@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">AbsentMindedTrackingApp</string>
+    <string name="login_welcome">Welcome</string>
+    <string name="login_email_placeholder">E-mail address</string>
+    <string name="login_password_placeholder">Password</string>
+    <string name="login_button">Log in</string>
+</resources>

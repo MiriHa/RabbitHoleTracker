@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/mainActivity">
+
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.trackingapp.MainActivity"
+        android:label="MainActivity" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.trackingapp.LoginFragment"
+        android:label="LoginFragment" />
+    <fragment
+        android:id="@+id/homeScreenFragment"
+        android:name="com.example.trackingapp.HomeScreenFragment"
+        android:label="HomeScreenFragment" />
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.example.trackingapp.WelcomeFragment"
+        android:label="WelcomeFragment" >
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.trackingapp.SignUpFragment"
+        android:label="SignUpFragment" />
+</navigation>
