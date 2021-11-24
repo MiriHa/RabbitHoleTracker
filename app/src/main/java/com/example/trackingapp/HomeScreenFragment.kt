@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.trackingapp.composables.HomeEvent
+import com.example.trackingapp.composables.HomeScreen
 import com.example.trackingapp.ui.theme.TrackingAppTheme
 
 class HomeScreenFragment: Fragment() {
@@ -24,10 +26,16 @@ class HomeScreenFragment: Fragment() {
         return ComposeView(requireContext()).apply { 
             setContent { 
                 TrackingAppTheme() {
-                    
+                    HomeScreen(onEvent = { event ->
+                        when (event) {
+                            is HomeEvent.clickInfo -> viewModel.clickInfo()
+                        }
+                    })
                 }
             }
         }
     }
+
+
 
 }

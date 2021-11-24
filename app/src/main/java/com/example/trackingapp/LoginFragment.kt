@@ -8,7 +8,12 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import com.example.trackingapp.composables.LoginScreen
 
-class LoginFragment(private val viewModel: LoginViewModel) : Fragment() {
+enum class LoginSignUpScreenType{
+    LOG_IN,
+    SIGN_UP
+}
+
+class LoginFragment(private val viewModel: LoginViewModel, val screenType: LoginSignUpScreenType) : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -16,14 +21,9 @@ class LoginFragment(private val viewModel: LoginViewModel) : Fragment() {
     ): View {
         return ComposeView(requireContext()).apply {
             setContent {
-                LoginScreen(viewModel = viewModel)
+                LoginScreen()
             }
         }
 
     }
-
-    companion object {
-        fun newInstance(viewModel: LoginViewModel) = LoginFragment(viewModel)
-    }
-
 }

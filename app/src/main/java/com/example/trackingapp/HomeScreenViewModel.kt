@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModelProvider
 
 class HomeScreenViewModel: ViewModel() {
 
+    fun clickInfo(){
+
+    }
 
 
 }

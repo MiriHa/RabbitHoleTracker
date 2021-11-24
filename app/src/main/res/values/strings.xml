@@ -1,7 +1,23 @@
 <resources>
     <string name="app_name">AbsentMindedTrackingApp</string>
+    <string name="app_name_display">Absent Minded Tracking App</string>
+
+    <string name="util_dismiss">Dismiss</string>
+    <string name="util_next">next</string>
+    <string name="util_previous">previous</string>
+    <string name="util_done">done</string>
+    <string name="util_back">back</string>
+    <string name="util_close">close</string>
+    <string name="util_continue">Continue</string>
+
+    <string name="util_email">Email</string>
+    <string name="util_password">Password</string>
+
     <string name="login_welcome">Welcome</string>
     <string name="login_email_placeholder">E-mail address</string>
     <string name="login_password_placeholder">Password</string>
+    <string name="login_signup">Sign up</string>
     <string name="login_button">Log in</string>
+
+    <string name="home_titleText">Hello!</string>
 </resources>

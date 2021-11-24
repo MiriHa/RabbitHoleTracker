@@ -17,9 +17,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.trackingapp.LoginViewModel
 import com.example.trackingapp.R
 import com.example.trackingapp.ui.theme.BackgroundColor
 import com.example.trackingapp.ui.theme.TextFieldColor
@@ -27,18 +27,18 @@ import com.example.trackingapp.ui.theme.TextFieldTextColor
 import com.example.trackingapp.ui.theme.TrackingAppTheme
 
 
-//@Preview(showBackground = true)
+@Preview(showBackground = true)
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen() {
     TrackingAppTheme {
         var email by rememberSaveable() { mutableStateOf("") }
         var password by rememberSaveable() { mutableStateOf("") }
         LoginMainCard(
             email,
             password,
-            onEmailChange = { email = it },
-            onPasswordChange = { password = it },
-            onButtonClick = { viewModel.login(email, password)}
+            onEmailChange = {  },
+            onPasswordChange = {  },
+            onButtonClick = { }
         )
     }
 }
@@ -76,6 +76,7 @@ fun LoginMainCard(
 
             Spacer(modifier = Modifier.padding(vertical = 25.dp))
 
+            //Email(emailState = emailState, imeAction = ImeAction.Done, onImeAction = onSubmit)
             TextField(
                 value = email,
                 onValueChange = onEmailChange,

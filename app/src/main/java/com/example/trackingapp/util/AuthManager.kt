@@ -12,9 +12,7 @@ sealed class AppUser {
 
 object AuthManager {
 
-    private var currentcuser: AppUser = AppUser.NoUserLoggedIn
-    val user: AppUser
-        get() = currentcuser
+    var user: AppUser = AppUser.NoUserLoggedIn
 
     fun signInWithEmail(email: String, password: String){
         Firebase.auth.signInWithEmailAndPassword(email, password)
