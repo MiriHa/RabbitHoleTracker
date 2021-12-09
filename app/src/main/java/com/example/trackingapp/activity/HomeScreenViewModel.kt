@@ -1,4 +1,4 @@
-package com.example.trackingapp
+package com.example.trackingapp.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -1,4 +1,4 @@
-package com.example.trackingapp
+package com.example.trackingapp.composeFragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,7 +13,7 @@ enum class LoginSignUpScreenType{
     SIGN_UP
 }
 
-class LoginFragment(private val viewModel: LoginViewModel, val screenType: LoginSignUpScreenType) : Fragment() {
+class LoginFragmentCom(private val comViewModel: LoginComViewModel, val screenType: LoginSignUpScreenType) : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

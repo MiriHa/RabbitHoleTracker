@@ -1,4 +1,4 @@
-package com.example.trackingapp
+package com.example.trackingapp.composeFragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.trackingapp.activity.HomeScreenViewModel
+import com.example.trackingapp.activity.HomeScreenViewModelFactory
 import com.example.trackingapp.composables.HomeEvent
 import com.example.trackingapp.composables.HomeScreen
 import com.example.trackingapp.ui.theme.TrackingAppTheme

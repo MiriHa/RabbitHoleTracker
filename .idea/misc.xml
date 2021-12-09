@@ -3,8 +3,16 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/drawable/circle_green.xml" value="0.1" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/drawable/shape_rounded.xml" value="0.29010416666666666" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/abstract_sensor_layout.xml" value="0.1" />
         <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/activity_main.xml" value="0.17255434782608695" />
         <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/content_main.xml" value="0.17255434782608695" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/fragment_login.xml" value="0.30416666666666664" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/fragment_mainscreen.xml" value="0.27395833333333336" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/fragment_onborading.xml" value="0.3234375" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/layout/layout_esm_intention_overlay.xml" value="0.27395833333333336" />
+        <entry key="..\:/+Dokumente/AndroidStudioProjects/AbsentMindedTrackingApp/app/src/main/res/menu/menu_main.xml" value="0.4041666666666667" />
         <entry key="..\:/+Dokumente/TrackingApp/app/src/main/res/layout/activity_main.xml" value="0.39010416666666664" />
         <entry key="..\:/+Dokumente/TrackingApp/app/src/main/res/layout/content_main.xml" value="0.39010416666666664" />
       </map>

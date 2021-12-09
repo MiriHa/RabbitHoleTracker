@@ -1,8 +1,9 @@
-package com.example.trackingapp
+package com.example.trackingapp.composeFragments
 
 import androidx.lifecycle.ViewModel
+import com.example.trackingapp.AuthManager
 
-class LoginViewModel : ViewModel() {
+class LoginComViewModel : ViewModel() {
     // TODO: Implement the ViewModel
 
     fun login(email: String, password: String){
@@ -15,8 +16,8 @@ class LoginViewModel : ViewModel() {
 class LoginViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel() as T
+        if (modelClass.isAssignableFrom(LoginComViewModel::class.java)) {
+            return LoginComViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

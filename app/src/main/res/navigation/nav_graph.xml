@@ -6,33 +6,41 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.trackingapp.LoginFragment"
+        android:name="com.example.trackingapp.composeFragments.LoginFragmentCom"
         android:label="LoginFragment" >
+        <argument
+            android:name="LoginSignUpScreenType"
+            app:argType="LoginSignUpScreenType"
+            android:defaultValue="LOG_IN" />
         <action
-            android:id="@+id/action_loginFragment_to_homeScreenFragment"
-            app:destination="@id/homeScreenFragment"
-            app:popUpTo="@+id/homeScreenFragment"
-            app:popUpToInclusive="true"/>
+            android:id="@+id/action_loginFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
     </fragment>
     <fragment
         android:id="@+id/homeScreenFragment"
-        android:name="com.example.trackingapp.HomeScreenFragment"
-        android:label="HomeScreenFragment" >
-        <action
-            android:id="@+id/action_homeScreenFragment_to_welcomeFragment"
-            app:destination="@id/OnBoardingFragment" />
-    </fragment>
+        android:name="com.example.trackingapp.composeFragments.HomeScreenFragment"
+        android:label="HomeScreenFragment" />
     <fragment
         android:id="@+id/OnBoardingFragment"
-        android:name="com.example.trackingapp.OnBoardingFragment"
+        android:name="com.example.trackingapp.activity.login.OnBoardingFragment"
         android:label="WelcomeFragment" >
-        <action
-            android:id="@+id/action_welcomeFragment_to_homeScreenFragment"
-            app:destination="@id/homeScreenFragment"
-            app:popUpTo="@+id/homeScreenFragment"
-            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_welcomeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_OnBoardingFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/mainActivity"
+        android:name="com.example.trackingapp.activity.MainActivity"
+        android:label="MainActivity" />
+    <fragment
+        android:id="@+id/mainScreenFragment"
+        android:name="com.example.trackingapp.activity.MainScreenFragment"
+        android:label="MainScreenFragment" >
+        <action
+            android:id="@+id/action_mainScreenFragment_to_OnBoardingFragment"
+            app:destination="@id/OnBoardingFragment" />
     </fragment>
 </navigation>

@@ -29,7 +29,7 @@ fun Fragment.navigate(to: ScreenType, from: ScreenType) {
             findNavController().navigate(R.id.loginFragment, null, navOptions)
         }
         ScreenType.HomeScreen -> {
-            findNavController().navigate(R.id.homeScreenFragment,null, navOptions)
+            findNavController().navigate(R.id.mainScreenFragment,null, navOptions)
         }
     }
 

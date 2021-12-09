@@ -1,4 +1,4 @@
-package com.example.trackingapp
+package com.example.trackingapp.activity.login
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
