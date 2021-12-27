@@ -7,7 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.trackingapp.R
 import java.security.InvalidParameterException
 
-enum class ScreenType {Welcome, SignUpLogin, HomeScreen}
+enum class ScreenType {Welcome, SignUp, Login, HomeScreen}
 
 fun Fragment.navigate(to: ScreenType, from: ScreenType) {
     if(to == from){
@@ -16,7 +16,9 @@ fun Fragment.navigate(to: ScreenType, from: ScreenType) {
 
     var navOptions = NavOptions.Builder().build()
 
-    if(from == ScreenType.Welcome || from == ScreenType.SignUpLogin){
+    Log.d("xxx","navigate from: $from to : $to")
+
+    if( from == ScreenType.Welcome || from == ScreenType.Login || from == ScreenType.SignUp){
         Log.d("xxx","fromLoginScreen, dont pop back")
        navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build()
     }
@@ -25,8 +27,11 @@ fun Fragment.navigate(to: ScreenType, from: ScreenType) {
         ScreenType.Welcome -> {
             findNavController().navigate(R.id.OnBoardingFragment,null, navOptions)
         }
-        ScreenType.SignUpLogin -> {
+        ScreenType.Login -> {
             findNavController().navigate(R.id.loginFragment, null, navOptions)
+        }
+        ScreenType.SignUp -> {
+            findNavController().navigate(R.id.signUpFragment, null, navOptions)
         }
         ScreenType.HomeScreen -> {
             findNavController().navigate(R.id.mainScreenFragment,null, navOptions)

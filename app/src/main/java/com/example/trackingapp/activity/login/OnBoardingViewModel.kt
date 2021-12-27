@@ -1,6 +1,5 @@
 package com.example.trackingapp.activity.login
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,7 +8,6 @@ import com.example.trackingapp.util.ScreenType
 
 class OnBoardingViewModel: ViewModel() {
     private val mNavigateTo = MutableLiveData<Event<ScreenType>>()
-    val navigateTo: LiveData<Event<ScreenType>> = mNavigateTo
 
 
     fun login(){
@@ -18,7 +16,8 @@ class OnBoardingViewModel: ViewModel() {
     }
 
     fun signup() {
-        mNavigateTo.value = Event(ScreenType.SignUpLogin)
+        mNavigateTo.value = Event(ScreenType.SignUp)
+
     }
 
     fun goToHomeScreen(){

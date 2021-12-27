@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BlackishGray"
+    android:clickable="true"
     android:padding="16dp">
 
     <ImageView
@@ -26,42 +28,55 @@
         android:text="@string/app_name"
         android:textColor="@color/white"
         android:textSize="32sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageview_onboarding_logo" />
 
-    <Button
-        android:id="@+id/onborading_login_button"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/milkGreen"
-        android:enabled="false"
-        android:text="@string/action_sign_in"
-        android:textColor="@color/white"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title"
-        app:layout_constraintVertical_bias="0.75" />
+        app:layout_constraintTop_toBottomOf="@+id/textView_title">
 
-    <Button
-        android:id="@+id/onborading_signup_button"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:backgroundTint="@color/milkGreen"
-        android:enabled="false"
-        android:text="@string/action_sign_in"
-        android:textColor="@color/white"
-        android:layout_marginTop="24dp"
-        android:layout_marginHorizontal="32dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/onborading_login_button"
-        app:layout_constraintVertical_bias="0.0" />
+        <Button
+            android:id="@+id/onborading_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/milkGreen"
+            android:text="@string/login_button"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/onborading_signup_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/milkGreen"
+            android:text="@string/login_signup"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/onboardingTestBUtton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginTop="32dp"
+            android:backgroundTint="@color/milkGreen"
+            android:text="home"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

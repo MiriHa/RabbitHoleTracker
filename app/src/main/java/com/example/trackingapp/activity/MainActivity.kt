@@ -10,14 +10,13 @@ import android.os.Environment
 import android.provider.Settings
 import android.util.Log
 import android.view.Menu
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.trackingapp.R
+import com.example.trackingapp.databinding.ActivityMainBinding
 import com.example.trackingapp.util.CONST
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -25,18 +24,23 @@ import com.google.firebase.auth.FirebaseAuth
 class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.name
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController)
 
         //firebaseAuth = Firebase.auth
 
-        val toolbar: Toolbar = findViewById<View>(R.id.toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        //val toolbar: Toolbar = findViewById<View>(R.id.toolbar) as Toolbar
+        //setSupportActionBar(toolbar)
 
         CONST.setSavePath(this)
         //TODO
@@ -126,7 +130,6 @@ class MainActivity : AppCompatActivity() {
         inflater.inflate(R.menu.menu_main, menu)
         return true
     }
-
 
     /*fun isLogServiceRunning(context: Context): Boolean {
         val sp = context.getSharedPreferences(

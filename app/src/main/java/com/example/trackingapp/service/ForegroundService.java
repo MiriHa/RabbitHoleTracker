@@ -23,13 +23,13 @@ import com.example.trackingapp.activity.MainActivity;
 public abstract class  ForegroundService extends Service {
 
 	String TAG = getClass().getName();
-	
+
 	private PowerManager.WakeLock m_wakeLock;
 
 	@Override
 	public void onCreate() {
-		super.onCreate();		
-		
+		super.onCreate();
+
 		Intent notificationIntent = new Intent(this, MainActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -43,8 +43,8 @@ public abstract class  ForegroundService extends Service {
 				.setOngoing(true).setContentInfo("");
 
 		startForeground(); //startForeground(42, notification.build());
-	
-		
+
+
 		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		m_wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 
@@ -83,36 +83,36 @@ public abstract class  ForegroundService extends Service {
 
 		return channelId;
 	}
-	
+
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 	  super.onConfigurationChanged(newConfig);
 	  Log.d(TAG, newConfig.toString());
 	}
-	
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
-		
+
 		if(!m_wakeLock.isHeld()) {
 			m_wakeLock.acquire();
 		}
-				
+
 		return Service.START_STICKY;
 	}
-	
+
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "Service Stopped");
-		
+
 		if(m_wakeLock.isHeld()) {
-			m_wakeLock.release();			
+			m_wakeLock.release();
 		}
-		
+
 		stopForeground(true);
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;

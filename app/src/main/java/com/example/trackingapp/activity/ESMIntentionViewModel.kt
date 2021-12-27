@@ -3,20 +3,16 @@ package com.example.trackingapp.activity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-class HomeScreenViewModel: ViewModel() {
-
-    fun clickInfo(){
-
-    }
+class ESMIntentionViewModel: ViewModel() {
 
 
 }
 
-class HomeScreenViewModelFactory() : ViewModelProvider.Factory {
+class ESMIntentionViewModelFactory() : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(HomeScreenViewModel::class.java)) {
-            return HomeScreenViewModel() as T
+        if (modelClass.isAssignableFrom(ESMIntentionViewModel::class.java)) {
+            return ESMIntentionViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
