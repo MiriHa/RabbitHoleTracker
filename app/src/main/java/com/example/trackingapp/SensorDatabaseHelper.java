@@ -116,7 +116,7 @@ public class SensorDatabaseHelper extends SQLiteOpenHelper {
 		}
 		else
 		{
-			Log.d(TAG, "Not Contraind Column " + COLUMN_ISENABLED);
+			ModelLog.d(TAG, "Not Contraind Column " + COLUMN_ISENABLED);
 		}
 		cursor.close();
 		db.close();

@@ -9,8 +9,8 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.R
-import com.example.trackingapp.activity.ESMIntentionActivity
-import com.example.trackingapp.activity.ESMIntentionCompleteActivity
+import com.example.trackingapp.activity.ESMIntentionUnlockActivity
+import com.example.trackingapp.activity.ESMIntentionLockActivity
 
 object NotificationHelper {
     private const val CHANEL_ID = "rabbitholeAlert"
@@ -38,8 +38,8 @@ object NotificationHelper {
     ) {
 
         val destination = when(esmType){
-            ESMType.ESMINTENTION -> ESMIntentionActivity::class.java
-            ESMType.ESMINTENTIONCOMPLETED -> ESMIntentionCompleteActivity::class.java
+            ESMType.ESMINTENTION -> ESMIntentionUnlockActivity::class.java
+            ESMType.ESMINTENTIONCOMPLETED -> ESMIntentionLockActivity::class.java
         }
         val fullScreenIntent = Intent(context, destination)
         val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, 0)

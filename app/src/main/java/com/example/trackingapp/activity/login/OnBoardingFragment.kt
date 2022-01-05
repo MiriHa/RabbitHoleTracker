@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.trackingapp.AuthManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
@@ -15,7 +16,6 @@ class OnBoardingFragment: Fragment() {
 
     private lateinit var viewModel: OnBoardingViewModel
     private lateinit var binding: FragmentOnboradingBinding
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,40 +27,26 @@ class OnBoardingFragment: Fragment() {
         binding = FragmentOnboradingBinding.inflate(inflater)
         val view = binding.root
 
-        /*//TODO
-        if(AuthManager.user == AppUser.NoUserLoggedIn){
-            Log.d("xxx","NoUserLoggedIN")
-            viewModel.goToHomeScreen()
-        } */
-
         binding.onboradingLoginButton.setOnClickListener {
-            Log.d("xxx","LoginClick")
             navigate(ScreenType.Login, ScreenType.Welcome)
         }
         binding.onboradingSignupButton.setOnClickListener {
-            Log.d("xxx","Signup")
             navigate(ScreenType.SignUp, ScreenType.Welcome)
         }
         binding.onboardingTestBUtton.setOnClickListener {
-            Log.d("xxx","Home")
             navigate(ScreenType.HomeScreen, ScreenType.Welcome)
         }
 
         return view
+    }
 
-        /*return ComposeView(requireContext()).apply {
-            setContent {
-                TrackingAppTheme() {
-                    OnBoardingScreen(
-                        onEvent = { event ->
-                            when (event) {
-                                is WelcomeEvent.SignInSignUp -> viewModel.signup()
-                                is WelcomeEvent.LoginIn -> viewModel.login()
-                            }
-                        }
-                    )
-                }
-            }
-        }*/
+    override fun onStart() {
+        super.onStart()
+       if(AuthManager.isUserLoggedIn()){
+           //GO to the MainScreen
+           Log.d("xxx","user already logged in")
+           navigate(ScreenType.HomeScreen, ScreenType.Welcome)
+       }
+
     }
 }

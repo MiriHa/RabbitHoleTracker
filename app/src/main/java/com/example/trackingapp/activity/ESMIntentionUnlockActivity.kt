@@ -5,12 +5,15 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.trackingapp.AuthManager
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
+import com.example.trackingapp.models.LogActivity
 import com.example.trackingapp.util.NotificationHelper.dismissNotification
+import java.util.*
 
 
-class ESMIntentionActivity: AppCompatActivity(){
+class ESMIntentionUnlockActivity: AppCompatActivity(){
     private lateinit var viewModel: ESMIntentionViewModel
     private lateinit var binding: LayoutEsmIntentionOverlayBinding
     private var suggestions: Array<String> = arrayOf()
@@ -27,13 +30,27 @@ class ESMIntentionActivity: AppCompatActivity(){
             "Belgium", "France", "Italy", "Germany", "Spain"
         )
         val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            this, R.layout.support_simple_spinner_dropdown_item, suggestions)
+            this, R.layout.custom_list_item, R.id.text_view_list_item, suggestions)
 
-        binding.autoCompleteTextView.setAdapter(adapter)
-
-        binding.buttonEsmIntetionStart.setOnClickListener {
-            dismissFullScreenNotification()
+        binding.esmUnlockAutoCompleteTextView.apply {
+            setAdapter(adapter)
+            completionHint = "test"
+            threshold = 2
         }
+
+
+        binding.esmUnlockButtonstart.setOnClickListener {
+            dismissFullScreenNotification()
+            makeLog()
+        }
+
+    }
+
+    private fun makeLog(){
+        val answer = binding.esmUnlockAutoCompleteTextView.text.toString()
+        AuthManager.makeLog(Date(), LogActivity.ESM_UNLOCK, answer)
+
+        //TODO save to preference
     }
 
     private fun dismissFullScreenNotification(){
@@ -44,44 +61,3 @@ class ESMIntentionActivity: AppCompatActivity(){
     }
 
 }
-
-
-
-/*
-    Fragment() {
-
-    private lateinit var viewModel: ESMIntentionViewModel
-    private lateinit var binding: LayoutEsmIntentionOverlayBinding
-    private lateinit var mContext: Context
-    private var suggestions: Array<String> = arrayOf()
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
-
-        binding = LayoutEsmIntentionOverlayBinding.inflate(inflater)
-
-        suggestions = arrayOf(
-            "Belgium", "France", "Italy", "Germany", "Spain"
-        )
-
-
-        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            mContext, R.layout.simple_dropdown_item_1line, suggestions)
-
-        binding.autoCompleteTextView.setAdapter(adapter)
-
-        binding.autoCompleteTextView
-
-
-        return binding.root
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
-    }
-}*/

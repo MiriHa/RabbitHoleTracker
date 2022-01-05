@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/esm_unlock_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     android:background="@color/BlackishGray">
 
     <TextView
-        android:id="@+id/text_before_activeInput"
+        android:id="@+id/esm_unlock_text_before_activeInput"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -21,25 +22,26 @@
         app:layout_constraintVertical_bias="0.29000002" />
 
     <AutoCompleteTextView
-        android:id="@+id/autoCompleteTextView"
+        android:id="@+id/esm_unlock_autoCompleteTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:imeOptions="actionDone"
         android:inputType="text"
         android:hint="@string/esm_unlock_intention_hint"
-        android:gravity="center"
+        android:completionThreshold="2"
         android:backgroundTint="@color/white"
         android:textColorHint="@color/LightBlackishGray"
         android:textColor="@color/white"
         android:layout_marginHorizontal="16dp"
+        android:dropDownHeight="200dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_before_activeInput"
+        app:layout_constraintTop_toBottomOf="@+id/esm_unlock_text_before_activeInput"
         app:layout_constraintVertical_bias="0.060000002" />
 
     <Button
-        android:id="@+id/button_esm_intetion_start"
+        android:id="@+id/esm_unlock_buttonstart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="btnSendToDatabase"
@@ -48,7 +50,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/autoCompleteTextView"
+        app:layout_constraintTop_toBottomOf="@+id/esm_unlock_autoCompleteTextView"
         app:layout_constraintVertical_bias="0.120000005" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

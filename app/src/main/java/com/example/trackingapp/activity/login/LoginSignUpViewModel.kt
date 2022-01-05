@@ -1,20 +1,21 @@
 package com.example.trackingapp.activity.login
 
+import android.util.Log
 import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.example.trackingapp.AuthManager
 import com.example.trackingapp.R
-import com.example.trackingapp.activity.login.data.LoginDataSource
-import com.example.trackingapp.activity.login.data.LoginRepository
-import com.example.trackingapp.activity.login.data.Result
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 /**
  * User details post authentication that is exposed to the UI
  */
 data class LoggedInUserView(
-    val displayName: String
+    val displayName: String?
     //... other data fields that may be accessible to the UI
 )
 
@@ -24,6 +25,7 @@ data class LoggedInUserView(
 data class LoginFormState(
     val usernameError: Int? = null,
     val passwordError: Int? = null,
+    val passwordMatchError: Int? = null,
     val isDataValid: Boolean = false
 )
 
@@ -36,7 +38,7 @@ data class LoginResult(
 )
 
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginSignUpViewModel : ViewModel() {
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     val loginFormState: LiveData<LoginFormState> = _loginForm
@@ -44,26 +46,47 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
-    fun login(username: String, password: String) {
-        // can be launched in a separate asynchronous job
-        val result = loginRepository.login(username, password)
-
-        if (result is Result.Success) {
-            _loginResult.value =
-                LoginResult(success = LoggedInUserView(displayName = result.data.displayName))
-        } else {
-            _loginResult.value = LoginResult(error = R.string.login_failed)
+    fun loginInWithEmailandPassword(email: String, password: String){
+        Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if(task.isSuccessful){
+                Log.d("LoginSignUpViewModel:","Login successful")
+                _loginResult.value =
+                    LoginResult(success = LoggedInUserView(displayName = AuthManager.user?.uid))
+            } else{
+                Log.d("LoginSignUpViewModel:","Login failed")
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+            }
         }
     }
 
-    fun loginDataChanged(username: String, password: String) {
+    fun createEmailPasswordAccount(email: String, password: String){
+        Firebase.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+            if(task.isSuccessful){
+                Log.d("LoginSignUpViewModel:","Create Account successful")
+                AuthManager.saveUserToFirebase(email)
+                _loginResult.value =
+                    LoginResult(success = LoggedInUserView(displayName = AuthManager.user?.uid))
+            } else{
+                Log.d("LoginSignUpViewModel:","Create Account failed")
+                _loginResult.value = LoginResult(error = R.string.login_failed)
+            }
+        }
+    }
+
+    fun loginDataChanged(username: String, password: String, passwordRepeat: String? = null) {
         if (!isUserNameValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
+        } else if(!doPasswordsMatch(password, passwordRepeat)) {
+            _loginForm.value = LoginFormState(passwordMatchError = R.string.invalid_password_no_match)
         } else {
             _loginForm.value = LoginFormState(isDataValid = true)
         }
+    }
+
+    private fun doPasswordsMatch(password: String, passwordRepeat: String?):Boolean{
+        return password == passwordRepeat
     }
 
     // A placeholder username validation check
@@ -79,18 +102,15 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
+
 }
 
 class LoginViewModelFactory : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
-            return LoginViewModel(
-                loginRepository = LoginRepository(
-                    dataSource = LoginDataSource()
-                )
-            ) as T
+        if (modelClass.isAssignableFrom(LoginSignUpViewModel::class.java)) {
+            return LoginSignUpViewModel() as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

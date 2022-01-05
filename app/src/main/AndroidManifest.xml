@@ -40,13 +40,13 @@
         </activity>
 
         <activity
-            android:name="com.example.trackingapp.activity.ESMIntentionCompleteActivity"
+            android:name="com.example.trackingapp.activity.ESMIntentionLockActivity"
             android:showOnLockScreen="true"
             android:launchMode="singleTop"
             android:exported="true"/>
 
         <activity
-            android:name="com.example.trackingapp.activity.ESMIntentionActivity"
+            android:name="com.example.trackingapp.activity.ESMIntentionUnlockActivity"
             android:launchMode="singleTop"
             android:exported="true"/>
 

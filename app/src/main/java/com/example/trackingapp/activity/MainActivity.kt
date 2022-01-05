@@ -20,10 +20,12 @@ import com.example.trackingapp.databinding.ActivityMainBinding
 import com.example.trackingapp.util.CONST
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
     private val TAG = javaClass.name
-    private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var auth: FirebaseAuth
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        auth = Firebase.auth
 
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)
@@ -229,20 +233,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun isPermissionGranted(permission: String): Boolean {
-        Log.d(TAG, "Check Permission")
+        ModelLog.d(TAG, "Check Permission")
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(permission)
                 == PackageManager.PERMISSION_GRANTED
             ) {
-                Log.v(TAG, "Permission is granted")
+                ModelLog.v(TAG, "Permission is granted")
                 true
             } else {
-                Log.v(TAG, "Permission is revoked")
+                ModelLog.v(TAG, "Permission is revoked")
                 ActivityCompat.requestPermissions(this, arrayOf(permission), 1)
                 false
             }
         } else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG, "Permission is granted")
+            ModelLog.v(TAG, "Permission is granted")
             true
         }
     }
@@ -254,7 +258,7 @@ class MainActivity : AppCompatActivity() {
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (grantResults.size > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Log.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0])
+            ModelLog.v(TAG, "Permission: " + permissions[0] + "was " + grantResults[0])
             //resume tasks needing this permission
         }
     }
@@ -272,18 +276,18 @@ class MainActivity : AppCompatActivity() {
         if (isLogServiceRunning(this)) {
             m_ButtonStart!!.visibility = View.GONE
             m_ButtonStop!!.visibility = View.VISIBLE
-            Log.d(TAG, "RESUME: service active")
+            ModelLog.d(TAG, "RESUME: service active")
         } else {
             m_ButtonStart!!.visibility = View.VISIBLE
             m_ButtonStop!!.visibility = View.GONE
-            Log.d(TAG, "RESUME: service inactive")
+            ModelLog.d(TAG, "RESUME: service inactive")
         }
     }
 
     private val onStartButtonClick = View.OnClickListener {
         m_ButtonStart!!.visibility = View.GONE
         m_ButtonStop!!.visibility = View.VISIBLE
-        Log.d(TAG, "START TRACKING!")
+        ModelLog.d(TAG, "START TRACKING!")
         startLogService(this@MainActivity)
     }
 
@@ -357,7 +361,7 @@ class MainActivity : AppCompatActivity() {
                 Settings.Secure.ACCESSIBILITY_ENABLED
             )
         } catch (e: Settings.SettingNotFoundException) {
-            Log.d(TAG, e.toString())
+            ModelLog.d(TAG, e.toString())
         }
         val mStringColonSplitter = TextUtils.SimpleStringSplitter(':')
         if (accessibilityEnabled == 1) {

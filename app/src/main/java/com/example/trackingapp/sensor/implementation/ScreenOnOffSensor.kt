@@ -17,6 +17,7 @@ class ScreenOnOffSensor : AbstractSensor() {
     private var mReceiver: BroadcastReceiver? = null
     private var m_context: Context? = null
     private var wasScreenOn = true
+    private var screenOffAsked = false
 
     override fun getSettingsView(context: Context?): View? {
         return null
@@ -42,7 +43,7 @@ class ScreenOnOffSensor : AbstractSensor() {
             }
             m_OutputStream!!.flush()
         } catch (e: Exception) {
-            Log.e(TAG, e.toString())
+            ModelLog.e(TAG, e.toString())
         }*/
 
         val filter = IntentFilter()
@@ -88,12 +89,14 @@ class ScreenOnOffSensor : AbstractSensor() {
 
             if (isRunning) {
                 val notificationManager = NotificationManagerCompat.from(context)
-                when (currentState) {
-                    ScreenState.OFF_LOCKED -> {
+                when {
+                    currentState == ScreenState.OFF_LOCKED && !screenOffAsked -> {
+                        screenOffAsked = true
                         NotificationHelper.createFullScreenNotification(context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
-                            context.getString(R.string.esm_during_intention_question))
+                            context.getString(R.string.esm_lock_intention_question_1))
                     }
-                    ScreenState.ON_USERPRESENT -> {
+                    currentState == ScreenState.ON_USERPRESENT -> {
+                        screenOffAsked = false
                         NotificationHelper.createFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
                     }

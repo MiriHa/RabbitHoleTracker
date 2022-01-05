@@ -31,7 +31,7 @@ abstract class AbstractSensor protected constructor() : Serializable {
     var isRunning = false
         protected set
     val filePath: String
-        get() = CONST.ROOT_FOLDER.absolutePath + "/" + fileName
+        get() = CONST.ROOT_FOLDER?.absolutePath + "/" + fileName
     val settingsState: Int
         get() = 0
 
@@ -49,12 +49,12 @@ abstract class AbstractSensor protected constructor() : Serializable {
 				if(!file.exists()){
 					m_FileWriter = new FileWriter(getFilePath(), true);
 					m_FileWriter.write(m_FileHeader + "\n");
-					Log.w(TAG, "File created " + getFilePath() );
+					ModelLog.w(TAG, "File created " + getFilePath() );
 				} else {
-					Log.w(TAG, "File exits " + getFilePath() );
+					ModelLog.w(TAG, "File exits " + getFilePath() );
 				}
 			} catch (IOException e) {
-				Log.e(TAG, e.toString());
+				ModelLog.e(TAG, e.toString());
 			}*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             val values = ContentValues()
@@ -94,7 +94,7 @@ abstract class AbstractSensor protected constructor() : Serializable {
         } else {
             val path = CONST.RELATIVE_PATH
             val file = File(path, fileName)
-            //Log.d(TAG, "saveFile: file path - " + file.getAbsolutePath());
+            //ModelLog.d(TAG, "saveFile: file path - " + file.getAbsolutePath());
             try {
                 m_OutputStream = FileOutputStream(file)
             } catch (e: FileNotFoundException) {

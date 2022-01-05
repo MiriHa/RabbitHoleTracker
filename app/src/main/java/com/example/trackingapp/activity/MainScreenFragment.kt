@@ -12,6 +12,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.databinding.FragmentMainscreenBinding
 import com.example.trackingapp.sensor.SensorList
+import com.example.trackingapp.util.ScreenType
+import com.example.trackingapp.util.navigate
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 class MainScreenFragment: Fragment() {
 
@@ -42,6 +46,11 @@ class MainScreenFragment: Fragment() {
                 mContext.getString(
                 R.string.esm_during_intention_question) )*/
             startTestSensors()
+        }
+
+        binding.signOut.setOnClickListener {
+            Firebase.auth.signOut()
+            navigate(ScreenType.Welcome, ScreenType.HomeScreen)
         }
 
 

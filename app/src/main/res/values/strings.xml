@@ -17,16 +17,31 @@
     <string name="login_email_placeholder">E-mail address</string>
     <string name="login_password_placeholder">Password</string>
     <string name="login_signup">Sign up</string>
+    <string name="login_signUp_CreateAccount">Create Account</string>
     <string name="login_button">Log in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="login_prompt_password_repeat">Repeat Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">Welcome!</string>
+    <string name="invalid_username">Not a valid email</string>
+    <string name="invalid_password">Password must be at least 6 characters</string>
+    <string name="invalid_password_no_match">Both passwords need to match</string>
+    <string name="login_failed">"Login failed"</string>
 
     <string name="home_titleText">Hello!</string>
 
 
     <!-- ESM -->
-    <string name="esm_unlock_intention_question">Why do you want to use your phone?</string>
+    <string name="esm_unlock_intention_question">What do you want to use your phone for?</string>
     <string name="esm_unlock_intention_hint">Your Intention</string>
     <string name="esm_unlock_intention_button_start">Start</string>
-    <string name="esm_during_intention_question">Did you finish your original intention?</string>
+    <string name="esm_lock_intention_description_promt">Your intention was:</string>
+    <string name="esm_lock_intention_question_1">Did you finish your intention?</string>
+    <string name="esm_lock_intention_question_2">Did you do more than your intention?</string>
     <string name="esm_button_yes">Yes</string>
     <string name="esm_button_no">No</string>
     <string name="esm_button_newIntention">New Intention</string>
@@ -67,15 +82,6 @@
 
     <string name="dbColumnSettingsState">settingsstate</string>
     <string name="dbColumnSettings">settings</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">Welcome!</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+
+
 </resources>

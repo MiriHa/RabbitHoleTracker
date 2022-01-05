@@ -1,13 +1,10 @@
 package com.example.trackingapp.models
 
-class User {
+class User(
+    val account_email:String? = null,
+    val account_userId: String? = null) {
 
-    private val userID: String = ""
-    private val userName = ""
-    val displayName: String = ""
-    private val email = ""
-
-    private var loggingList = listOf<Log>()
+    private var loggingList = listOf<ModelLog>()
 
 
 }

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "459215279370",
+    "firebase_url": "https://absentmindedtrack-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "absentmindedtrack",
     "storage_bucket": "absentmindedtrack.appspot.com"
   },

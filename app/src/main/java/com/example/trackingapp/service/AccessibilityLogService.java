@@ -136,7 +136,7 @@ public class AccessibilityLogService extends AccessibilityService {
     		return;
     	
     	String s = String.format("%s,%s,%s,%s,%s,%s\n",
-    			CONST.dateFormat.format(System.currentTimeMillis()), event.getEventTime(), getEventType(event),
+    			CONST.dateTimeFormat.format(System.currentTimeMillis()), event.getEventTime(), getEventType(event),
                 event.getClassName(), event.getPackageName(),
                  getEventText(event));
 		
