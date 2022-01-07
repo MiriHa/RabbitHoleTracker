@@ -26,13 +26,8 @@ abstract class AbstractSensor protected constructor() : Serializable {
     open fun start(context: Context) {
         m_isSensorAvailable = isAvailable(context)
         if (!m_isSensorAvailable) Log.i(TAG, "Sensor not available")
-        initFile(context)
     }
 
-    fun initFile(context: Context) {
-    }
-
-    //TODO remoe streams
 
     abstract fun stop()
 

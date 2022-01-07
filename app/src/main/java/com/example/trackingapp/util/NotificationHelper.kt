@@ -9,8 +9,8 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.R
-import com.example.trackingapp.activity.ESMIntentionUnlockActivity
-import com.example.trackingapp.activity.ESMIntentionLockActivity
+import com.example.trackingapp.activity.ESM.ESMIntentionLockActivity
+import com.example.trackingapp.activity.ESM.ESMIntentionUnlockActivity
 
 object NotificationHelper {
     private const val CHANEL_ID = "rabbitholeAlert"

@@ -1,4 +1,4 @@
-package com.example.trackingapp.activity
+package com.example.trackingapp.activity.ESM
 
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
@@ -63,21 +63,13 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
    private fun actionDone(){
        val intention = binding.esmUnlockAutoCompleteTextView.text.toString()
        if(intention.isNotBlank()){
-        checkDuplicateIntentionAnSave(intention)
+        viewModel.checkDuplicateIntentionAnSave(intention)
         dismissFullScreenNotification()
         DatabaseManager.makeLog(Date(), LogActivity.ESM_UNLOCK, intention)
         DatabaseManager.saveLastIntention(this@ESMIntentionUnlockActivity, intention)
        } else {
            Toast.makeText(this, R.string.esm_unlock_intention_error, Toast.LENGTH_LONG).show()
        }
-    }
-
-    private fun checkDuplicateIntentionAnSave(newIntention: String){
-        //TODO val cleanedIntention = newIntention.lowercase().replace(" ", "")
-        if(!DatabaseManager.intentionList.contains(newIntention)){
-            //save new Intention to Firebase
-            DatabaseManager.saveIntentionToFirebase(Date(), newIntention)
-        }
     }
 
     private fun dismissFullScreenNotification(){
