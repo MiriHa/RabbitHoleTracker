@@ -28,29 +28,43 @@ class ESMIntentionLockActivity : AppCompatActivity(){
         this.turnScreenOnAndKeyguardOff()
 
         binding.buttonEsmLockNo.setOnClickListener {
-           dismissFullScreenNotification()
             viewModel.makeLogQuestion1(false)
+            it.isEnabled = false
+            binding.buttonEsmLockYes.isEnabled = false
+            dismissFullScreenNotification()
         }
 
         binding.buttonEsmLockYes.setOnClickListener {
-            dismissFullScreenNotification()
             viewModel.makeLogQuestion1(true)
+            it.isEnabled = false
+            binding.buttonEsmLockNo.isEnabled = false
+            dismissFullScreenNotification()
         }
 
         binding.buttonEsmLockQuestion2No.setOnClickListener {
-            dismissFullScreenNotification()
             viewModel.makeLogQuestion2(false)
+            it.isEnabled = false
+            binding.buttonEsmLockQuestion2Yes.isEnabled = false
+            dismissFullScreenNotification()
         }
 
         binding.buttonEsmLockQuestion2Yes.setOnClickListener {
-            dismissFullScreenNotification()
             viewModel.makeLogQuestion2(true)
+            it.isEnabled = false
+            binding.buttonEsmLockQuestion2No.isEnabled = false
+            dismissFullScreenNotification()
         }
     }
 
     private fun dismissFullScreenNotification(){
-        this.finish()
-        this.dismissNotification()
+        if(viewModel.esmLockQuestion1answered && viewModel.esmLockQuestion2Answered) {
+            this.finish()
+            this.dismissNotification()
+        }
+    }
+
+    override fun onBackPressed() {
+        //Do nothing
     }
 
     override fun onDestroy() {

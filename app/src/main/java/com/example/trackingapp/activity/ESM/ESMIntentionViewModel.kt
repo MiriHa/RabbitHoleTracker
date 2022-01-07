@@ -9,12 +9,17 @@ import java.util.*
 
 class ESMIntentionViewModel: ViewModel() {
 
+    var esmLockQuestion1answered = false
+    var esmLockQuestion2Answered = false
+
     fun makeLogQuestion1(isIntentionFinished: Boolean){
+        esmLockQuestion1answered = true
         val answer = if(isIntentionFinished) ESM_Intention_Lock_Answer.ESM_INTENTION_FINISHED else ESM_Intention_Lock_Answer.ESM_INTENTION_UNFINISHED
         DatabaseManager.makeLog(Date(), LogActivity.ESM_LOCK, answer.toString())
     }
 
     fun makeLogQuestion2(moreThanInitialIntention: Boolean){
+        esmLockQuestion2Answered = true
         val answer = if(moreThanInitialIntention) ESM_Intention_Lock_Answer.ESM_MORE_THAN_INITIAL_INTENTION else ESM_Intention_Lock_Answer.ESM_NOT_MORE_THAN_INITIAL_INTENTION
         DatabaseManager.makeLog(Date(), LogActivity.ESM_LOCK, answer.toString())
     }
