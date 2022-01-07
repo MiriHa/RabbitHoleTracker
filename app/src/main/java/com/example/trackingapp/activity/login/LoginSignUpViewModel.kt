@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.AuthManager
+import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.R
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -46,12 +46,14 @@ class LoginSignUpViewModel : ViewModel() {
     private val _loginResult = MutableLiveData<LoginResult>()
     val loginResult: LiveData<LoginResult> = _loginResult
 
+    var isButtonEnabled = false
+
     fun loginInWithEmailandPassword(email: String, password: String){
         Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 Log.d("LoginSignUpViewModel:","Login successful")
                 _loginResult.value =
-                    LoginResult(success = LoggedInUserView(displayName = AuthManager.user?.uid))
+                    LoginResult(success = LoggedInUserView(displayName = DatabaseManager.user?.uid))
             } else{
                 Log.d("LoginSignUpViewModel:","Login failed")
                 _loginResult.value = LoginResult(error = R.string.login_failed)
@@ -63,9 +65,9 @@ class LoginSignUpViewModel : ViewModel() {
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 Log.d("LoginSignUpViewModel:","Create Account successful")
-                AuthManager.saveUserToFirebase(email)
+                DatabaseManager.saveUserToFirebase(email)
                 _loginResult.value =
-                    LoginResult(success = LoggedInUserView(displayName = AuthManager.user?.uid))
+                    LoginResult(success = LoggedInUserView(displayName = DatabaseManager.user?.uid))
             } else{
                 Log.d("LoginSignUpViewModel:","Create Account failed")
                 _loginResult.value = LoginResult(error = R.string.login_failed)
@@ -81,6 +83,7 @@ class LoginSignUpViewModel : ViewModel() {
         } else if(!doPasswordsMatch(password, passwordRepeat)) {
             _loginForm.value = LoginFormState(passwordMatchError = R.string.invalid_password_no_match)
         } else {
+            isButtonEnabled = true
             _loginForm.value = LoginFormState(isDataValid = true)
         }
     }

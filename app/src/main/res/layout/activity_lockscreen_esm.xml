@@ -21,14 +21,15 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/esm_lock_intention"
+        android:id="@+id/textView_esm_lock_intention"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
         tools:text="intention"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        android:layout_marginTop="24dp"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention_prompt" />
@@ -45,7 +46,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention"
+        app:layout_constraintTop_toBottomOf="@+id/textView_esm_lock_intention"
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
@@ -78,5 +79,51 @@
             android:text="@string/esm_button_no" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/esm_lock_intention_question_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/esm_lock_intention_question_2"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention_question_2"
+        app:layout_constraintVertical_bias="0.0">
+
+        <Button
+            android:id="@+id/button_esm_lock_question2_yes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/milkGreen"
+            android:text="@string/esm_button_yes" />
+
+        <Button
+            android:id="@+id/button_esm_lock_question2_no"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:backgroundTint="@color/milkGreen"
+            android:text="@string/esm_button_no" />
+
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -99,11 +99,15 @@ class LoginFragment : Fragment() {
         }
 
         loginButton.setOnClickListener {
-            loadingProgressBar.visibility = View.VISIBLE
-            loginSignUpViewModel.loginInWithEmailandPassword(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
-            )
+            if(loginSignUpViewModel.isButtonEnabled) {
+                loadingProgressBar.visibility = View.VISIBLE
+                loginSignUpViewModel.loginInWithEmailandPassword(
+                    usernameEditText.text.toString(),
+                    passwordEditText.text.toString()
+                )
+            } else {
+                showLoginFailed(R.string.invalid_data_error)
+            }
         }
     }
 

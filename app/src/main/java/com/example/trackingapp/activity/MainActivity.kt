@@ -17,7 +17,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityMainBinding
-import com.example.trackingapp.util.CONST
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -46,7 +45,6 @@ class MainActivity : AppCompatActivity() {
         //val toolbar: Toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         //setSupportActionBar(toolbar)
 
-        CONST.setSavePath(this)
         //TODO
         /*
         isPermissionGranted(Manifest.permission.WAKE_LOCK)

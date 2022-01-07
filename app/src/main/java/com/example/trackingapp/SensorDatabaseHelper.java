@@ -78,7 +78,7 @@ public class SensorDatabaseHelper extends SQLiteOpenHelper {
 		
 		values.put(COLUMN_NAME, pSensor.getSensorName());
 		values.put(COLUMN_ISAVAILABLE, pSensor.isAvailable(m_context));
-		values.put(COLUMN_SETTINGS, pSensor.getSettings());
+		//values.put(COLUMN_SETTINGS, pSensor.getSettings());
 		values.put(COLUMN_SETTINGSSTATE, pSensor.getSettingsState());
 		
 		if (pSensor.isEnabled())

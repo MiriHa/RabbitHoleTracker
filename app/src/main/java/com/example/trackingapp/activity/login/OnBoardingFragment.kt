@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.AuthManager
+import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
@@ -42,7 +42,7 @@ class OnBoardingFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-       if(AuthManager.isUserLoggedIn()){
+       if(DatabaseManager.isUserLoggedIn){
            //GO to the MainScreen
            Log.d("xxx","user already logged in")
            navigate(ScreenType.HomeScreen, ScreenType.Welcome)

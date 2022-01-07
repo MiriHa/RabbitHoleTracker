@@ -30,6 +30,7 @@
     <string name="invalid_username">Not a valid email</string>
     <string name="invalid_password">Password must be at least 6 characters</string>
     <string name="invalid_password_no_match">Both passwords need to match</string>
+    <string name="invalid_data_error">Entered data is not valid!</string>
     <string name="login_failed">"Login failed"</string>
 
     <string name="home_titleText">Hello!</string>
@@ -82,6 +83,7 @@
 
     <string name="dbColumnSettingsState">settingsstate</string>
     <string name="dbColumnSettings">settings</string>
+    <string name="esm_unlock_intention_error">Please enter a intention!</string>
 
 
 </resources>

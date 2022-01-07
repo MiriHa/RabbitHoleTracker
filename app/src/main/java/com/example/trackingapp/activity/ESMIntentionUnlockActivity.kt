@@ -1,11 +1,12 @@
 package com.example.trackingapp.activity
 
 import android.os.Bundle
-import android.util.Log
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.AuthManager
+import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
 import com.example.trackingapp.models.LogActivity
@@ -16,7 +17,6 @@ import java.util.*
 class ESMIntentionUnlockActivity: AppCompatActivity(){
     private lateinit var viewModel: ESMIntentionViewModel
     private lateinit var binding: LayoutEsmIntentionOverlayBinding
-    private var suggestions: Array<String> = arrayOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,35 +26,61 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
         binding = LayoutEsmIntentionOverlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        suggestions = arrayOf(
-            "Belgium", "France", "Italy", "Germany", "Spain"
+        //DatabaseManager.getSavedIntentions()
+
+        val adapter = ArrayAdapter(
+            this@ESMIntentionUnlockActivity,
+            R.layout.support_simple_spinner_dropdown_item,
+            ArrayList(DatabaseManager.intentionList)
         )
-        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-            this, R.layout.custom_list_item, R.id.text_view_list_item, suggestions)
 
         binding.esmUnlockAutoCompleteTextView.apply {
             setAdapter(adapter)
-            completionHint = "test"
-            threshold = 2
+            threshold = 1
+            setOnFocusChangeListener { _, hasFocus ->
+                if(hasFocus)
+                    this.showDropDown()
+            }
+            setOnEditorActionListener{ _, actionID, _ ->
+                if(actionID == EditorInfo.IME_ACTION_DONE){
+                    actionDone()
+                    return@setOnEditorActionListener true
+                }
+                false
+            }
         }
 
-
         binding.esmUnlockButtonstart.setOnClickListener {
-            dismissFullScreenNotification()
-            makeLog()
+            actionDone()
         }
 
     }
 
-    private fun makeLog(){
-        val answer = binding.esmUnlockAutoCompleteTextView.text.toString()
-        AuthManager.makeLog(Date(), LogActivity.ESM_UNLOCK, answer)
+    override fun onBackPressed() {
+        // Do Nothing
+    }
 
-        //TODO save to preference
+   private fun actionDone(){
+       val intention = binding.esmUnlockAutoCompleteTextView.text.toString()
+       if(intention.isNotBlank()){
+        checkDuplicateIntentionAnSave(intention)
+        dismissFullScreenNotification()
+        DatabaseManager.makeLog(Date(), LogActivity.ESM_UNLOCK, intention)
+        DatabaseManager.saveLastIntention(this@ESMIntentionUnlockActivity, intention)
+       } else {
+           Toast.makeText(this, R.string.esm_unlock_intention_error, Toast.LENGTH_LONG).show()
+       }
+    }
+
+    private fun checkDuplicateIntentionAnSave(newIntention: String){
+        //TODO val cleanedIntention = newIntention.lowercase().replace(" ", "")
+        if(!DatabaseManager.intentionList.contains(newIntention)){
+            //save new Intention to Firebase
+            DatabaseManager.saveIntentionToFirebase(Date(), newIntention)
+        }
     }
 
     private fun dismissFullScreenNotification(){
-        Log.d("xxx","DismissFullScreenNotification!")
         this.finish()
         moveTaskToBack(true)
         this.dismissNotification()

@@ -1,9 +1,8 @@
 package com.example.trackingapp.activity
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.example.trackingapp.AuthManager
+import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.models.ESM_Intention_Lock_Answer
 import com.example.trackingapp.models.LogActivity
@@ -22,27 +21,43 @@ class ESMIntentionLockActivity : AppCompatActivity(){
         binding = ActivityLockscreenEsmBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        this.turnScreenOnAndKeyguardOff()
+        val savedIntention = DatabaseManager.getLastSavedIntention(this@ESMIntentionLockActivity)
+        binding.textViewEsmLockIntention.text = savedIntention
 
+        this.turnScreenOnAndKeyguardOff()
 
         binding.buttonEsmLockNo.setOnClickListener {
            dismissFullScreenNotification()
-            makeLog(false)
+            makeLogQuestion1(false)
         }
 
         binding.buttonEsmLockYes.setOnClickListener {
             dismissFullScreenNotification()
-            makeLog(true)
+            makeLogQuestion1(true)
+        }
+
+        binding.buttonEsmLockQuestion2No.setOnClickListener {
+            dismissFullScreenNotification()
+            makeLogQuestion2(false)
+        }
+
+        binding.buttonEsmLockQuestion2Yes.setOnClickListener {
+            dismissFullScreenNotification()
+            makeLogQuestion2(true)
         }
     }
 
-    private fun makeLog(isIntentionFinished: Boolean){
+    private fun makeLogQuestion1(isIntentionFinished: Boolean){
         val answer = if(isIntentionFinished) ESM_Intention_Lock_Answer.ESM_INTENTION_FINISHED else ESM_Intention_Lock_Answer.ESM_INTENTION_UNFINISHED
-        AuthManager.makeLog(Date(), LogActivity.ESM_LOCK, answer.toString())
+        DatabaseManager.makeLog(Date(), LogActivity.ESM_LOCK, answer.toString())
+    }
+
+    private fun makeLogQuestion2(moreThanInitialIntention: Boolean){
+        val answer = if(moreThanInitialIntention) ESM_Intention_Lock_Answer.ESM_MORE_THAN_INITIAL_INTENTION else ESM_Intention_Lock_Answer.ESM_NOT_MORE_THAN_INITIAL_INTENTION
+        DatabaseManager.makeLog(Date(), LogActivity.ESM_LOCK, answer.toString())
     }
 
     private fun dismissFullScreenNotification(){
-        Log.d("xxx","DismissFullScreenNotification!")
         this.finish()
         this.dismissNotification()
     }

@@ -93,11 +93,15 @@ class SignUpFragment: Fragment() {
         }
 
         createAccountButton.setOnClickListener {
-            loadingProgressBar.visibility = View.VISIBLE
-            loginSignUpViewModel.createEmailPasswordAccount(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
-            )
+            if(loginSignUpViewModel.isButtonEnabled) {
+                loadingProgressBar.visibility = View.VISIBLE
+                loginSignUpViewModel.createEmailPasswordAccount(
+                    usernameEditText.text.toString(),
+                    passwordEditText.text.toString()
+                )
+            } else {
+                showSignUpFailed(R.string.invalid_data_error)
+            }
         }
 
         return binding.root
@@ -107,7 +111,6 @@ class SignUpFragment: Fragment() {
         val welcome = getString(R.string.welcome) + model.displayName
         // TODO : initiate successful logged in experience
         val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
         navigate(ScreenType.HomeScreen, ScreenType.SignUp)
     }
 

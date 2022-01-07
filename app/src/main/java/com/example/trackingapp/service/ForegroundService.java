@@ -53,13 +53,7 @@ public abstract class  ForegroundService extends Service {
 
 	private void startForeground() {
 		String channelId = "";
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-			channelId = createNotificationChannel("my_service", "My Background Service");
-		} else {
-			// If earlier version channel ID is not used
-			// https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
-			channelId = "";
-		}
+		channelId = createNotificationChannel("my_service", "My Background Service");
 		Intent notificationIntent = new Intent(this, MainActivity.class);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this,
 				0, notificationIntent, 0);

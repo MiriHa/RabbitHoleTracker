@@ -13,44 +13,50 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/esm_unlock_intention_question"
-        android:textSize="24sp"
         android:textColor="@color/white"
+        android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.29000002" />
+        app:layout_constraintVertical_bias="0.18" />
 
-    <AutoCompleteTextView
-        android:id="@+id/esm_unlock_autoCompleteTextView"
+    <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:hint="@string/esm_unlock_intention_hint"
-        android:completionThreshold="2"
-        android:backgroundTint="@color/white"
-        android:textColorHint="@color/LightBlackishGray"
-        android:textColor="@color/white"
-        android:layout_marginHorizontal="16dp"
-        android:dropDownHeight="200dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/esm_unlock_text_before_activeInput"
-        app:layout_constraintVertical_bias="0.060000002" />
+        app:layout_constraintVertical_bias="0.060000002">
+
+        <AutoCompleteTextView
+            android:id="@+id/esm_unlock_autoCompleteTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:backgroundTint="@color/white"
+            android:hint="@string/esm_unlock_intention_hint"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:textColor="@color/white"
+            android:textColorHint="@color/LightBlackishGray" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/esm_unlock_buttonstart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:backgroundTint="@color/milkGreen"
         android:onClick="btnSendToDatabase"
         android:text="@string/esm_unlock_intention_button_start"
-        android:backgroundTint="@color/milkGreen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/esm_unlock_autoCompleteTextView"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
         app:layout_constraintVertical_bias="0.120000005" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

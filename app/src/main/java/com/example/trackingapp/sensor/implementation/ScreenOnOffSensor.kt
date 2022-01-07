@@ -64,13 +64,6 @@ class ScreenOnOffSensor : AbstractSensor() {
         if (isRunning) {
             isRunning = false
             m_context!!.unregisterReceiver(mReceiver)
-            try {
-                m_OutputStream!!.flush()
-                m_OutputStream!!.close()
-                m_OutputStream = null
-            } catch (e: Exception) {
-                Log.e(TAG, e.toString())
-            }
         }
     }
 
@@ -144,8 +137,6 @@ class ScreenOnOffSensor : AbstractSensor() {
         isRunning = false
         TAG = javaClass.name
         sensorName = "Screen On/Off"
-        fileName = "screen_on_off.csv"
-        m_FileHeader = "TimeUnix,Value"
     }
 }
 

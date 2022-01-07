@@ -5,7 +5,6 @@ import android.app.PendingIntent
 import android.content.Intent
 import android.content.IntentSender.SendIntentException
 import android.util.Log
-import com.example.trackingapp.util.CONST
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GooglePlayServicesUtil
 
@@ -20,7 +19,6 @@ open class AbstractService : ForegroundService() {
 
     private var mRequestType: REQUEST_TYPE? = null
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        if (CONST.ROOT_FOLDER == null) CONST.setSavePath(this)
         return super.onStartCommand(intent, flags, startId)
     }
 

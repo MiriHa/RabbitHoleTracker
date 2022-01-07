@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.FragmentMainscreenBinding
 import com.example.trackingapp.sensor.SensorList
 import com.example.trackingapp.util.ScreenType
@@ -38,6 +39,8 @@ class MainScreenFragment: Fragment() {
         binding = FragmentMainscreenBinding.inflate(inflater)
         val view = binding.root
         notificationManager = NotificationManagerCompat.from(mContext)
+
+        DatabaseManager.getSavedIntentions()
 
         binding.buttonTest.setOnClickListener {
            /* NotificationHelper.createFullScreenNotification(
