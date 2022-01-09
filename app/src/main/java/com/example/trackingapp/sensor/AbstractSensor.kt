@@ -5,11 +5,11 @@ import android.util.Log
 import android.view.View
 import java.io.Serializable
 
-abstract class AbstractSensor protected constructor() : Serializable {
-    @JvmField
-    protected var TAG: String? = null
-    var sensorName: String? = null
-        protected set
+abstract class AbstractSensor protected constructor(
+    protected var TAG: String?,
+    var sensorName: String?
+) : Serializable {
+
     var isEnabled = true
 
     @JvmField

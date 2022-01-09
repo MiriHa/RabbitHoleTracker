@@ -8,15 +8,22 @@ import android.content.IntentFilter
 import android.util.Log
 import android.view.View
 import androidx.core.app.NotificationManagerCompat
+import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
+import com.example.trackingapp.models.Event
+import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.ScreenState
 import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ESMType
 import com.example.trackingapp.util.NotificationHelper
 
-class ScreenOnOffSensor : AbstractSensor() {
+class ScreenOnOffSensor : AbstractSensor(
+    "ScreenOnOffSensor",
+    "ScreenState"
+) {
     private var mReceiver: BroadcastReceiver? = null
     private var m_context: Context? = null
-    private var wasScreenOn = true
     private var screenOffAsked = false
 
     override fun getSettingsView(context: Context?): View? {
@@ -31,20 +38,7 @@ class ScreenOnOffSensor : AbstractSensor() {
         super.start(context)
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        Log.d("xxx", "StartScreenSensor")
-       /* val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
-        val isScreenOn = pm.isScreenOn
-        m_context = context
-        try {
-            if (isScreenOn) {
-                m_OutputStream!!.write("$t,on\n".toByteArray())
-            } else {
-                m_OutputStream!!.write("$t,off\n".toByteArray())
-            }
-            m_OutputStream!!.flush()
-        } catch (e: Exception) {
-            ModelLog.e(TAG, e.toString())
-        }*/
+        Log.d("ScreenOnOffSensor", "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_SCREEN_ON)
@@ -82,19 +76,34 @@ class ScreenOnOffSensor : AbstractSensor() {
 
             if (isRunning) {
                 val notificationManager = NotificationManagerCompat.from(context)
-                when {
-                    currentState == ScreenState.OFF_LOCKED && !screenOffAsked -> {
-                        screenOffAsked = true
-                        NotificationHelper.createFullScreenNotification(context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
-                            context.getString(R.string.esm_lock_intention_question_1))
+                when (currentState) {
+                    ScreenState.OFF_LOCKED -> {
+                        if(!screenOffAsked) {
+                            screenOffAsked = true
+                            NotificationHelper.createFullScreenNotification(
+                                context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
+                                context.getString(R.string.esm_lock_intention_question_1)
+                            )
+                        }
+                        saveEntry(currentState, time)
                     }
-                    currentState == ScreenState.ON_USERPRESENT -> {
+                    ScreenState.OFF_UNLOCKED -> {
+                        saveEntry(currentState, time)
+                    }
+                    ScreenState.ON_LOCKED -> {
+                        saveEntry(currentState, time)
+                    }
+                    ScreenState.ON_UNLOCKED -> {
+                        saveEntry(currentState, time)
+                    }
+                    ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
                         NotificationHelper.createFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
+                        saveEntry(currentState, time)
                     }
                     else -> {
-
+                        saveEntry(ScreenState.UNKNOWN, time)
                     }
                 }
             }
@@ -126,6 +135,14 @@ class ScreenOnOffSensor : AbstractSensor() {
 
             return state
         }
+
+        private fun saveEntry(type: ScreenState,  timestamp: Long) {
+            Event(
+                EventName.SCREEN,
+                CONST.dateTimeFormat.format(timestamp),
+                type.name,
+            ).saveToDataBase()
+        }
     }
 
 
@@ -138,9 +155,4 @@ class ScreenOnOffSensor : AbstractSensor() {
         TAG = javaClass.name
         sensorName = "Screen On/Off"
     }
-}
-
-
-enum class ScreenState {
-    ON_LOCKED, ON_UNLOCKED, OFF_UNLOCKED, OFF_LOCKED, ON_USERPRESENT, UNKNOWN
 }

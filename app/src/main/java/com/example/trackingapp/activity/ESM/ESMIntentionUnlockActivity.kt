@@ -7,10 +7,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.DatabaseManager
+import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
-import com.example.trackingapp.models.LogActivity
+import com.example.trackingapp.models.ESMState
+import com.example.trackingapp.models.Event
+import com.example.trackingapp.models.EventName
+import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.NotificationHelper.dismissNotification
+import com.example.trackingapp.util.SharePrefManager
 import java.util.*
 
 
@@ -65,8 +70,13 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
        if(intention.isNotBlank()){
         viewModel.checkDuplicateIntentionAnSave(intention)
         dismissFullScreenNotification()
-        DatabaseManager.makeLog(Date(), LogActivity.ESM_UNLOCK, intention)
-        DatabaseManager.saveLastIntention(this@ESMIntentionUnlockActivity, intention)
+           Event(
+               EventName.ESM,
+               CONST.dateTimeFormat.format(System.currentTimeMillis()),
+               ESMState.ESM_UNLOCK.name,
+               intention
+           ).saveToDataBase()
+        SharePrefManager.saveLastIntention(this@ESMIntentionUnlockActivity, intention)
        } else {
            Toast.makeText(this, R.string.esm_unlock_intention_error, Toast.LENGTH_LONG).show()
        }

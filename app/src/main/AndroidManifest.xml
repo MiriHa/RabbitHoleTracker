@@ -16,6 +16,12 @@
 
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
+    <!--e: Starting with Build.VERSION_CODES#S, apps targeting SDK level 31 or higher
+need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
+    <uses-permission android:name="android.permission.SET_ALARM"/>
+
+    ACCESS_BACKGROUND_LOCATION
+
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
@@ -66,13 +72,12 @@
             android:label="@string/app_name" >
         </service>
 
-        <receiver android:name="com.example.trackingapp.sensor.BootUpReceiver"
+        <receiver android:name="com.example.trackingapp.sensor.implementation.BootUpReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
-                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
     </application>

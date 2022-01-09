@@ -1,8 +1,10 @@
 package com.example.trackingapp.sensor
 
 import android.content.Context
-import com.example.trackingapp.SensorDatabaseHelper
+import com.example.trackingapp.sensor.implementation.BootUpSensor
+import com.example.trackingapp.sensor.implementation.PowerSensor
 import com.example.trackingapp.sensor.implementation.ScreenOnOffSensor
+import com.example.trackingapp.sensor.implementation.WifiSensor
 import java.util.*
 
 object SensorList {
@@ -25,11 +27,10 @@ object SensorList {
 //        list.add(ScreenOrientationSensor())
 //        list.add(StillAliveSensor())
 //        list.add(TouchSensor())
-//        list.add(WifiSensor())
-        val db = SensorDatabaseHelper(pContext)
-        for (s in list) db.addIfNotExists(s)
-        for (s in list) s.isEnabled = db.getSensorData(s)
-        db.close()
+       list.add(WifiSensor())
+       list.add(BootUpSensor())
+        list.add(PowerSensor())
+
         return list
     }
 }

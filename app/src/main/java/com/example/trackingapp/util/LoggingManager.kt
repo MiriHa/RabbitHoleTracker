@@ -8,8 +8,12 @@ class LoggingManager: Service() {
 
     val isRunning = false
 
-
     override fun onBind(p0: Intent?): IBinder? {
         TODO("Not yet implemented")
+    }
+
+    companion object{
+        val isDataRecordingActive: Boolean
+            get() = true //TODO save in preferences?
     }
 }
