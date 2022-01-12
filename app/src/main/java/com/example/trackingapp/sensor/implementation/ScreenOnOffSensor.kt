@@ -14,6 +14,7 @@ import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.models.ScreenState
 import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ESMType
 import com.example.trackingapp.util.NotificationHelper
@@ -86,6 +87,7 @@ class ScreenOnOffSensor : AbstractSensor(
                             )
                         }
                         saveEntry(currentState, time)
+                        LoggingManager.cancleRecordingAlarmManager(context)
                     }
                     ScreenState.OFF_UNLOCKED -> {
                         saveEntry(currentState, time)
@@ -98,6 +100,7 @@ class ScreenOnOffSensor : AbstractSensor(
                     }
                     ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
+                        LoggingManager.scheduleStartRecordingAlarmManager(context)
                         NotificationHelper.createESMFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
                         saveEntry(currentState, time)

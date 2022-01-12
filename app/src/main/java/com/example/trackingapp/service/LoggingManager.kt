@@ -1,14 +1,18 @@
 package com.example.trackingapp.service
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.SharePrefManager
 import java.util.concurrent.TimeUnit
 
 object LoggingManager {
@@ -17,41 +21,53 @@ object LoggingManager {
 
     val loggingService: LoggingService = LoggingService()
 
+    fun isServiceRunning(context: Context): Boolean {
+        return SharePrefManager.getBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING)
+    }
+
     val isDataRecordingActive: Boolean
         get() = true //TODO save in preferences?
 
 
     fun startLoggingService(context: Context) {
-        if (!loggingService.isRunning) {
+        if (!isServiceRunning(context)) {
             Log.d(TAG, "startService called")
+            Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
             val t= LoggingService()
             val serviceIntent = Intent(context, LoggingService::class.java )
             ContextCompat.startForegroundService(context, serviceIntent)
-            //context.startService(serviceIntent)
             startServiceViaWorker(context)
-
-           // if (!LoggingManager.loggingService(context, LoggingManager::class.java)) {
-          //      val loggingIntent = Intent(context, LoggingManager::class.java)
-          //  context.startService(loggingIntent)
-
-
-            /*val pendingIntent: PendingIntent = MainActivity.getPendingIntent(context)
-            val m_AlarmInterval = (60 * 1000).toLong()
-            context.getSystemService(Context.ALARM_SERVICE).setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                System.currentTimeMillis() + m_AlarmInterval,
-                m_AlarmInterval,
-                pendingIntent
-            )
-            val sp: SharedPreferences =
-                context.getSharedPreferences(CONST.SP_LOG_EVERYTHING, Activity.MODE_PRIVATE)
-            sp.edit().putBoolean(CONST.KEY_LOG_EVERYTHING_RUNNING, true).apply()*/
         }
     }
 
-    fun stopLoggingService() {
-        if (loggingService.isRunning) {
+    fun scheduleStartRecordingAlarmManager(context: Context) {
+        val startTime = System.currentTimeMillis()
+        Log.d(TAG, "Start Recording AlarmManager $startTime")
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = getPendingIntent(context)
+        val m_AlarmInterval = CONST.LOGGING_INTERVAL.toLong()
+        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, startTime, pendingIntent)
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + m_AlarmInterval, m_AlarmInterval, pendingIntent)
+
+    }
+
+    fun cancleRecordingAlarmManager(context: Context){
+        Log.d(TAG, "Cancel Recording AlarmManager")
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val pendingIntent = getPendingIntent(context)
+        alarmManager.cancel(pendingIntent)
+    }
+
+    private fun getPendingIntent(context: Context): PendingIntent? {
+        val alarmIntent = Intent(context.applicationContext, LoggingService::class.java)
+        return PendingIntent.getService(context, 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+    }
+
+    fun stopLoggingService(context: Context) {
+        if (isServiceRunning(context)) {
             Log.d(TAG, "stopService called")
+            Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
+            SharePrefManager.saveBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, false)
             loggingService.stopService()
         }
     }

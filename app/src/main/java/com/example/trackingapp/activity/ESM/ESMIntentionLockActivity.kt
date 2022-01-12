@@ -59,7 +59,7 @@ class ESMIntentionLockActivity : AppCompatActivity(){
     private fun dismissFullScreenNotification(){
         if(viewModel.esmLockQuestion1answered && viewModel.esmLockQuestion2Answered) {
             this.finish()
-            this.dismissESMNotification()
+            dismissESMNotification(this)
         }
     }
 

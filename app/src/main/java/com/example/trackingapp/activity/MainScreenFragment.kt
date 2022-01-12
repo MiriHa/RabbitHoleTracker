@@ -51,17 +51,17 @@ class MainScreenFragment : Fragment() {
 
         binding.buttonTest.apply {
             text =
-                if (LoggingManager.loggingService.isRunning) getString(R.string.logging_stop_button) else getString(
+                if (LoggingManager.isServiceRunning(mContext)) getString(R.string.logging_stop_button) else getString(
                     R.string.logging_start_button)
             setOnClickListener {
-                val running = LoggingManager.loggingService.isRunning
-                Log.d(TAG, "startLoggingButton Click: running $running")
-                if (!running) {
+                Log.d(TAG, "startLoggingButton Click: running")
+                val isServiceRunning = LoggingManager.isServiceRunning(mContext)
+                if (!isServiceRunning) {
                     LoggingManager.startLoggingService(mContext as Activity)
                     Event(EventName.LOGIN, CONST.dateTimeFormat.format(System.currentTimeMillis()), "startLoggingService","test").saveToDataBase()
                     //text = getString(R.string.logging_stop_button)
                 } else {
-                    LoggingManager.stopLoggingService()
+                    LoggingManager.stopLoggingService(mContext)
                    // text = getString(R.string.logging_start_button)
                 }
             }
@@ -79,23 +79,6 @@ class MainScreenFragment : Fragment() {
 
         return view
     }
-
-
-    fun startTestSensors() {
-        val sensorList = LoggingManager.loggingService.sensorList
-        Log.d("xxx", "size: " + sensorList.size)
-        for (sensor in sensorList) {
-            if (/*sensor.isEnabled && */sensor.isAvailable(mContext)) {
-                sensor.start(mContext)
-                //if(sensor instanceof MyAccelerometerSensor) ((MyAccelerometerSensor)sensor).start(this);
-                //if(sensor instanceof AppSensor) ((AppSensor)sensor).start(this);
-                Log.d(TAG, sensor.sensorName + " turned on")
-            } else {
-                Log.w(TAG, sensor.sensorName + " turned off")
-            }
-        }
-    }
-
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

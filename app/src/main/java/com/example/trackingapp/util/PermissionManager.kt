@@ -21,7 +21,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.RECEIVE_BOOT_COMPLETED)
             l.add(Manifest.permission.READ_PHONE_STATE)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
-            //l.add(Manifest.permission.SET_ALARM)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 l.add(Manifest.permission.ACTIVITY_RECOGNITION)
                 l.add(Manifest.permission.USE_FULL_SCREEN_INTENT)
@@ -36,7 +35,8 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     fun checkPermissions() {
         Log.d(TAG,"checkPermissions")
         if (isPermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
-            showAlert()
+            //showAlert()
+            requestPermissions()
         } else {
             Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
         }

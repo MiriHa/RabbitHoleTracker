@@ -171,7 +171,7 @@ class AppSensor : AbstractSensor(
 
          */
             Log.i(TAG, "Logging app $applicationName")
-            val activity = Event(EventName.APPS, CONST.dateTimeFormat.format(timestampMillis),eventType,description, applicationName, packageName).saveToDataBase()
+            Event(EventName.APPS, CONST.dateTimeFormat.format(timestampMillis),eventType,description, applicationName, packageName).saveToDataBase()
 
     }
 

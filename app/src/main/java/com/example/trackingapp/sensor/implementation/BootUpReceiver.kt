@@ -36,7 +36,7 @@ class BootUpReceiver : BroadcastReceiver() {
     }
 
     private fun startLoggingManager(context: Context) {
-        if (!LoggingManager.loggingService.isRunning) {
+        if (!LoggingManager.isServiceRunning(context)) {
             LoggingManager.startLoggingService(context)
         }
     }

@@ -35,6 +35,8 @@ object NotificationHelper {
         description: String = "Description"
     ) {
         Log.d(TAG, "Create ESM FullscreenNotification")
+        dismissESMNotification(context)
+
         val destination = when(esmType){
             ESMType.ESMINTENTION -> ESMIntentionUnlockActivity::class.java
             ESMType.ESMINTENTIONCOMPLETED -> ESMIntentionLockActivity::class.java
@@ -57,9 +59,9 @@ object NotificationHelper {
         }
     }
 
-    fun Context.dismissESMNotification(){
+    fun dismissESMNotification(context: Context){
         Log.d(TAG, "Dismiss ESM Notification")
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         with(notificationManager) {
             cancel(CONST.NOTIFICATION_ID_ESM)

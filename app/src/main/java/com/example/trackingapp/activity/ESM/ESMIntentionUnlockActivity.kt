@@ -85,7 +85,7 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
     private fun dismissFullScreenNotification(){
         this.finish()
         moveTaskToBack(true)
-        this.dismissESMNotification()
+        dismissESMNotification(this)
     }
 
 }

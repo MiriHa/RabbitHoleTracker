@@ -30,4 +30,6 @@ object CONST {
 
     const val PERMISSION_REQUEST_CODE = 123
 
+    const val LOGGING_INTERVAL = 60 * 0.1; // 60 * 1 = 1 minutes
+
 }

@@ -14,7 +14,7 @@ enum class EventName {
     BOOT,
     PHONE,
     POWER,
-    NOTFICATION,
+    NOTIFICATION,
     SCREEN,
     SMS,
     INTERNET,
