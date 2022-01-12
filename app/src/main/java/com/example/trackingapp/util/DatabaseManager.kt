@@ -9,7 +9,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
@@ -17,14 +16,15 @@ import java.util.*
 
 object DatabaseManager {
 
+    val TAG = "TRACKINGAPP_DATABASE_MANAGER"
+
     val user: FirebaseUser?
         get() = Firebase.auth.currentUser
 
     val userID: String
         get() = user?.uid ?: ""
 
-    private val database: DatabaseReference
-        get() = Firebase.database.reference
+    val database = Firebase.database.reference
 
     val intentionList: MutableSet<String?> = HashSet()
 
@@ -40,7 +40,10 @@ object DatabaseManager {
         val userId = Firebase.auth.currentUser?.uid
         val user = User(email, userId)
         if (userId != null) {
-            database.child(CONST.firebaseReferenceUsers).child(userId).setValue(user)
+            database.child(CONST.firebaseReferenceUsers)
+                .child(userId)
+                .setValue(user)
+
             Event(
                 EventName.LOGIN,
                 CONST.dateTimeFormat.format(System.currentTimeMillis()),
@@ -51,13 +54,19 @@ object DatabaseManager {
     }
 
     fun Event.saveToDataBase(){
+        Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event}")
         user?.let {
-            database.child(CONST.firebaseReferenceUsers)
+            Firebase.database.reference.child(CONST.firebaseReferenceUsers)
                 .child(it.uid)
                 .child(CONST.firebaseReferenceLogs)
-                .child("${this.timestamp} ${this.eventName}")
+                .child("${this.timestamp} ${this.eventName.name}")
                 .setValue(this)
         }
+    }
+
+    fun saveEventToFireBase(eventName: EventName, timestamp: Long, name: String? = null, description: String? = null){
+        Log.d("xxx", "SaveEntryToDataBase: ${eventName} ${name}")
+        //Event(EventName.INTERNET, CONST.dateTimeFormat.format(timestamp), name, description).saveToDataBase()
     }
 
     fun saveIntentionToFirebase(time: Date, intention: String){

@@ -38,7 +38,7 @@ class ScreenOnOffSensor : AbstractSensor(
         super.start(context)
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        Log.d("ScreenOnOffSensor", "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
+        Log.d(TAG, "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_SCREEN_ON)
@@ -57,7 +57,7 @@ class ScreenOnOffSensor : AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context!!.unregisterReceiver(mReceiver)
+            m_context?.unregisterReceiver(mReceiver)
         }
     }
 
@@ -71,7 +71,7 @@ class ScreenOnOffSensor : AbstractSensor(
             val time = System.currentTimeMillis()
             val currentState: ScreenState = determineScreenState(context, intent)
 
-            Log.d("xxx","ScreenREciver recived: $currentState isRunning: $isRunning")
+            Log.d("xxx","ScreenReceiver: $currentState isRunning: $isRunning")
 
 
             if (isRunning) {
@@ -80,7 +80,7 @@ class ScreenOnOffSensor : AbstractSensor(
                     ScreenState.OFF_LOCKED -> {
                         if(!screenOffAsked) {
                             screenOffAsked = true
-                            NotificationHelper.createFullScreenNotification(
+                            NotificationHelper.createESMFullScreenNotification(
                                 context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
                                 context.getString(R.string.esm_lock_intention_question_1)
                             )
@@ -98,7 +98,7 @@ class ScreenOnOffSensor : AbstractSensor(
                     }
                     ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
-                        NotificationHelper.createFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
+                        NotificationHelper.createESMFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
                         saveEntry(currentState, time)
                     }

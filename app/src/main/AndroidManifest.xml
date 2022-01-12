@@ -5,30 +5,27 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
+   // <uses-permission android:name="android.permission.SET_ALARM"/>
 
     <uses-permission android:name="android.permission.USE_FULL_SCREEN_INTENT" />
 
     <!--e: Starting with Build.VERSION_CODES#S, apps targeting SDK level 31 or higher
 need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
-    <uses-permission android:name="android.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.SET_ALARM" />
 
-    ACCESS_BACKGROUND_LOCATION
-
-
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="28" />
+<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    //<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
 
     <application
-        android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -36,50 +33,58 @@ need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
         android:theme="@style/Theme.TrackingApp">
         <activity
             android:name="com.example.trackingapp.activity.MainActivity"
-            android:label="@string/app_name"
-            android:exported="true">
+            android:exported="true"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name="com.example.trackingapp.activity.ESM.ESMIntentionLockActivity"
-            android:showOnLockScreen="true"
+            android:exported="true"
             android:launchMode="singleTop"
-            android:exported="true"/>
+            android:showOnLockScreen="true" />
 
         <activity
             android:name="com.example.trackingapp.activity.ESM.ESMIntentionUnlockActivity"
-            android:launchMode="singleTop"
-            android:exported="true"/>
+            android:exported="true"
+            android:launchMode="singleTop" />
 
         <service
-            android:name="com.example.trackingapp.service.LogService"
+            android:name=".service.LoggingService"
+            android:enabled="true"
+            android:exported="true"
             android:process=":remote"
-            android:stopWithTask="false"
-            android:exported="true">
+            android:stopWithTask="false">
             <intent-filter>
-                <action android:name="android.intent.action.CONFIGURATION_CHANGED"/>
+                <action android:name="android.intent.action.CONFIGURATION_CHANGED" />
             </intent-filter>
         </service>
 
         <service
             android:name="com.example.trackingapp.service.ActivityRecognitionIntentService"
             android:exported="false"
-            android:label="@string/app_name" >
-        </service>
+            android:label="@string/app_name" />
 
-        <receiver android:name="com.example.trackingapp.sensor.implementation.BootUpReceiver"
+        <receiver
+            android:name=".service.stayalive.StayAliveReceiver"
+            android:exported="true" />
+
+        <receiver
+            android:name="com.example.trackingapp.sensor.implementation.BootUpReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

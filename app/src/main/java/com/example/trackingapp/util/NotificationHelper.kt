@@ -13,15 +13,13 @@ import com.example.trackingapp.activity.ESM.ESMIntentionLockActivity
 import com.example.trackingapp.activity.ESM.ESMIntentionUnlockActivity
 
 object NotificationHelper {
-    private const val CHANEL_ID = "rabbitholeAlert"
-    private const val CHANGELNAME = "RabbitHole Alert"
-    const val NOTIFICATION_ID = 24756
 
+    val TAG ="TRACKINGAPP_NOTIFICATION_HELPER"
 
-    private fun NotificationManagerCompat.createNotificationChannel() {
+    fun NotificationManagerCompat.createESMNotificationChannel() {
 
         val channel = NotificationChannel(
-            CHANEL_ID, CHANGELNAME, NotificationManager.IMPORTANCE_HIGH
+            CONST.CHANNEL_ID_ESM, CONST.CHANNEL_NAME_ESM, NotificationManager.IMPORTANCE_HIGH
         ).apply {
             lockscreenVisibility = Notification.VISIBILITY_PUBLIC
         }
@@ -29,14 +27,14 @@ object NotificationHelper {
         createNotificationChannel(channel)
     }
 
-    fun createFullScreenNotification(
+    fun createESMFullScreenNotification(
         context: Context,
         notificationManager: NotificationManagerCompat,
         esmType: ESMType,
         title: String = "Title",
         description: String = "Description"
     ) {
-
+        Log.d(TAG, "Create ESM FullscreenNotification")
         val destination = when(esmType){
             ESMType.ESMINTENTION -> ESMIntentionUnlockActivity::class.java
             ESMType.ESMINTENTIONCOMPLETED -> ESMIntentionLockActivity::class.java
@@ -44,7 +42,7 @@ object NotificationHelper {
         val fullScreenIntent = Intent(context, destination)
         val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, 0)
 
-        val builder = NotificationCompat.Builder(context, CHANEL_ID)
+        val builder = NotificationCompat.Builder(context, CONST.CHANNEL_ID_ESM)
             .setSmallIcon(R.drawable.ic_logo_placholder)
             .setContentTitle(title)
             .setContentText(description)
@@ -53,23 +51,23 @@ object NotificationHelper {
             .setCategory(NotificationCompat.CATEGORY_ALARM)
 
         with(notificationManager){
-            createNotificationChannel()
+            createESMNotificationChannel()
             val notification = builder.build()
-            notify(NOTIFICATION_ID, notification)
+            notify(CONST.NOTIFICATION_ID_ESM, notification)
         }
     }
 
-    fun Context.dismissNotification(){
+    fun Context.dismissESMNotification(){
+        Log.d(TAG, "Dismiss ESM Notification")
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         with(notificationManager) {
-            cancel(NOTIFICATION_ID)
+            cancel(CONST.NOTIFICATION_ID_ESM)
         }
     }
 }
 
 fun Activity.turnScreenOnAndKeyguardOff() {
-    Log.d("xxx","turnScfreenkeygurad")
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
         setShowWhenLocked(true)
         setTurnScreenOn(true)

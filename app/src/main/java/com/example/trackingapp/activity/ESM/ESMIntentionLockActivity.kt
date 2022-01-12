@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
-import com.example.trackingapp.util.NotificationHelper.dismissNotification
+import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharePrefManager
 import com.example.trackingapp.util.turnScreenOffAndKeyguardOn
 import com.example.trackingapp.util.turnScreenOnAndKeyguardOff
@@ -59,7 +59,7 @@ class ESMIntentionLockActivity : AppCompatActivity(){
     private fun dismissFullScreenNotification(){
         if(viewModel.esmLockQuestion1answered && viewModel.esmLockQuestion2Answered) {
             this.finish()
-            this.dismissNotification()
+            this.dismissESMNotification()
         }
     }
 

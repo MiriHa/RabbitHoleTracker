@@ -12,8 +12,8 @@ import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.models.PowerState
 import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.LoggingManager
 
 class PowerSensor : AbstractSensor(
     "PowerSensor",
@@ -54,10 +54,71 @@ class PowerSensor : AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context!!.unregisterReceiver(mReceiver)
+            m_context?.unregisterReceiver(mReceiver)
         }
     }
 
+    override fun saveSnapshot(context: Context) {
+        super.saveSnapshot(context)
+        val timestamp = System.currentTimeMillis()
+        val connectionState = isConnected(context)
+        val chargeState = getBatteryLevel(context)
+        saveEntry(connectionState, chargeState.toString(), timestamp)
+    }
+
+    /**
+     * Method to retrieve current battery charge level ratio.
+     * @param context the application context
+     * @return charge level at the ratio of current level : fully charged level
+     */
+    private fun getBatteryLevel(context: Context): Float {
+        //Retrieve Info from sticky Intent
+        val batteryIntent = context.applicationContext.registerReceiver(
+            null,
+            IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        )
+        var level = -1
+        var scale = -1
+        try {
+            level = batteryIntent!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+        } catch (npe: NullPointerException) {
+            Log.e(TAG, "Nullpointer in batteryIntent.getIntExtra()")
+        }
+        if (level == -1 || scale == -1) {
+            Log.e(
+                TAG,
+                "Battery level or scale couldn't be determined - returning default value of 50%"
+            )
+            return 50.0f
+        }
+
+        //calculate and return the ratio
+        return level.toFloat() / scale.toFloat() * 100.0f
+    }
+
+    private fun isConnected(context: Context): PowerState {
+        val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED)
+
+        val intent = context.registerReceiver(null, filter)
+        val plugged = intent?.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
+        return if (plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB) PowerState.CONNECTED else PowerState.DISCONNECTED
+    }
+
+    /**
+     * Method to save entry to DB.
+     * @param type a BootEventType
+     * @param charge the charge level
+     */
+    private fun saveEntry(type: PowerState?, charge: String, timestamp: Long) {
+        Event(
+            EventName.POWER,
+            CONST.dateTimeFormat.format(timestamp),
+            type?.name,
+            charge
+        ).saveToDataBase()
+    }
 
     inner class PowerReceiver : BroadcastReceiver() {
         private var state: PowerState? = null
@@ -86,51 +147,6 @@ class PowerSensor : AbstractSensor(
 
             //save entry containing state and current charge level
             saveEntry(state, charge, timestamp)
-        }
-
-        /**
-         * Method to retrieve current battery charge level ratio.
-         * @param context the application context
-         * @return charge level at the ratio of current level : fully charged level
-         */
-        fun getBatteryLevel(context: Context): Float {
-            //Retrieve Info from sticky Intent
-            val batteryIntent = context.applicationContext.registerReceiver(
-                null,
-                IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            )
-            var level = -1
-            var scale = -1
-            try {
-                level = batteryIntent!!.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-                scale = batteryIntent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-            } catch (npe: NullPointerException) {
-                Log.e(TAG, "Nullpointer in batteryIntent.getIntExtra()")
-            }
-            if (level == -1 || scale == -1) {
-                Log.e(
-                    TAG,
-                    "Battery level or scale couldn't be determined - returning default value of 50%"
-                )
-                return 50.0f
-            }
-
-            //calculate and return the ratio
-            return level.toFloat() / scale.toFloat() * 100.0f
-        }
-
-        /**
-         * Method to save entry to DB.
-         * @param type a BootEventType
-         * @param charge the charge level
-         */
-        private fun saveEntry(type: PowerState?, charge: String, timestamp: Long) {
-            Event(
-                EventName.POWER,
-                CONST.dateTimeFormat.format(timestamp),
-                type?.name,
-                charge
-            ).saveToDataBase()
         }
 
     }

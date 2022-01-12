@@ -10,13 +10,14 @@ enum class ESM_Intention_Lock_Answer{
 enum class EventName {
 
     APPS,
+    AIRPLANEMODE,
     BOOT,
     PHONE,
     POWER,
     NOTFICATION,
     SCREEN,
     SMS,
-    WIFI,
+    INTERNET,
     LOGIN,
     SCREEN_STATE,
     ESM,
@@ -31,6 +32,11 @@ enum class ESMState {
 enum class BootEventType {
     BOOTED,
     SHUTDOWM
+}
+
+enum class ONOFFSTATE{
+    ON,
+    OFF
 }
 
 enum class PowerState {

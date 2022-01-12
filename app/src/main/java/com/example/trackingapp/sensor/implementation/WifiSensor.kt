@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities
 import android.net.NetworkInfo.DetailedState
 import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
@@ -17,8 +18,8 @@ import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.models.WifiConnectionState
 import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.LoggingManager
 
 class WifiSensor : AbstractSensor(
     "WIFISENSOR",
@@ -40,7 +41,6 @@ class WifiSensor : AbstractSensor(
         super.start(context)
         if (!m_isSensorAvailable) return
         m_context = context
-        val timestamp = System.currentTimeMillis()
 
         val filter = IntentFilter()
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION)
@@ -53,21 +53,28 @@ class WifiSensor : AbstractSensor(
         }
         context.registerReceiver(mReceiver, filter)
 
-        val netWorkType = getCurrentNetworkType(context)
-        if(isWifiEnabled(context)){
-            saveEntry(WifiConnectionState.ENABLED, netWorkType, timestamp)
-        } else{
-            saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)
-        }
-
         isRunning = true
     }
 
     override fun stop() {
         if (isRunning)
             isRunning = false
-            m_context!!.unregisterReceiver(mReceiver)
+        m_context?.unregisterReceiver(mReceiver)
     }
+
+    override fun saveSnapshot(context: Context) {
+        super.saveSnapshot(context)
+        val timestamp = System.currentTimeMillis()
+        val netWorkType = getCurrentNetworkType(context)
+        val wifiName = getWifiName(context)
+        if (isWifiEnabled(context)) {
+            Log.d("xxx", "wifienabledtest")
+            saveEntry(WifiConnectionState.ENABLED, netWorkType, wifiName, timestamp)
+        } else {
+            saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)
+        }
+    }
+
     private fun getCurrentNetworkType(context: Context?): ConnectionType {
         val cm: ConnectivityManager? =
             context?.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
@@ -88,33 +95,54 @@ class WifiSensor : AbstractSensor(
     }
 
     private fun isWifiEnabled(context: Context): Boolean {
-        val wifiManager =  context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager =
+            context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
         return wifiManager.isWifiEnabled
     }
 
-    fun getWifiName(context: Context): String? {
+    fun getWifiName(context: Context): String {
         //TODO
         val manager =
             context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+
         if (manager.isWifiEnabled) {
-            val wifiInfo = manager.connectionInfo
-            if (wifiInfo != null) {
-                val state = WifiInfo.getDetailedStateOf(wifiInfo.supplicantState)
-                if (state == DetailedState.CONNECTED || state == DetailedState.OBTAINING_IPADDR) {
-                    return wifiInfo.ssid
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                val wifiInfo = manager.connectionInfo
+                if (wifiInfo != null) {
+                    val state = WifiInfo.getDetailedStateOf(wifiInfo.supplicantState)
+                    if (state == DetailedState.CONNECTED || state == DetailedState.OBTAINING_IPADDR) {
+                        return wifiInfo.ssid
+                    }
                 }
+            } else {
+                val cm: ConnectivityManager? =
+                    context.applicationContext?.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+                val network = cm?.activeNetwork
+
+                val linkProperties = cm?.getLinkProperties(network)
+                return linkProperties?.interfaceName ?: "wifiName"
             }
         }
-        return null
+        return "wifiName"
     }
 
 
-    private fun saveEntry(connection: WifiConnectionState, wifiState: ConnectionType, timestamp: Long) {
-        Event(EventName.WIFI, CONST.dateTimeFormat.format(timestamp), connection.name, wifiState.name).saveToDataBase()
+    private fun saveEntry(
+        connection: WifiConnectionState,
+        wifiState: ConnectionType,
+        timestamp: Long
+    ) {
+        Event(EventName.INTERNET, CONST.dateTimeFormat.format(timestamp), connection.name, wifiState.name).saveToDataBase()
+
     }
 
-    private fun saveEntry(connection: WifiConnectionState, wifiState: ConnectionType, ssid: String, timestamp: Long) {
-        Event(EventName.WIFI, CONST.dateTimeFormat.format(timestamp), connection.name,"${wifiState.name}: $ssid").saveToDataBase()
+    private fun saveEntry(
+        connection: WifiConnectionState,
+        wifiState: ConnectionType,
+        wifiName: String,
+        timestamp: Long
+    ) {
+        Event(EventName.INTERNET, CONST.dateTimeFormat.format(timestamp), connection.name, wifiState.name, wifiName).saveToDataBase()
     }
 
 
@@ -130,15 +158,18 @@ class WifiSensor : AbstractSensor(
             if (intent.action == WifiManager.WIFI_STATE_CHANGED_ACTION) {
                 //find out if Wifi was enabled or disabled
 
-                when (intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, WifiManager.WIFI_STATE_UNKNOWN)) {
-                    WifiManager.WIFI_STATE_ENABLED ->{
+                when (intent.getIntExtra(
+                    WifiManager.EXTRA_WIFI_STATE,
+                    WifiManager.WIFI_STATE_UNKNOWN
+                )) {
+                    WifiManager.WIFI_STATE_ENABLED -> {
                         val netWorkType = getCurrentNetworkType(context)
-                        saveEntry(WifiConnectionState.ENABLED,  netWorkType, timestamp)
+                        saveEntry(WifiConnectionState.ENABLED, netWorkType, timestamp)
                     }
 
                     WifiManager.WIFI_STATE_DISABLED -> {
                         val netWorkType = getCurrentNetworkType(context)
-                        saveEntry(WifiConnectionState.DISABLED,  netWorkType, timestamp)
+                        saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)
                     }
 
                     else ->                     //ignore cases ENABLING, DISABLING, UNKNOWN

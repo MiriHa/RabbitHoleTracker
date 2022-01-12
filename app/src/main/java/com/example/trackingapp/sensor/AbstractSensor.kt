@@ -3,6 +3,7 @@ package com.example.trackingapp.sensor
 import android.content.Context
 import android.util.Log
 import android.view.View
+import com.google.firebase.FirebaseApp
 import java.io.Serializable
 
 abstract class AbstractSensor protected constructor(
@@ -12,7 +13,6 @@ abstract class AbstractSensor protected constructor(
 
     var isEnabled = true
 
-    @JvmField
     protected var m_isSensorAvailable = false
 
     var isRunning = false
@@ -26,10 +26,13 @@ abstract class AbstractSensor protected constructor(
     open fun start(context: Context) {
         m_isSensorAvailable = isAvailable(context)
         if (!m_isSensorAvailable) Log.i(TAG, "Sensor not available")
+        FirebaseApp.initializeApp(context)
     }
-
-
     abstract fun stop()
+
+    open fun saveSnapshot(context: Context){
+        Log.i(TAG, "save Snapshot if possible")
+    }
 
     companion object {
         private const val serialVersionUID = 1L
