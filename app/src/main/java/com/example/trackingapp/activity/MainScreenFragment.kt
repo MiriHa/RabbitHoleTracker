@@ -50,31 +50,43 @@ class MainScreenFragment : Fragment() {
         DatabaseManager.getSavedIntentions()
 
         binding.buttonTest.apply {
-            text =
-                if (LoggingManager.isServiceRunning(mContext)) getString(R.string.logging_stop_button) else getString(
+            text = getString(
                     R.string.logging_start_button)
             setOnClickListener {
                 Log.d(TAG, "startLoggingButton Click: running")
+                LoggingManager.isDataRecordingActive = true
                 val isServiceRunning = LoggingManager.isServiceRunning(mContext)
                 if (!isServiceRunning) {
-                    LoggingManager.startLoggingService(mContext as Activity)
-                    Event(EventName.LOGIN, CONST.dateTimeFormat.format(System.currentTimeMillis()), "startLoggingService","test").saveToDataBase()
-                    //text = getString(R.string.logging_stop_button)
-                } else {
                     LoggingManager.stopLoggingService(mContext)
-                   // text = getString(R.string.logging_start_button)
+                    LoggingManager.userPresent = true
+                    LoggingManager.startLoggingService(mContext as Activity)
+                    Event(EventName.LOGIN, System.currentTimeMillis(), "startLoggingService","test").saveToDataBase()
+                    //text = getString(R.string.logging_stop_button)
+            }
+        }
+
+        binding.buttonTestStop.apply {
+            text = getString(R.string.logging_stop_button)
+            setOnClickListener {
+                LoggingManager.isDataRecordingActive = false
+                LoggingManager.stopLoggingService(mContext)
                 }
             }
         }
 
         binding.signOut.setOnClickListener {
             Firebase.auth.signOut()
+            LoggingManager.isDataRecordingActive = false
+            LoggingManager.stopLoggingService(mContext)
             navigate(ScreenType.Welcome, ScreenType.HomeScreen)
         }
 
+        //TODO move to Onboarding
         this.activity?.let {
             val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
             managePermissions.checkPermissions()
+           val notifiperission = managePermissions.checkForNotificationListenerPermissionEnabled()
+           //val accesibilityperission = managePermissions.checkAccessibilityPermission()
         }
 
         return view

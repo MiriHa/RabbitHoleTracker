@@ -18,7 +18,9 @@ fun Fragment.navigate(to: ScreenType, from: ScreenType) {
 
     Log.d("xxx","navigate from: $from to : $to")
 
-    if( (from == ScreenType.Welcome && to != ScreenType.HomeScreen) || from == ScreenType.Login || from == ScreenType.SignUp){
+    if( (from == ScreenType.Welcome && to != ScreenType.HomeScreen)
+        || (from == ScreenType.Login && to == ScreenType.HomeScreen)
+        || (from == ScreenType.SignUp && to == ScreenType.HomeScreen)){
         Log.d("xxx","fromLoginScreen, dont pop back")
        navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build()
     }

@@ -8,7 +8,6 @@ import com.example.trackingapp.models.ESMState
 import com.example.trackingapp.models.ESM_Intention_Lock_Answer
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
-import com.example.trackingapp.util.CONST
 import java.util.*
 
 class ESMIntentionViewModel : ViewModel() {
@@ -22,7 +21,7 @@ class ESMIntentionViewModel : ViewModel() {
 
         Event(
             EventName.ESM,
-            CONST.dateTimeFormat.format(System.currentTimeMillis()),
+            System.currentTimeMillis(),
             ESMState.ESM_LOCK_Q1.name,
             answer.toString()
         ).saveToDataBase()
@@ -34,7 +33,7 @@ class ESMIntentionViewModel : ViewModel() {
 
         Event(
             EventName.ESM,
-            CONST.dateTimeFormat.format(System.currentTimeMillis()),
+            System.currentTimeMillis(),
             ESMState.ESM_LOCK_Q2.name,
             answer.toString()
         ).saveToDataBase()

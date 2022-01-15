@@ -19,7 +19,6 @@ import com.example.trackingapp.models.EventName
 import com.example.trackingapp.models.WifiConnectionState
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
-import com.example.trackingapp.util.CONST
 
 class WifiSensor : AbstractSensor(
     "WIFISENSOR",
@@ -132,7 +131,7 @@ class WifiSensor : AbstractSensor(
         wifiState: ConnectionType,
         timestamp: Long
     ) {
-        Event(EventName.INTERNET, CONST.dateTimeFormat.format(timestamp), connection.name, wifiState.name).saveToDataBase()
+        Event(EventName.INTERNET, timestamp, connection.name, wifiState.name).saveToDataBase()
 
     }
 
@@ -142,14 +141,14 @@ class WifiSensor : AbstractSensor(
         wifiName: String,
         timestamp: Long
     ) {
-        Event(EventName.INTERNET, CONST.dateTimeFormat.format(timestamp), connection.name, wifiState.name, wifiName).saveToDataBase()
+        Event(EventName.INTERNET, timestamp, connection.name, wifiState.name, wifiName).saveToDataBase()
     }
 
 
     inner class WifiReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent) {
-            if (!LoggingManager.isDataRecordingActive) {
+            if (LoggingManager.isDataRecordingActive == false) {
                 return
             }
 

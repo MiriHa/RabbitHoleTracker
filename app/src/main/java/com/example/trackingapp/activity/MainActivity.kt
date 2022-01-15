@@ -11,6 +11,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityMainBinding
+import com.example.trackingapp.util.CONST
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         auth = Firebase.auth
+
+        CONST.currentLocale = this.resources.configuration.locales.get(0);
 
         val navView: NavigationView = findViewById(R.id.nav_view)
         val navController = findNavController(R.id.nav_host_fragment)

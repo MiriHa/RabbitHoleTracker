@@ -87,7 +87,7 @@ class ScreenOnOffSensor : AbstractSensor(
                             )
                         }
                         saveEntry(currentState, time)
-                        LoggingManager.cancleRecordingAlarmManager(context)
+                        LoggingManager.userPresent = false
                     }
                     ScreenState.OFF_UNLOCKED -> {
                         saveEntry(currentState, time)
@@ -100,7 +100,7 @@ class ScreenOnOffSensor : AbstractSensor(
                     }
                     ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
-                        LoggingManager.scheduleStartRecordingAlarmManager(context)
+                        LoggingManager.userPresent = true
                         NotificationHelper.createESMFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
                         saveEntry(currentState, time)
@@ -142,7 +142,7 @@ class ScreenOnOffSensor : AbstractSensor(
         private fun saveEntry(type: ScreenState,  timestamp: Long) {
             Event(
                 EventName.SCREEN,
-                CONST.dateTimeFormat.format(timestamp),
+               timestamp,
                 type.name,
             ).saveToDataBase()
         }

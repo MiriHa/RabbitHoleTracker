@@ -9,6 +9,7 @@ enum class ESM_Intention_Lock_Answer{
 
 enum class EventName {
 
+    ACCESSIBILITY,
     APPS,
     AIRPLANEMODE,
     BOOT,
@@ -19,7 +20,6 @@ enum class EventName {
     SMS,
     INTERNET,
     LOGIN,
-    SCREEN_STATE,
     ESM,
 }
 

@@ -13,7 +13,6 @@ import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.util.CONST
 import java.util.*
 
 
@@ -67,7 +66,7 @@ class AppSensor : AbstractSensor(
     private fun saveEntry(foregroundApp: String?, timestamp: Long) {
         Event(
             EventName.APPS,
-            CONST.dateTimeFormat.format(timestamp),
+            timestamp,
             foregroundApp
         ).saveToDataBase()
     }
@@ -171,7 +170,7 @@ class AppSensor : AbstractSensor(
 
          */
             Log.i(TAG, "Logging app $applicationName")
-            Event(EventName.APPS, CONST.dateTimeFormat.format(timestampMillis),eventType,description, applicationName, packageName).saveToDataBase()
+            Event(EventName.APPS, timestampMillis,eventType,description, applicationName, packageName).saveToDataBase()
 
     }
 

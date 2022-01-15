@@ -2,13 +2,21 @@ package com.example.trackingapp.util
 
 import android.Manifest
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+
+
+
+
+
+
 
 class PermissionManager(val activity: Activity, private val code: Int) {
     val TAG = "TRACKINGAPP_PERMISSION_MANAGER"
@@ -20,7 +28,15 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.ACCESS_WIFI_STATE)
             l.add(Manifest.permission.RECEIVE_BOOT_COMPLETED)
             l.add(Manifest.permission.READ_PHONE_STATE)
+            l.add(Manifest.permission.READ_CALL_LOG)
+            l.add(Manifest.permission.READ_PHONE_NUMBERS)
+            l.add(Manifest.permission.READ_SMS)
+            l.add(Manifest.permission.RECEIVE_SMS)
+            // ?? l.add(Manifest.permission.WRITE_SMS)
+            l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
+            l.add(Manifest.permission.BIND_ACCESSIBILITY_SERVICE)
+            l.add(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 l.add(Manifest.permission.ACTIVITY_RECOGNITION)
                 l.add(Manifest.permission.USE_FULL_SCREEN_INTENT)
@@ -34,7 +50,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     // Check permissions at runtime
     fun checkPermissions() {
         Log.d(TAG,"checkPermissions")
-        if (isPermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
+        if (arePermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
             //showAlert()
             requestPermissions()
         } else {
@@ -42,9 +58,45 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
     }
 
+    fun checkForNotificationListenerPermissionEnabled(): Boolean {
+        //val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+        //activity.startActivity(intent)
+
+        return if (Settings.Secure.getString(activity.contentResolver, "enabled_notification_listeners")
+                .contains(activity.applicationContext.packageName)) {
+            //service is enabled do something
+            true
+        } else {
+            val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
+            activity.startActivity(intent)
+            false
+        }
+    }
+
+    // method to check is the user has permitted the accessibility permission
+    // if not then prompt user to the system's Settings activity
+    fun checkAccessibilityPermission(): Boolean {
+        var accessEnabled = 0
+        try {
+            accessEnabled = Settings.Secure.getInt(activity.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
+        } catch (e: Settings.SettingNotFoundException) {
+            e.printStackTrace()
+        }
+        return if (accessEnabled == 0) {
+            // if not construct intent to request permission
+            val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            // request permission via start activity for result
+            activity.startActivity(intent)
+            false
+        } else {
+            true
+        }
+    }
+
 
     // Check permissions status
-    private fun isPermissionsGranted(): Int {
+    private fun arePermissionsGranted(): Int {
         // PERMISSION_GRANTED : Constant Value: 0
         // PERMISSION_DENIED : Constant Value: -1
         var counter = 0;

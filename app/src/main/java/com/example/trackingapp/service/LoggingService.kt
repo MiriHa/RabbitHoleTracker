@@ -12,17 +12,21 @@ import com.example.trackingapp.R
 import com.example.trackingapp.activity.MainActivity
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.sensor.implementation.*
-import com.example.trackingapp.service.stayalive.StayAliveReceiver
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharePrefManager
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class LoggingService : Service() {
     private val mTAG = "TRACKINGAPP_LOGGING_SERVICE"
 
-    var isRunning: Boolean = false
-
     lateinit var sensorList: MutableList<AbstractSensor>
+
+    private val scope = MainScope()
+    var job: Job? = null
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -30,11 +34,11 @@ class LoggingService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d(mTAG,"onCreate")
+        Log.d(mTAG, "onCreate")
         sensorList = createSensorList()
 
         val notificationManager = getSystemService(NotificationManager::class.java)
-        val channel = NotificationChannel( CONST.CHANNEL_ID_LOGGING, CONST.CHANNEL_NAME_ESM_LOGGING, NotificationManager.IMPORTANCE_DEFAULT)
+        val channel = NotificationChannel(CONST.CHANNEL_ID_LOGGING, CONST.CHANNEL_NAME_ESM_LOGGING, NotificationManager.IMPORTANCE_DEFAULT)
         notificationManager.createNotificationChannel(channel)
         isServiceRunning(true)
 
@@ -51,61 +55,30 @@ class LoggingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-       Log.d(mTAG,"onStarCommand")
-
+        Log.d(mTAG, "onStarCommand: Start Foreground Service")
         startSensors()
+        startLoggingUpdates()
+
         return START_STICKY
     }
 
     override fun onDestroy() {
-        Log.d(mTAG, "onDestroy called")
+        Log.d(mTAG, "onDestroy called: Datarecording active: ${LoggingManager.isDataRecordingActive}")
         isServiceRunning(false)
         stopForeground(true)
         stopSensors()
+        stopLoggingUpdates()
 
-        if (LoggingManager.isDataRecordingActive) {
-            val boradcasIntent = Intent(this, StayAliveReceiver::class.java)
-            sendBroadcast(boradcasIntent)
+        if (LoggingManager.isDataRecordingActive == true) {
+            //TODO
+            //val boradcastIntent = Intent(this, StayAliveReceiver::class.java)
+            //sendBroadcast(boradcastIntent)
         }
 
         super.onDestroy()
     }
 
-    fun stopService(){
-        Log.d(mTAG, "Stop Logging Service")
-        stopSelf()
-    }
-
-    private fun startSensors(){
-        sensorList.let { list ->
-            Log.d(mTAG, "size: " + list.size)
-            for (sensor in list) {
-                if (sensor.isEnabled && sensor.isAvailable(this)) {
-                    sensor.start(this)
-                    //TODO TEst Collect initial snapshots
-                    sensor.saveSnapshot(this)
-                    Log.d(mTAG, sensor.sensorName + " turned on")
-                }
-            }
-        }
-    }
-
-    private fun stopSensors(){
-        sensorList.let { list ->
-            for (sensor in list) {
-                if (sensor.isRunning) {
-                    sensor.stop()
-                }
-            }
-        }
-    }
-
-    fun isServiceRunning(isRunning: Boolean){
-        this.isRunning = isRunning
-        SharePrefManager.saveBoolean(this, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, isRunning)
-    }
-
-    fun collectSnapShots(){
+    private fun collectSnapShots() {
         sensorList?.let { list ->
             Log.d(mTAG, "size: " + list.size)
             for (sensor in list) {
@@ -117,17 +90,67 @@ class LoggingService : Service() {
         }
     }
 
-    private fun createSensorList(): MutableList<AbstractSensor>{
+    private fun startLoggingUpdates() {
+        Log.d(mTAG, "startSensorThread")
+        stopLoggingUpdates()
+        job = scope.launch {
+            while (true) {
+                if(LoggingManager.userPresent /* TODO && LoggingManager.isDataRecordingActive */)
+                    collectSnapShots() // the function that should be ran every second
+                delay(CONST.LOGGING_FREQUENCY)
+            }
+        }
+    }
+
+    private fun stopLoggingUpdates() {
+        job?.cancel()
+        job = null
+    }
+
+    private fun startSensors() {
+        sensorList.let { list ->
+            Log.d(mTAG, "size: " + list.size)
+            for (sensor in list) {
+                if (sensor.isEnabled && sensor.isAvailable(this)) {
+                    sensor.start(this)
+                    //TODO TEst Collect initial snapshots
+                    //sensor.saveSnapshot(this)
+                    Log.d(mTAG, sensor.sensorName + " turned on")
+                }
+            }
+        }
+    }
+
+    private fun stopSensors() {
+        sensorList.let { list ->
+            for (sensor in list) {
+                if (sensor.isRunning) {
+                    sensor.stop()
+                }
+            }
+        }
+    }
+
+    private fun isServiceRunning(isServiceRunning: Boolean) {
+        isRunning = isServiceRunning
+        SharePrefManager.saveBoolean(this, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, isRunning)
+    }
+
+    private fun createSensorList(): MutableList<AbstractSensor> {
         val list = arrayListOf<AbstractSensor>()
+        list.add(AirplaneModeSensor())
         list.add(ScreenOnOffSensor())
         list.add(NotificationSensor())
         list.add(WifiSensor())
         list.add(PowerSensor())
         list.add(AppSensor())
+        list.add(AccessibilitySensor())
+        list.add(CallSensor())
         return list
     }
 
-    companion object{
+    companion object {
+        @JvmStatic
         var isRunning: Boolean = false
 
     }

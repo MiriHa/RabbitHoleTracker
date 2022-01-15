@@ -8,7 +8,8 @@ object CONST {
     private const val TAG = "TRACKINGAPP_CONST"
     @JvmField
 	//val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
-    var dateTimeFormat: DateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss,SSS", Locale.GERMAN)
+    var currentLocale: Locale = Locale.GERMAN
+    var dateTimeFormat: DateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss,SSS", currentLocale)
 
     const val PREFERENCES_FILE: String = "ESM_INTENTION"
     const val PREFERENCES_INTENTION_NAME: String = "SAVED_INTENTION"
@@ -31,5 +32,8 @@ object CONST {
     const val PERMISSION_REQUEST_CODE = 123
 
     const val LOGGING_INTERVAL = 60 * 0.1; // 60 * 1 = 1 minutes
+    const val LOGGING_FREQUENCY: Long = 500 //milliseconds
+
+    const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 
 }

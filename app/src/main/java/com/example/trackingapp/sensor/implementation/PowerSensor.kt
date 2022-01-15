@@ -114,7 +114,7 @@ class PowerSensor : AbstractSensor(
     private fun saveEntry(type: PowerState?, charge: String, timestamp: Long) {
         Event(
             EventName.POWER,
-            CONST.dateTimeFormat.format(timestamp),
+            timestamp,
             type?.name,
             charge
         ).saveToDataBase()
@@ -124,7 +124,7 @@ class PowerSensor : AbstractSensor(
         private var state: PowerState? = null
 
         override fun onReceive(context: Context, intent: Intent) {
-            if (!LoggingManager.isDataRecordingActive) {
+            if (LoggingManager.isDataRecordingActive == false) {
                 return
             }
             val timestamp = System.currentTimeMillis()

@@ -15,30 +15,43 @@ import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharePrefManager
 import java.util.concurrent.TimeUnit
 
+
 object LoggingManager {
 
     private const val TAG = "TRACKINGAPP_LOGGING_MANAGER"
 
-    val loggingService: LoggingService = LoggingService()
+    var userPresent = false
 
     fun isServiceRunning(context: Context): Boolean {
+
         return SharePrefManager.getBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING)
     }
 
-    val isDataRecordingActive: Boolean
-        get() = true //TODO save in preferences?
+    var isDataRecordingActive: Boolean? = null
 
 
     fun startLoggingService(context: Context) {
         if (!isServiceRunning(context)) {
             Log.d(TAG, "startService called")
             Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
-            val t= LoggingService()
             val serviceIntent = Intent(context, LoggingService::class.java )
             ContextCompat.startForegroundService(context, serviceIntent)
             startServiceViaWorker(context)
         }
     }
+
+    fun stopLoggingService(context: Context) {
+        //if (isServiceRunning(context)) {
+        Log.d(TAG, "stopService called")
+        LoggingManager.isDataRecordingActive = false
+        Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
+        SharePrefManager.saveBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, false)
+        val stopIntent = Intent(context, LoggingService::class.java )
+        context.applicationContext.stopService(stopIntent)
+        cancleServiceViaWorker(context)
+        // }
+    }
+
 
     fun scheduleStartRecordingAlarmManager(context: Context) {
         val startTime = System.currentTimeMillis()
@@ -63,18 +76,8 @@ object LoggingManager {
         return PendingIntent.getService(context, 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
-    fun stopLoggingService(context: Context) {
-        if (isServiceRunning(context)) {
-            Log.d(TAG, "stopService called")
-            Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
-            SharePrefManager.saveBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, false)
-            loggingService.stopService()
-        }
-    }
-
     private fun startServiceViaWorker(context: Context) {
         Log.d(TAG, "startServiceViaWorker called")
-        val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
         val workManager: WorkManager = WorkManager.getInstance(context)
 
         // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
@@ -88,9 +91,13 @@ object LoggingManager {
         // to schedule a unique work, no matter how many times app is opened i.e. startServiceViaWorker gets called
         // do check for AutoStart permission
         workManager.enqueueUniquePeriodicWork(
-            UNIQUE_WORK_NAME,
+            CONST.UNIQUE_WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
             request
         )
+    }
+
+    fun cancleServiceViaWorker(context: Context){
+        WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
     }
 }

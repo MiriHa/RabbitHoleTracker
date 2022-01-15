@@ -1,4 +1,4 @@
-package com.example.trackingapp.service
+package com.example.trackingapp.unused
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent

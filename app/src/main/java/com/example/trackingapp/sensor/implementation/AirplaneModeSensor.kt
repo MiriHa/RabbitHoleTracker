@@ -8,7 +8,6 @@ import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.models.ONOFFSTATE
 import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.util.CONST
 
 class AirplaneModeSensor: AbstractSensor(
     "AIRPLANEMODESENSOR",
@@ -21,6 +20,18 @@ class AirplaneModeSensor: AbstractSensor(
 
     override fun isAvailable(context: Context?): Boolean {
         return true
+    }
+
+    override fun start(context: Context) {
+        super.start(context)
+        if (!m_isSensorAvailable) return
+        isRunning = true
+        val timestamp = System.currentTimeMillis()
+        if(isAirplaneModeOn(context)){
+            saveEntry(ONOFFSTATE.ON, timestamp)
+        } else {
+            saveEntry(ONOFFSTATE.OFF, timestamp)
+        }
     }
 
     override fun saveSnapshot(context: Context) {
@@ -44,6 +55,6 @@ class AirplaneModeSensor: AbstractSensor(
     }
 
     private fun saveEntry(state: ONOFFSTATE, timestamp: Long) {
-        Event(EventName.AIRPLANEMODE, CONST.dateTimeFormat.format(timestamp), state.name).saveToDataBase()
+        Event(EventName.AIRPLANEMODE, timestamp, state.name).saveToDataBase()
     }
 }

@@ -9,12 +9,11 @@ import com.example.trackingapp.models.BootEventType
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.service.LoggingManager
-import com.example.trackingapp.util.CONST
 
 class BootUpReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
-        if (!LoggingManager.isDataRecordingActive) {
+        if (LoggingManager.isDataRecordingActive == false) {
             return
         } else {
             val timestamp = System.currentTimeMillis()
@@ -48,7 +47,7 @@ class BootUpReceiver : BroadcastReceiver() {
     private fun saveEntry(type: BootEventType, timestamp: Long) {
         Event(
             EventName.BOOT,
-            CONST.dateTimeFormat.format(timestamp),
+           timestamp,
             type.name
         ).saveToDataBase()
     }

@@ -13,7 +13,6 @@ import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
 import com.example.trackingapp.models.ESMState
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
-import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharePrefManager
 import java.util.*
@@ -72,7 +71,7 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
         dismissFullScreenNotification()
            Event(
                EventName.ESM,
-               CONST.dateTimeFormat.format(System.currentTimeMillis()),
+               System.currentTimeMillis(),
                ESMState.ESM_UNLOCK.name,
                intention
            ).saveToDataBase()

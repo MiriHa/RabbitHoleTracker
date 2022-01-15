@@ -6,7 +6,7 @@
     android:background="@color/BlackishGray"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/fragment_horizontal_margin"
+    android:padding="24dp"
     android:orientation="vertical">
 
     <Button
@@ -14,11 +14,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="Start Lock Notifications"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.41000003"
+        tools:text="Start Lock Notifications" />
+
+    <Button
+        android:id="@+id/buttonTestStop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonTest"
+        app:layout_constraintVertical_bias="0.0"
+        tools:text="Stop Lock Notifications" />
 
     <Button
         android:id="@+id/signOut"
@@ -26,11 +40,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:text="signout"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonTest"
-        app:layout_constraintVertical_bias="0.120000005" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonTestStop"
+        app:layout_constraintVertical_bias="0.0" />
 
     <!--<androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"

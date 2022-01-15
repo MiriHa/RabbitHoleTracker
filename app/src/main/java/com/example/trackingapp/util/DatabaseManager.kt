@@ -32,6 +32,8 @@ object DatabaseManager {
         get() = user != null
 
     init {
+        //TODO Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
+        //Firebase.database.setPersistenceEnabled(true)
         intentionList.addAll(arrayOf("Browsing", "Passing Time", "Search for Information"))
         getSavedIntentions()
     }
@@ -46,7 +48,7 @@ object DatabaseManager {
 
             Event(
                 EventName.LOGIN,
-                CONST.dateTimeFormat.format(System.currentTimeMillis()),
+                System.currentTimeMillis(),
                 "Account created"
             ).saveToDataBase()
         }
@@ -59,14 +61,9 @@ object DatabaseManager {
             Firebase.database.reference.child(CONST.firebaseReferenceUsers)
                 .child(it.uid)
                 .child(CONST.firebaseReferenceLogs)
-                .child("${this.timestamp} ${this.eventName.name}")
+                .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
                 .setValue(this)
         }
-    }
-
-    fun saveEventToFireBase(eventName: EventName, timestamp: Long, name: String? = null, description: String? = null){
-        Log.d("xxx", "SaveEntryToDataBase: ${eventName} ${name}")
-        //Event(EventName.INTERNET, CONST.dateTimeFormat.format(timestamp), name, description).saveToDataBase()
     }
 
     fun saveIntentionToFirebase(time: Date, intention: String){
