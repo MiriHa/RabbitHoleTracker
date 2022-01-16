@@ -146,6 +146,7 @@ class LoggingService : Service() {
         list.add(AppSensor())
         list.add(AccessibilitySensor())
         list.add(CallSensor())
+        list.add(SmsSensor())
         return list
     }
 

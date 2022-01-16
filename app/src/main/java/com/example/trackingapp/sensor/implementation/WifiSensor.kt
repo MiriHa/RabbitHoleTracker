@@ -87,9 +87,9 @@ class WifiSensor : AbstractSensor(
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> ConnectionType.CONNECTED_MOBILE
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> ConnectionType.CONNECTED_ETHERNET
                 capabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN) -> ConnectionType.CONNECTED_VPN
-                else -> ConnectionType.UNKOWN
+                else -> ConnectionType.UNKNOWN
             }
-        } else ConnectionType.UNKOWN
+        } else ConnectionType.UNKNOWN
 
     }
 

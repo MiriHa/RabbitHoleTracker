@@ -56,7 +56,7 @@ enum class ScreenState {
 enum class WifiConnectionState {
     DISABLED,
     ENABLED,
-    UNKOWN
+    UNKNOWN
 }
 
 enum class ConnectionType {
@@ -64,5 +64,15 @@ enum class ConnectionType {
     CONNECTED_MOBILE,
     CONNECTED_ETHERNET,
     CONNECTED_VPN,
-    UNKOWN
+    UNKNOWN
+}
+
+enum class SmsEventType {
+    UNKNOWN,
+    INBOX,
+    SENT,
+    DRAFT,
+    OUTBOX
+
+
 }

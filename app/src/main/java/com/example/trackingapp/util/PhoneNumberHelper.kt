@@ -6,23 +6,26 @@ import android.content.pm.PackageManager
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
+import com.google.i18n.phonenumbers.NumberParseException
+import com.google.i18n.phonenumbers.PhoneNumberUtil
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber
+
 
 object PhoneNumberHelper {
     private const val TAG = "PhoneNumberHelper"
     private const val DEFAULT_CC = "DE"
 
     //E: CHECKED! WORKS ->
-    fun formatNumber(number: String): String {
-      /*  val phoneNumber: PhoneNumber
-        val phoneUtil: PhoneNumberUtils = PhoneNumberUtils()
+    fun formatNumber(number: String?): String {
+        val phoneNumber: PhoneNumber
+        val phoneUtil = PhoneNumberUtil.getInstance()
         return try {
-            phoneNumber = phoneUtil.parse(PhoneNumberUtils.convertAlphaCharactersInNumber(number), DEFAULT_CC)
-            phoneUtil.format(phoneNumber, PhoneNumberUtils.PhoneNumberFormat.INTERNATIONAL)
-        } catch (e: NumberFormatException) {
+            phoneNumber = phoneUtil.parse(PhoneNumberUtil.convertAlphaCharactersInNumber(number), DEFAULT_CC)
+            phoneUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL)
+        } catch (e: NumberParseException) {
             e.printStackTrace()
-            number
-        }*/
-        return ""
+            number ?: ""
+        }
     }
 
     fun getOwnPhonenumber(context: Context): String? {
@@ -39,14 +42,14 @@ object PhoneNumberHelper {
         return number
     }
 
-    fun getOwnCountryCode(context: Context): String {
-        val ownNumber = getOwnPhonenumber(context) ?: return DEFAULT_CC
+    fun getOwnCountryCode(context: Context?): String? {
+        val ownNumber = getOwnPhonenumber(context!!) ?: return DEFAULT_CC
         return extractCountryCodeFromNumber(ownNumber)
     }
 
     fun extractCountryCodeFromNumber(ownNumber: String?): String {
-       /* val number: Phonenumber.PhoneNumber
-        val phoneUtil: PhoneNumberUtil = PhoneNumberUtil.getInstance()
+        val number: PhoneNumber
+        val phoneUtil = PhoneNumberUtil.getInstance()
         return try {
             number = phoneUtil.parse(PhoneNumberUtil.convertAlphaCharactersInNumber(ownNumber), DEFAULT_CC)
             //return String.valueOf(phoneUtil.getCountryCodeForRegion((phoneUtil.getRegionCodeForNumber(number))));
@@ -54,11 +57,10 @@ object PhoneNumberHelper {
         } catch (e: NumberParseException) {
             e.printStackTrace()
             DEFAULT_CC
-        }*/
-        return ""
+        }
     }
 
-    fun extractCountryCodesFromNumbers(phoneNumbers: Array<String?>): Array<String?> {
+    fun extractCountryCodesFromNumbers(phoneNumbers: Array<String?>): Array<String?>? {
         val countryCodes = arrayOfNulls<String>(phoneNumbers.size)
         for (i in phoneNumbers.indices) {
             countryCodes[i] = extractCountryCodeFromNumber(phoneNumbers[i])

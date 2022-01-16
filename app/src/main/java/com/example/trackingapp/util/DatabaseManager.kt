@@ -38,7 +38,7 @@ object DatabaseManager {
         getSavedIntentions()
     }
 
-    fun saveUserToFirebase(email: String){
+    fun saveUserToFirebase(email: String) {
         val userId = Firebase.auth.currentUser?.uid
         val user = User(email, userId)
         if (userId != null) {
@@ -55,8 +55,17 @@ object DatabaseManager {
 
     }
 
-    fun Event.saveToDataBase(){
+    fun Event.saveToDataBase() {
         Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event}")
+/*        if (this.metaData != null) {
+            user?.let {
+                Firebase.database.reference.child(CONST.firebaseReferenceUsers)
+                    .child(it.uid)
+                    .child(CONST.firebaseReferenceLogs)
+                    .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
+                    .setValue(this)
+            }
+        } else {*/
         user?.let {
             Firebase.database.reference.child(CONST.firebaseReferenceUsers)
                 .child(it.uid)
@@ -64,9 +73,10 @@ object DatabaseManager {
                 .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
                 .setValue(this)
         }
+        // }
     }
 
-    fun saveIntentionToFirebase(time: Date, intention: String){
+    fun saveIntentionToFirebase(time: Date, intention: String) {
         val timestamp = CONST.dateTimeFormat.format(time)
         user?.let {
             database.child(CONST.firebaseReferenceUsers)
@@ -77,7 +87,7 @@ object DatabaseManager {
         }
     }
 
-    fun getSavedIntentions(){
+    fun getSavedIntentions() {
         val intentionRef = database.child(CONST.firebaseReferenceUsers).child(userID).child(CONST.firebaseReferenceIntentions)
         intentionRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -86,6 +96,7 @@ object DatabaseManager {
                     intentionList.add(value)
                 }
             }
+
             override fun onCancelled(error: DatabaseError) {
                 Log.d("onCancelled", error.toString())
             }

@@ -102,7 +102,7 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation "androidx.work:work-multiprocess:2.7.1"
 
-
+    api 'com.googlecode.libphonenumber:libphonenumber:8.12.5'
 
 
 }

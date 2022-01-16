@@ -13,12 +13,16 @@ import android.telephony.TelephonyManager
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.models.Event
+import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.metadata.CallMeta
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.PhoneNumberHelper
 
-class CallSensor: AbstractSensor(
+class CallSensor : AbstractSensor(
     "CALLSENSOR",
     "call"
 ) {
@@ -41,7 +45,11 @@ class CallSensor: AbstractSensor(
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_CALL)
+        filter.addAction("android.intent.action.PHONE_STATE")
 
+        mReceiver = CallReceiver()
+
+        context.applicationContext.registerReceiver(mReceiver, filter)
 
         //mReceiver = PowerSensor.PowerReceiver()
         try {
@@ -116,7 +124,6 @@ class CallSensor: AbstractSensor(
                         // Get data of last CallLog entry, save them to corresponding instance variables
                         getLastCallLogEntryData(context)
                         getContactNameAndUidFromNumber(context, lastCallLogNumber)
-/*
 
                         // Ringing length (also onhold length)
                         // broadCastTimestamp = in this case: moment when call was rejected / missed / ended in ms
@@ -126,47 +133,32 @@ class CallSensor: AbstractSensor(
                         val ringingLength = (totalLength - lastCallLogDuration).toInt()
 
                         // Save Ringing state to DB
-                        if (cachedEvent != null && cachedEvent  == RINGING) {
-                            LogHelper.i(TAG, "Ringing duration: $broadCastTimestamp - $lastCallLogTimestamp = $ringingLength")
-                            if (!appDatabaseHelper.isAlreadySaved(UsageActivityName.PHONE, RINGING, lastCallLogTimestamp)) {
-                                saveEntry(
-                                    context, lastCallLogNumber, countryCode, contactName, contactUid,
-                                    lastCallLogTimestamp, ringingLength, RINGING
-                                )
-                            }
+                        if (cachedEvent != null && cachedEvent == RINGING) {
+                            Log.i(TAG, "Ringing duration: $broadCastTimestamp - $lastCallLogTimestamp = $ringingLength")
+                            saveEntry(
+                                context, lastCallLogNumber, countryCode, contactName, contactUid,
+                                lastCallLogTimestamp, ringingLength, RINGING
+                            )
                         }
-*/
 
                         // Save on hold State to DB
-                   /*     if (cachedEvent != null && cachedEvent == ONHOLD) {
-                            LogHelper.i(TAG, "Ringing duration onhold: $broadCastTimestamp - $lastCallLogTimestamp = $ringingLength")
-                            if (!appDatabaseHelper.isAlreadySaved(UsageActivityName.PHONE, ONHOLD, lastCallLogTimestamp)) {
-                                saveEntry(
-                                    context, lastCallLogNumber, countryCode, contactName, contactUid,
-                                    lastCallLogTimestamp, ringingLength, ONHOLD
-                                )
-                            }
+                        if (cachedEvent != null && cachedEvent == ONHOLD) {
+                            Log.i(TAG, "Ringing duration onhold: $broadCastTimestamp - $lastCallLogTimestamp = $ringingLength")
+                            saveEntry(
+                                context, lastCallLogNumber, countryCode, contactName, contactUid,
+                                lastCallLogTimestamp, ringingLength, ONHOLD
+                            )
                         }
-*/
 
                         // Save last call log entry to db
-                       /* val timestamp = lastCallLogTimestamp + ringingLength // Moment when call really started
-                        if (!appDatabaseHelper.isAlreadySaved(UsageActivityName.PHONE, lastCallLogType, timestamp)) {
-                            if ("OUTGOING" != lastCallLogType || lastCallLogDuration > 0) { // do not log OUTGOING with duration 0 (#301)
-                                if (Build.VERSION.SDK_INT < 24 && "INCOMING" == lastCallLogType && lastCallLogDuration == 0L) {
-                                    // workaround for SDK < 24, where rejected does not exist: INCOMING with duration 0 corresponds to REJECTED
-                                    saveEntry(
-                                        context, lastCallLogNumber, countryCode, contactName, contactUid,
-                                        timestamp, lastCallLogDuration.toInt(), "REJECTED"
-                                    )
-                                }
-                                Log.d(TAG, "Found no entry for: PHONE $lastCallLogType $timestamp")
-                                saveEntry(
-                                    context, lastCallLogNumber, countryCode, contactName, contactUid,
-                                    timestamp, lastCallLogDuration.toInt(), lastCallLogType
-                                )
-                            }
-                        }*/
+                        val timestamp = lastCallLogTimestamp + ringingLength // Moment when call really started
+                        if ("OUTGOING" != lastCallLogType || lastCallLogDuration > 0) { // do not log OUTGOING with duration 0 (#301)
+                            Log.d(TAG, "Found no entry for: PHONE $lastCallLogType $timestamp")
+                            saveEntry(
+                                context, lastCallLogNumber, countryCode, contactName, contactUid,
+                                timestamp, lastCallLogDuration.toInt(), lastCallLogType
+                            )
+                        }
 
                         // Update callReceiverCache in sharedPrefs with last saved call data!
                         callReceiverCache = lastCallLogType
@@ -198,15 +190,15 @@ class CallSensor: AbstractSensor(
          * @param event     event name
          */
         private var callReceiverCache: String?
-            private get() {
+            get() {
                 Log.d(TAG, "getCallReceiverCache()")
-                return sharedPrefs!!.getString("CallReceiverEvent", null)
+                return sharedPrefs?.getString("CallReceiverEvent", null)
             }
             private set(event) {
                 Log.d(TAG, "setCallReceiverCache()")
-                val editor = sharedPrefs!!.edit()
-                editor.putString("CallReceiverEvent", event)
-                editor.apply()
+                val editor = sharedPrefs?.edit()
+                editor?.putString("CallReceiverEvent", event)
+                editor?.apply()
             }
 
         /**
@@ -235,6 +227,20 @@ class CallSensor: AbstractSensor(
             //val activity = UsageActivity()
             /*activity.activityName(UsageActivityName.PHONE).timestamp(timestamp).event(event).metaData(meta)
             activity.insertIntoDB()*/
+            val callMeta = CallMeta(
+                phoneNumber = PhoneNumberHelper.formatNumber(phoneNumber).hashCode().toString(),
+                countryCode = countryCode,
+                partner = contactName.hashCode().toString(),
+                duration = duration,
+                contactId = contactUid
+            )
+
+            Event(
+                eventName = EventName.PHONE,
+                timestamp = timestamp,
+                event = event,
+                metaData = callMeta
+            ).saveToDataBase()
         }
 
         /**
@@ -252,17 +258,19 @@ class CallSensor: AbstractSensor(
                         Calls.CONTENT_URI,
                         selection, null, null, Calls.DATE + " DESC"
                     )
-                    val type = c!!.getColumnIndex(Calls.TYPE)
-                    val date = c.getColumnIndex(Calls.DATE)
-                    val number = c.getColumnIndex(Calls.NUMBER)
-                    val duration = c.getColumnIndex(Calls.DURATION)
-                    if (c.moveToFirst()) {
-                        val typeInt = c.getInt(type)
-                        lastCallLogType = getReadableType(typeInt)
-                        lastCallLogTimestamp = c.getLong(date)
-                        lastCallLogNumber = c.getString(number)
-                        lastCallLogDuration = c.getLong(duration)
-                        countryCode = PhoneNumberHelper.extractCountryCodeFromNumber(lastCallLogNumber)
+                    if (c != null) {
+                        val type = c.getColumnIndex(Calls.TYPE)
+                        val date = c.getColumnIndex(Calls.DATE)
+                        val number = c.getColumnIndex(Calls.NUMBER)
+                        val duration = c.getColumnIndex(Calls.DURATION)
+                        if (c.moveToFirst()) {
+                            val typeInt = c.getInt(type)
+                            lastCallLogType = getReadableType(typeInt)
+                            lastCallLogTimestamp = c.getLong(date)
+                            lastCallLogNumber = c.getString(number)
+                            lastCallLogDuration = c.getLong(duration)
+                            countryCode = PhoneNumberHelper.extractCountryCodeFromNumber(lastCallLogNumber)
+                        }
                     }
                 } catch (e: java.lang.Exception) {
                     e.printStackTrace()
