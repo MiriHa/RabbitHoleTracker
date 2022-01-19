@@ -12,11 +12,15 @@ enum class EventName {
     ACCESSIBILITY,
     APPS,
     AIRPLANEMODE,
+    ACCELEROMETER,
+    BLUETOOTH,
     BOOT,
     PHONE,
     POWER,
     NOTIFICATION,
     SCREEN,
+    SCREEN_ORIENTATION,
+    RINGER_MODE,
     SMS,
     INTERNET,
     LOGIN,
@@ -73,6 +77,21 @@ enum class SmsEventType {
     SENT,
     DRAFT,
     OUTBOX
+}
 
+enum class ScreenOrientationType {
+    SCREEN_ORIENTATION_PORTRAIT,
+    SCREEN_ORIENTATION_LANDSCAPE,
+    SCREEN_ORIENTATION_UNDEFINED
+}
 
+enum class RingerMode {
+    SILENT_MODE,
+    VIBRATE_MODE,
+    NORMAL_MODE,
+    UNKNOWN
+}
+
+enum class AccelerometerAccuracy {
+    ACCURACY_UNRELAIABLE
 }

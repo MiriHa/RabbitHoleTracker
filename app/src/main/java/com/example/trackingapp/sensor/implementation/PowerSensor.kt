@@ -16,12 +16,12 @@ import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 
 class PowerSensor : AbstractSensor(
-    "PowerSensor",
+    "POWER_SENSOR",
     "Charging"
 ) {
 
     private var mReceiver: BroadcastReceiver? = null
-    private var m_context: Context? = null
+    private var mContext: Context? = null
 
     override fun getSettingsView(context: Context?): View? {
         return null
@@ -35,12 +35,13 @@ class PowerSensor : AbstractSensor(
         super.start(context)
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        Log.d(TAG, "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
+        Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_POWER_CONNECTED)
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
 
+        mContext = context
         mReceiver = PowerReceiver()
         try {
             context.unregisterReceiver(mReceiver)
@@ -54,7 +55,7 @@ class PowerSensor : AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context?.unregisterReceiver(mReceiver)
+            mContext?.unregisterReceiver(mReceiver)
         }
     }
 

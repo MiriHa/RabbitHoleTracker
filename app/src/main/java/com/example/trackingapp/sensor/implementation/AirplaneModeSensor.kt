@@ -10,7 +10,7 @@ import com.example.trackingapp.models.ONOFFSTATE
 import com.example.trackingapp.sensor.AbstractSensor
 
 class AirplaneModeSensor: AbstractSensor(
-    "AIRPLANEMODESENSOR",
+    "AIRPLANE_MODE_SENSOR",
     "airplane"
 ) {
 

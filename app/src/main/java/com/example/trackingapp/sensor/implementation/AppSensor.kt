@@ -17,7 +17,7 @@ import java.util.*
 
 
 class AppSensor : AbstractSensor(
-    "APPSENSOR",
+    "APP_SENSOR",
     "app"
 ) {
 
@@ -33,8 +33,8 @@ class AppSensor : AbstractSensor(
         super.saveSnapshot(context)
         val timestamp = System.currentTimeMillis()
         //TODO save all usageStats once per hour???
-        val foregroundtask = getForeGroundTask(context)
-        saveEntry(foregroundtask, timestamp)
+      //  val foregroundtask = getForeGroundTask(context)
+      //  saveEntry(foregroundtask, timestamp)
     }
 
     override fun stop() {

@@ -2,26 +2,31 @@ package com.example.trackingapp.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.Intent
-import android.os.Handler
-import android.os.Looper
-import android.os.PowerManager
+import android.content.ComponentName
+import android.content.pm.ActivityInfo
+import android.content.pm.PackageManager
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
+import com.google.firebase.FirebaseApp
+
+
+//TODO lPointerException: Parameter specified as non-null is null: method kotlin.jvm.internal.Intrinsics.checkNotNullParameter, parameter intent
+// at com.example.trackingapp.service.AccessibilityLogService.onStartCommand(Unknown Source:2)
 
 class AccessibilityLogService : AccessibilityService() {
-    private var mWakeLock: PowerManager.WakeLock? = null
+   // private var mWakeLock: PowerManager.WakeLock? = null
     private val info = AccessibilityServiceInfo()
+
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
-
-        val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        FirebaseApp.initializeApp(this)
+       // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         //mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG)
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, classTAG)
+       // mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, classTAG)
     }
 
     override fun onInterrupt() {
@@ -57,49 +62,59 @@ class AccessibilityLogService : AccessibilityService() {
         this.serviceInfo = info
     }
 
-    private fun getEventText(event: AccessibilityEvent): String {
+    private fun getEventText(event: AccessibilityEvent?): String {
         val sb = StringBuilder()
-        for (s in event.text) {
-            sb.append(s)
+        event?.let {
+            for (s in event.text) {
+                sb.append(s)
+            }
         }
         return sb.toString()
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        super.onStartCommand(intent, flags, startId)
-        Log.d(TAG, "onStartCommand() was called")
-        mWakeLock?.let { wakeLock ->
-            if (!wakeLock.isHeld) {
-                wakeLock.acquire(10*60*1000L /*10 minutes*/)
-            }
-            Handler(Looper.getMainLooper()).postDelayed(
-                {
-                    if (wakeLock.isHeld) {
-                        wakeLock.release()
-                    }
-                },
-                10000
-            )
+    private fun tryGetActivity(componentName: ComponentName): ActivityInfo? {
+        return try {
+            packageManager.getActivityInfo(componentName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
         }
-        return START_STICKY
     }
+
+//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+//        super.onStartCommand(intent, flags, startId)
+//        Log.d(TAG, "onStartCommand() was called")
+////        mWakeLock?.let { wakeLock ->
+////            if (!wakeLock.isHeld) {
+////                wakeLock.acquire(10*60*1000L /*10 minutes*/)
+////            }
+////            Handler(Looper.getMainLooper()).postDelayed(
+////                {
+////                    if (wakeLock.isHeld) {
+////                        wakeLock.release()
+////                    }
+////                },
+////                10000
+////            )
+////        }
+//        return START_STICKY
+//    }
 
     override fun onDestroy() {
         Log.d(TAG, "service stopped")
-        mWakeLock?.let { wakeLock ->
-            if (wakeLock.isHeld) {
-                wakeLock.release()
-            }
-        }
+//        mWakeLock?.let { wakeLock ->
+//            if (wakeLock.isHeld) {
+//                wakeLock.release()
+//            }
+//        }
         stopForeground(true)
         super.onDestroy()
     }
 
-    override fun onAccessibilityEvent(event: AccessibilityEvent) {
-        if (AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED == event.eventType) return //TODO also record window content? -> to much info?
+    override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+        if (AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED == event?.eventType) return //TODO also record window content? -> to much info?
 
         var eventName = EventName.ACCESSIBILITY
-        if (AccessibilityEvent.TYPE_WINDOWS_CHANGED == event.eventType) {
+        if (AccessibilityEvent.TYPE_WINDOWS_CHANGED == event?.eventType) {
             eventName = EventName.APPS
         }
 
@@ -108,13 +123,13 @@ class AccessibilityLogService : AccessibilityService() {
             timestamp = System.currentTimeMillis(),
             event = getEventType(event),
             description = getEventText(event),
-            name = event.className.toString(),
-            packageName = event.packageName.toString()
+            name = event?.className.toString(),
+            packageName = event?.packageName.toString()
         ).saveToDataBase()
     }
 
-    private fun getEventType(event: AccessibilityEvent): String {
-        when (event.eventType) {
+    private fun getEventType(event: AccessibilityEvent?): String {
+        when (event?.eventType) {
             AccessibilityEvent.TYPE_ANNOUNCEMENT -> return "TYPE_ANNOUNCEMENT"
             AccessibilityEvent.TYPE_GESTURE_DETECTION_END -> return "TYPE_GESTURE_DETECTION_END"
             AccessibilityEvent.TYPE_GESTURE_DETECTION_START -> return "TYPE_GESTURE_DETECTION_START"
@@ -146,6 +161,6 @@ class AccessibilityLogService : AccessibilityService() {
 
     companion object {
         val TAG: String = "ACCESSIBILITYSERVICE" // AccessibilityLogService::class.java.simpleName
-        val classTAG = AccessibilityLogService::class.java.simpleName
+        //val classTAG = AccessibilityLogService::class.java.simpleName
     }
 }

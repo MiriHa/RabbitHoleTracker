@@ -19,12 +19,12 @@ import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ESMType
 import com.example.trackingapp.util.NotificationHelper
 
-class ScreenOnOffSensor : AbstractSensor(
-    "ScreenOnOffSensor",
+class ScreenStateSensor : AbstractSensor(
+    "SCREEN_STATE_SENSOR",
     "ScreenState"
 ) {
     private var mReceiver: BroadcastReceiver? = null
-    private var m_context: Context? = null
+    private var mContext: Context? = null
     private var screenOffAsked = false
 
     override fun getSettingsView(context: Context?): View? {
@@ -39,7 +39,9 @@ class ScreenOnOffSensor : AbstractSensor(
         super.start(context)
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        Log.d(TAG, "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
+        Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
+
+        mContext = context
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_SCREEN_ON)
@@ -58,7 +60,7 @@ class ScreenOnOffSensor : AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context?.unregisterReceiver(mReceiver)
+            mContext?.unregisterReceiver(mReceiver)
         }
     }
 
@@ -72,7 +74,7 @@ class ScreenOnOffSensor : AbstractSensor(
             val time = System.currentTimeMillis()
             val currentState: ScreenState = determineScreenState(context, intent)
 
-            Log.d("xxx","ScreenReceiver: $currentState isRunning: $isRunning")
+            Log.d("TAG","ScreenReceiver: $currentState isRunning: $isRunning")
 
 
             if (isRunning) {

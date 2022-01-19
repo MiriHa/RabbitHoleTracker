@@ -31,7 +31,7 @@ abstract class AbstractSensor protected constructor(
     abstract fun stop()
 
     open fun saveSnapshot(context: Context){
-        Log.i(TAG, "save Snapshot if possible")
+        //Log.i(TAG, "save Snapshot if possible")
     }
 
     companion object {

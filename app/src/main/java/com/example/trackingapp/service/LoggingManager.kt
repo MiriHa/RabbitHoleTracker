@@ -2,8 +2,11 @@ package com.example.trackingapp.service
 
 import android.app.AlarmManager
 import android.app.PendingIntent
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.provider.Settings
+import android.text.TextUtils.SimpleStringSplitter
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -99,5 +102,18 @@ object LoggingManager {
 
     fun cancleServiceViaWorker(context: Context){
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
+    }
+
+    fun isAccessibilityServiceEnabled(context: Context, accessibilityService: Class<*>?): Boolean {
+        val expectedComponentName = ComponentName(context, accessibilityService!!)
+        val enabledServicesSetting: String = Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
+        val colonSplitter = SimpleStringSplitter(':')
+        colonSplitter.setString(enabledServicesSetting)
+        while (colonSplitter.hasNext()) {
+            val componentNameString = colonSplitter.next()
+            val enabledService = ComponentName.unflattenFromString(componentNameString)
+            if (enabledService != null && enabledService == expectedComponentName) return true
+        }
+        return false
     }
 }

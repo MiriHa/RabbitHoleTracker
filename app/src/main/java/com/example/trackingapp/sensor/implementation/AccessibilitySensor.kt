@@ -1,13 +1,13 @@
 package com.example.trackingapp.sensor.implementation
 
 import android.content.Context
-import android.content.Intent
+import android.util.Log
 import android.view.View
 import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.service.AccessibilityLogService
+import com.example.trackingapp.util.CONST
 
 class AccessibilitySensor : AbstractSensor(
-    "ACCESIBILITYSENSOR",
+    "ACCESIBILITY_SENSOR",
     "accessibility"
 ) {
 
@@ -23,10 +23,18 @@ class AccessibilitySensor : AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
+        if (!m_isSensorAvailable) return
+
+        val time = System.currentTimeMillis()
+        Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
+
         mContext = context
 
-        val startIntent = Intent(mContext, AccessibilityLogService::class.java)
+        /* TODO Service gets started via settings???
+        val startIntent = Intent(context, AccessibilityLogService::class.java)
         context.startService(startIntent)
+
+         */
 
         isRunning = true
     }
@@ -34,8 +42,8 @@ class AccessibilitySensor : AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            val stopIntent = Intent(mContext, AccessibilityLogService::class.java)
-            mContext?.stopService(stopIntent)
+           // val stopIntent = Intent(mContext, AccessibilityLogService::class.java)
+            //mContext?.stopService(stopIntent)
         }
     }
 

@@ -28,7 +28,7 @@ class SmsSensor: AbstractSensor(
         super.start(context)
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        Log.d(TAG, "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
+        Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         try{
             val smsObserver = SmsObserver(null, context);

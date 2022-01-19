@@ -12,7 +12,10 @@ import com.example.trackingapp.service.LoggingManager
 
 class BootUpReceiver : BroadcastReceiver() {
 
+    private val TAG = "BootUpReceiver"
+
     override fun onReceive(context: Context, intent: Intent) {
+        Log.i(TAG, "Unexpected intent type received")
         if (LoggingManager.isDataRecordingActive == false) {
             return
         } else {
@@ -25,10 +28,9 @@ class BootUpReceiver : BroadcastReceiver() {
                 Intent.ACTION_BOOT_COMPLETED -> {
                     saveEntry(BootEventType.BOOTED, timestamp)
                     startLoggingManager(context)
-                    startLoggingManager(context)
                 }
                 else -> {
-                    Log.i("BootUpReceiver", "Unexpected intent type received")
+                    Log.i(TAG, "Unexpected intent type received")
                 }
             }
         }

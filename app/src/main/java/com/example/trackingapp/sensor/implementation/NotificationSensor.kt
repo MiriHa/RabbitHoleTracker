@@ -9,11 +9,11 @@ import com.example.trackingapp.service.NotificationListener
 import com.example.trackingapp.util.CONST
 
 class NotificationSensor: AbstractSensor(
-    "TRACKINGAPP_NOTIFICATION_SENSOR",
+    "NOTIFICATION_SENSOR",
     "notifications"
 ) {
 
-    var m_context: Context? = null
+    var mContext: Context? = null
 
     override fun getSettingsView(context: Context?): View? {
         return null
@@ -28,9 +28,9 @@ class NotificationSensor: AbstractSensor(
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
 
-        m_context = context
+        mContext = context
         context.startService(Intent(context, NotificationListener::class.java))
-        Log.d(TAG, "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
+        Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
 
         isRunning = true
@@ -46,7 +46,7 @@ class NotificationSensor: AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context?.stopService(Intent(m_context, NotificationListener::class.java))
+            mContext?.stopService(Intent(mContext, NotificationListener::class.java))
         }
     }
 

@@ -2,21 +2,18 @@ package com.example.trackingapp.util
 
 import android.Manifest
 import android.app.Activity
+import android.app.AppOpsManager
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Process
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-
-
-
-
-
-
 
 class PermissionManager(val activity: Activity, private val code: Int) {
     val TAG = "TRACKINGAPP_PERMISSION_MANAGER"
@@ -37,12 +34,18 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
             l.add(Manifest.permission.BIND_ACCESSIBILITY_SERVICE)
             l.add(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
+            l.add(Manifest.permission.BLUETOOTH)
+//            l.add(Manifest.permission.WAKE_LOCK)
+            l.add(Manifest.permission.PACKAGE_USAGE_STATS)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                l.add(Manifest.permission.FOREGROUND_SERVICE)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                l.add(Manifest.permission.BLUETOOTH_CONNECT)
+            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 l.add(Manifest.permission.ACTIVITY_RECOGNITION)
                 l.add(Manifest.permission.USE_FULL_SCREEN_INTENT)
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                l.add(Manifest.permission.FOREGROUND_SERVICE)
             }
             return l
         }
@@ -92,6 +95,26 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         } else {
             true
         }
+    }
+
+    /**
+     * //TODO Method to check if UsageStats are allowed
+     */
+    fun checkUsageAccess(context: Context): Boolean {
+        Log.d(TAG, "checkUsageAccess()")
+        var granted = false
+        val appOps = context
+            .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+        val mode = appOps.checkOpNoThrow(
+            AppOpsManager.OPSTR_GET_USAGE_STATS,
+            Process.myUid(), context.packageName
+        )
+        granted = if (mode == AppOpsManager.MODE_DEFAULT) {
+            context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+        } else {
+            mode == AppOpsManager.MODE_ALLOWED
+        }
+        return granted
     }
 
 

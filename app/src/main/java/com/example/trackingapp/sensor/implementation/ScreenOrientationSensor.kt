@@ -7,15 +7,18 @@ import android.content.IntentFilter
 import android.content.res.Configuration
 import android.util.Log
 import android.view.View
+import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.models.Event
+import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.ScreenOrientationType
 import com.example.trackingapp.sensor.AbstractSensor
 
 class ScreenOrientationSensor : AbstractSensor(
-    "SCREN_ORIENTATION_SENSOR",
+    "SCREEN_ORIENTATION_SENSOR",
     "screenOrientation"
 ) {
     private var m_Receiver: BroadcastReceiver? = null
-    private var m_context: Context? = null
-    var m_WasScreenOn = true
+    private var mContext: Context? = null
 
     override fun getSettingsView(context: Context?): View? {
         return null
@@ -29,61 +32,68 @@ class ScreenOrientationSensor : AbstractSensor(
         super.start(context)
         val t = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        m_context = context
-            try {
-                if (m_context?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-                } else if (m_context?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-                } else if (m_context?.resources?.configuration?.orientation == Configuration.ORIENTATION_UNDEFINED) {
-
-                } else {
-
-                }
-
-            } catch (e: Exception) {
-                Log.e(TAG, e.toString())
-            }
+        mContext = context
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_CONFIGURATION_CHANGED)
-        m_Receiver = ScreenReceiver()
+        m_Receiver = ScreenOrientationReceiver()
+
         try {
-            m_context!!.unregisterReceiver(m_Receiver)
+            mContext?.unregisterReceiver(m_Receiver)
         } catch (e: Exception) {
             //Not Registered
         }
-        m_context?.registerReceiver(m_Receiver, filter)
+        mContext?.registerReceiver(m_Receiver, filter)
         isRunning = true
     }
 
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context?.unregisterReceiver(m_Receiver)
+            mContext?.unregisterReceiver(m_Receiver)
 
         }
     }
 
-    inner class ScreenReceiver : BroadcastReceiver() {
+    override fun saveSnapshot(context: Context) {
+        super.saveSnapshot(context)
+       //val time = System.currentTimeMillis()
+       // val orientationType = getScreenOrientation(context)
+       // saveEntry(orientationType, time)
+    }
+
+    fun saveEntry(orientation: ScreenOrientationType, timestamp: Long) {
+        Event(EventName.SCREEN_ORIENTATION, timestamp, orientation.name).saveToDataBase()
+    }
+
+    fun getScreenOrientation(context: Context?): ScreenOrientationType {
+        var orientationType: ScreenOrientationType = ScreenOrientationType.SCREEN_ORIENTATION_UNDEFINED
+        try {
+            orientationType = when {
+                (context?.resources?.configuration?.orientation == Configuration.ORIENTATION_LANDSCAPE) ->
+                    ScreenOrientationType.SCREEN_ORIENTATION_LANDSCAPE
+
+                (context?.resources?.configuration?.orientation == Configuration.ORIENTATION_PORTRAIT) ->
+                    ScreenOrientationType.SCREEN_ORIENTATION_PORTRAIT
+
+                (context?.resources?.configuration?.orientation == Configuration.ORIENTATION_UNDEFINED) ->
+                    ScreenOrientationType.SCREEN_ORIENTATION_UNDEFINED
+
+                else -> ScreenOrientationType.SCREEN_ORIENTATION_UNDEFINED
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
+        }
+        return orientationType
+    }
+
+    inner class ScreenOrientationReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val t = System.currentTimeMillis()
+            val time = System.currentTimeMillis()
             if (isRunning) {
                 if (intent.action == Intent.ACTION_CONFIGURATION_CHANGED) {
-                    try {
-                        if (context.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-                        } else if (context.resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) {
-
-                        } else if (context.resources.configuration.orientation == Configuration.ORIENTATION_UNDEFINED) {
-
-                        } else {
-
-                        }
-
-                    } catch (e: Exception) {
-                        Log.e(TAG, e.toString())
-                    }
+                    val orientationType = getScreenOrientation(context)
+                    saveEntry(orientationType, time)
                 }
             }
         }

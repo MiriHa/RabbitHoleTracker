@@ -8,6 +8,7 @@ import com.example.trackingapp.R
 import java.security.InvalidParameterException
 
 enum class ScreenType {Welcome, SignUp, Login, HomeScreen}
+const val TAG = "NAVIGATION"
 
 fun Fragment.navigate(to: ScreenType, from: ScreenType) {
     if(to == from){
@@ -16,12 +17,11 @@ fun Fragment.navigate(to: ScreenType, from: ScreenType) {
 
     var navOptions = NavOptions.Builder().build()
 
-    Log.d("xxx","navigate from: $from to : $to")
+    Log.d(TAG,"navigate from: $from to : $to")
 
     if( (from == ScreenType.Welcome && to != ScreenType.HomeScreen)
         || (from == ScreenType.Login && to == ScreenType.HomeScreen)
         || (from == ScreenType.SignUp && to == ScreenType.HomeScreen)){
-        Log.d("xxx","fromLoginScreen, dont pop back")
        navOptions = NavOptions.Builder().setPopUpTo(R.id.nav_graph, true).build()
     }
 

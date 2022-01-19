@@ -139,14 +139,18 @@ class LoggingService : Service() {
     private fun createSensorList(): MutableList<AbstractSensor> {
         val list = arrayListOf<AbstractSensor>()
         list.add(AirplaneModeSensor())
-        list.add(ScreenOnOffSensor())
+        list.add(ScreenStateSensor())
         list.add(NotificationSensor())
         list.add(WifiSensor())
         list.add(PowerSensor())
-        list.add(AppSensor())
+        //list.add(AppSensor())
         list.add(AccessibilitySensor())
         list.add(CallSensor())
         list.add(SmsSensor())
+        list.add(ScreenOrientationSensor())
+        list.add(RingerModeSensor())
+        list.add(AccelerometerSensor())
+        list.add(BluetoothSensor())
         return list
     }
 

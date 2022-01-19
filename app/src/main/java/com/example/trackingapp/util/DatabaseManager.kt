@@ -26,7 +26,7 @@ object DatabaseManager {
 
     val database = Firebase.database.reference
 
-    val intentionList: MutableSet<String?> = HashSet()
+    var intentionList: MutableSet<String?> = HashSet()
 
     val isUserLoggedIn: Boolean
         get() = user != null
@@ -56,8 +56,8 @@ object DatabaseManager {
     }
 
     fun Event.saveToDataBase() {
-        Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event}")
-/*        if (this.metaData != null) {
+        Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
+        if (this.metaData != null) {
             user?.let {
                 Firebase.database.reference.child(CONST.firebaseReferenceUsers)
                     .child(it.uid)
@@ -65,15 +65,15 @@ object DatabaseManager {
                     .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
                     .setValue(this)
             }
-        } else {*/
-        user?.let {
-            Firebase.database.reference.child(CONST.firebaseReferenceUsers)
-                .child(it.uid)
-                .child(CONST.firebaseReferenceLogs)
-                .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
-                .setValue(this)
+        } else {
+            user?.let {
+                Firebase.database.reference.child(CONST.firebaseReferenceUsers)
+                    .child(it.uid)
+                    .child(CONST.firebaseReferenceLogs)
+                    .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
+                    .setValue(this)
+            }
         }
-        // }
     }
 
     fun saveIntentionToFirebase(time: Date, intention: String) {
@@ -91,14 +91,15 @@ object DatabaseManager {
         val intentionRef = database.child(CONST.firebaseReferenceUsers).child(userID).child(CONST.firebaseReferenceIntentions)
         intentionRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                Log.d(TAG, "OnDataChange: IntentionChanged")
                 for (postSnapshot in snapshot.children) {
                     val value = postSnapshot.getValue(String::class.java)
-                    intentionList.add(value)
+                    if (!intentionList.contains(value)) intentionList.add(value)
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.d("onCancelled", error.toString())
+                Log.d(TAG, "onCancelled $error")
             }
         })
     }

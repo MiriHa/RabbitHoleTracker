@@ -1,6 +1,7 @@
 package com.example.trackingapp.util
 
 import java.text.DateFormat
+import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,4 +37,5 @@ object CONST {
 
     const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 
+    val numberFormat = NumberFormat.getInstance()
 }

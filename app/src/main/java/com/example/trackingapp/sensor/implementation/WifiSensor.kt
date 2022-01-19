@@ -21,7 +21,7 @@ import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 
 class WifiSensor : AbstractSensor(
-    "WIFISENSOR",
+    "WIFI_SENSOR",
     "wifi"
 ) {
 
@@ -67,7 +67,6 @@ class WifiSensor : AbstractSensor(
         val netWorkType = getCurrentNetworkType(context)
         val wifiName = getWifiName(context)
         if (isWifiEnabled(context)) {
-            Log.d("xxx", "wifienabledtest")
             saveEntry(WifiConnectionState.ENABLED, netWorkType, wifiName, timestamp)
         } else {
             saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)

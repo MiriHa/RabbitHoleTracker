@@ -23,11 +23,11 @@ import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.PhoneNumberHelper
 
 class CallSensor : AbstractSensor(
-    "CALLSENSOR",
+    "CALL_SENSOR",
     "call"
 ) {
     private var mReceiver: BroadcastReceiver? = null
-    private var m_context: Context? = null
+    private var mContext: Context? = null
 
     override fun getSettingsView(context: Context?): View? {
         return null
@@ -41,12 +41,13 @@ class CallSensor : AbstractSensor(
         super.start(context)
         val time = System.currentTimeMillis()
         if (!m_isSensorAvailable) return
-        Log.d(TAG, "StartScreenSensor: ${CONST.dateTimeFormat.format(time)}")
+        Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_CALL)
         filter.addAction("android.intent.action.PHONE_STATE")
 
+        mContext = context
         mReceiver = CallReceiver()
 
         context.applicationContext.registerReceiver(mReceiver, filter)
@@ -64,7 +65,7 @@ class CallSensor : AbstractSensor(
     override fun stop() {
         if (isRunning) {
             isRunning = false
-            m_context?.unregisterReceiver(mReceiver)
+            mContext?.unregisterReceiver(mReceiver)
         }
     }
 
@@ -135,8 +136,7 @@ class CallSensor : AbstractSensor(
                         // Save Ringing state to DB
                         if (cachedEvent != null && cachedEvent == RINGING) {
                             Log.i(TAG, "Ringing duration: $broadCastTimestamp - $lastCallLogTimestamp = $ringingLength")
-                            saveEntry(
-                                context, lastCallLogNumber, countryCode, contactName, contactUid,
+                            saveEntry(lastCallLogNumber, countryCode, contactName, contactUid,
                                 lastCallLogTimestamp, ringingLength, RINGING
                             )
                         }
@@ -144,8 +144,7 @@ class CallSensor : AbstractSensor(
                         // Save on hold State to DB
                         if (cachedEvent != null && cachedEvent == ONHOLD) {
                             Log.i(TAG, "Ringing duration onhold: $broadCastTimestamp - $lastCallLogTimestamp = $ringingLength")
-                            saveEntry(
-                                context, lastCallLogNumber, countryCode, contactName, contactUid,
+                            saveEntry(lastCallLogNumber, countryCode, contactName, contactUid,
                                 lastCallLogTimestamp, ringingLength, ONHOLD
                             )
                         }
@@ -154,8 +153,7 @@ class CallSensor : AbstractSensor(
                         val timestamp = lastCallLogTimestamp + ringingLength // Moment when call really started
                         if ("OUTGOING" != lastCallLogType || lastCallLogDuration > 0) { // do not log OUTGOING with duration 0 (#301)
                             Log.d(TAG, "Found no entry for: PHONE $lastCallLogType $timestamp")
-                            saveEntry(
-                                context, lastCallLogNumber, countryCode, contactName, contactUid,
+                            saveEntry(lastCallLogNumber, countryCode, contactName, contactUid,
                                 timestamp, lastCallLogDuration.toInt(), lastCallLogType
                             )
                         }
@@ -213,20 +211,9 @@ class CallSensor : AbstractSensor(
          * @param event             event name
          */
         private fun saveEntry(
-            context: Context, phoneNumber: String?, countryCode: String?, contactName: String?, contactUid: Int,
+            phoneNumber: String?, countryCode: String?, contactName: String?, contactUid: Int,
             timestamp: Long, duration: Int, event: String?
         ) {
-
-            //create MetaCall
-            /*val meta = MetaCall()
-            val phoneNumberHash: String = hashFactory.getHash(PhoneNumberHelper.formatNumber(phoneNumber))
-            meta.phoneNumber(phoneNumberHash).countryCode(countryCode).partner(hashFactory.getHash(contactName)).duration(duration).contactId(contactUid)
-            Log.logMetaData(TAG, meta.toJSONString())*/
-
-            //create UsageActivity using MetaData and store to DB
-            //val activity = UsageActivity()
-            /*activity.activityName(UsageActivityName.PHONE).timestamp(timestamp).event(event).metaData(meta)
-            activity.insertIntoDB()*/
             val callMeta = CallMeta(
                 phoneNumber = PhoneNumberHelper.formatNumber(phoneNumber).hashCode().toString(),
                 countryCode = countryCode,

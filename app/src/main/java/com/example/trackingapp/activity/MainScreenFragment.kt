@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.FragmentMainscreenBinding
@@ -47,7 +46,7 @@ class MainScreenFragment : Fragment() {
         val view = binding.root
         notificationManager = NotificationManagerCompat.from(mContext)
 
-        DatabaseManager.getSavedIntentions()
+        //DatabaseManager.getSavedIntentions()
 
         binding.buttonTest.apply {
             text = getString(
