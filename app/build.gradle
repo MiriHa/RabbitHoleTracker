@@ -54,8 +54,8 @@ apply plugin: 'com.google.gms.google-services'
 dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
-    implementation 'androidx.appcompat:appcompat:1.4.0'
-    implementation 'com.google.android.material:material:1.4.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation "androidx.compose.ui:ui:1.0.5"
     implementation "androidx.compose.material:material:1.0.5"
     implementation "androidx.compose.ui:ui-tooling-preview:1.0.5"
@@ -67,7 +67,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0'
     implementation 'androidx.fragment:fragment-ktx:1.4.0'
     implementation 'androidx.annotation:annotation:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.2'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
 
 
     testImplementation 'junit:junit:4.+'
@@ -84,7 +84,7 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4:1.0.5'
 
     //Navigation
-    implementation "androidx.navigation:navigation-compose:2.4.0-beta02"
+    implementation "androidx.navigation:navigation-compose:2.4.0-rc01"
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.navigation:navigation-ui-ktx:2.3.5")
     implementation("androidx.navigation:navigation-dynamic-features-fragment:2.3.5")
@@ -94,7 +94,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth-ktx'
     implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'com.google.android.gms:play-services-auth:20.0.0'
+    implementation 'com.google.android.gms:play-services-auth:20.0.1'
     implementation "com.google.firebase:firebase-analytics"
     implementation "com.google.firebase:firebase-database"
 
@@ -102,7 +102,14 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.7.1")
     implementation "androidx.work:work-multiprocess:2.7.1"
 
-    api 'com.googlecode.libphonenumber:libphonenumber:8.12.5'
+    //Phone number
+    implementation 'com.googlecode.libphonenumber:libphonenumber:8.12.5'
+
+    //Gson
+    implementation 'com.google.code.gson:gson:2.8.8'
+
+    //Activity Recognition
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
 
 
 }

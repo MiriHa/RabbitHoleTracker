@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.androidsensors
 
 import android.content.Context
 import android.hardware.Sensor
@@ -15,6 +15,7 @@ import android.widget.TextView
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.SensorAccuracy
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
@@ -24,7 +25,6 @@ class AccelerometerSensor : AbstractSensor(
     "accelerometer"
 ), SensorEventListener {
     private var sensorManager: SensorManager? = null
-    private var count: Long = 0
 
     override fun getSettingsView(context: Context?): View {
         val linearLayout = LinearLayout(context)
@@ -67,7 +67,6 @@ class AccelerometerSensor : AbstractSensor(
             SensorManager.SENSOR_DELAY_NORMAL
         )
         isRunning = true
-        count = 0
     }
 
     override fun stop() {
@@ -77,37 +76,32 @@ class AccelerometerSensor : AbstractSensor(
         }
     }
 
-    fun saveEntry(timestamp: Long, sensorData: String) {
-        Event(EventName.ACCELEROMETER, timestamp, sensorData).saveToDataBase()
+    fun saveEntry(timestamp: Long, sensorData: String, accuracy: String) {
+        Event(EventName.ACCELEROMETER, timestamp, sensorData, accuracy).saveToDataBase()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
-    override fun onSensorChanged(event: SensorEvent) {
+    override fun onSensorChanged(event: SensorEvent?) {
         val time = System.currentTimeMillis()
         if (isRunning && LoggingManager.userPresent) {
             try {
-                count++
-                when (event.accuracy) {
+                when (event?.accuracy) {
                     SensorManager.SENSOR_STATUS_UNRELIABLE -> {
                         val sensorData = "${CONST.numberFormat.format(event.values[0])}, " +
                                 "${CONST.numberFormat.format(event.values[1])}, ${CONST.numberFormat.format(event.values[2])}"
-                        saveEntry(time, sensorData)
+                        saveEntry(time, sensorData, SensorAccuracy.ACCURACY_UNRELAIABLE.name)
                     }
-                    //SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM
+                    //TOOD SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM
                     else -> {
-                        val sensorData = "${CONST.numberFormat.format(event.values[0])}, " +
-                                "${CONST.numberFormat.format(event.values[1])}, ${CONST.numberFormat.format(event.values[2])}"
-                        saveEntry(time, sensorData)
+                        val sensorData = "${CONST.numberFormat.format(event?.values?.get(0))}, " +
+                                "${CONST.numberFormat.format(event?.values?.get(1))}, ${CONST.numberFormat.format(event?.values?.get(2))}"
+                        saveEntry(time, sensorData, SensorAccuracy.ACCURACY_ELSE.name)
                     }
                 }
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
             }
         }
-    }
-
-    companion object {
-        private const val serialVersionUID = 1L
     }
 }

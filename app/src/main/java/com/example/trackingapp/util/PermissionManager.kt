@@ -37,6 +37,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.BLUETOOTH)
 //            l.add(Manifest.permission.WAKE_LOCK)
             l.add(Manifest.permission.PACKAGE_USAGE_STATS)
+            l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 l.add(Manifest.permission.FOREGROUND_SERVICE)
             }

@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.usage
 
 import android.content.Context
 import android.util.Log

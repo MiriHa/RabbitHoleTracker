@@ -5,10 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
-import com.example.trackingapp.util.SharePrefManager
+import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.turnScreenOffAndKeyguardOn
 import com.example.trackingapp.util.turnScreenOnAndKeyguardOff
-import java.util.*
 
 class ESMIntentionLockActivity : AppCompatActivity(){
 
@@ -22,7 +21,7 @@ class ESMIntentionLockActivity : AppCompatActivity(){
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
 
-        val savedIntention = SharePrefManager.getLastSavedIntention(this@ESMIntentionLockActivity)
+        val savedIntention = SharedPrefManager.getLastSavedIntention()
         binding.textViewEsmLockIntention.text = savedIntention
 
         this.turnScreenOnAndKeyguardOff()

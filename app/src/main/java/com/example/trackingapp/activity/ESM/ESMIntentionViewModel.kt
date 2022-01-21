@@ -42,7 +42,7 @@ class ESMIntentionViewModel : ViewModel() {
     fun checkDuplicateIntentionAnSave(newIntention: String) {
         if (!DatabaseManager.intentionList.contains(newIntention)) {
             //save new Intention to Firebase
-            DatabaseManager.saveIntentionToFirebase(Date(), newIntention)
+            DatabaseManager.saveNewIntention(Date(), newIntention)
         }
     }
 

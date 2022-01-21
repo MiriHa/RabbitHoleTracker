@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.communication
 
 import android.content.Context
 import android.content.Intent

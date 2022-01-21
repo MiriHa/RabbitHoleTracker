@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.modes
 
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
@@ -148,11 +148,6 @@ class ScreenStateSensor : AbstractSensor(
                 type.name,
             ).saveToDataBase()
         }
-    }
-
-
-    companion object {
-        private const val serialVersionUID = 1L
     }
 
     init {

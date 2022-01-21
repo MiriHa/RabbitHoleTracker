@@ -10,6 +10,7 @@ import android.util.Log
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.metadata.MetaNotification
 
 class NotificationListener: NotificationListenerService() {
     val TAG = "NotificationReceiver"
@@ -122,7 +123,7 @@ class NotificationListener: NotificationListenerService() {
         return mOnUnbind
     }
 
-    fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
+    private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
         Log.d(TAG, "checkIfNotificationExistsAndSave()")
         if (packageName != "com.example.trackingapp" &&
             !(packageName == "com.whatsapp" && category != null && category == Notification.CATEGORY_CALL && priority == 2)
@@ -132,8 +133,8 @@ class NotificationListener: NotificationListenerService() {
     }
 
     private fun saveEntry(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
-        //TODO save description and priority with MetaNotification
-        Event(EventName.NOTIFICATION, timestamp, event= title, description= text, name=category, packageName = packageName).saveToDataBase()
+        val metaNotification = MetaNotification(priority, category)
+        Event(EventName.NOTIFICATION, timestamp, event= title, description= text, packageName = packageName).saveToDataBase(metaNotification)
 
     }
 }

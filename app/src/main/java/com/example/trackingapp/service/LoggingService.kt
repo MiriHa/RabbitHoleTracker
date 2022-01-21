@@ -11,9 +11,23 @@ import androidx.core.app.NotificationCompat
 import com.example.trackingapp.R
 import com.example.trackingapp.activity.MainActivity
 import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.sensor.implementation.*
+import com.example.trackingapp.sensor.activityrecognition.ActivityRecognitionSensor
+import com.example.trackingapp.sensor.androidsensors.AccelerometerSensor
+import com.example.trackingapp.sensor.androidsensors.GyroscopeSensor
+import com.example.trackingapp.sensor.androidsensors.LightSensor
+import com.example.trackingapp.sensor.androidsensors.ProximitySensor
+import com.example.trackingapp.sensor.communication.CallSensor
+import com.example.trackingapp.sensor.communication.NotificationSensor
+import com.example.trackingapp.sensor.communication.SmsSensor
+import com.example.trackingapp.sensor.connection.BluetoothSensor
+import com.example.trackingapp.sensor.connection.PowerSensor
+import com.example.trackingapp.sensor.connection.WifiSensor
+import com.example.trackingapp.sensor.modes.AirplaneModeSensor
+import com.example.trackingapp.sensor.modes.RingerModeSensor
+import com.example.trackingapp.sensor.modes.ScreenOrientationSensor
+import com.example.trackingapp.sensor.modes.ScreenStateSensor
+import com.example.trackingapp.sensor.usage.AccessibilitySensor
 import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.SharePrefManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
@@ -40,7 +54,7 @@ class LoggingService : Service() {
         val notificationManager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(CONST.CHANNEL_ID_LOGGING, CONST.CHANNEL_NAME_ESM_LOGGING, NotificationManager.IMPORTANCE_DEFAULT)
         notificationManager.createNotificationChannel(channel)
-        isServiceRunning(true)
+        isRunning = true
 
         val notificationIntent = Intent(this, MainActivity::class.java)
         val notificationPendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
@@ -64,7 +78,7 @@ class LoggingService : Service() {
 
     override fun onDestroy() {
         Log.d(mTAG, "onDestroy called: Datarecording active: ${LoggingManager.isDataRecordingActive}")
-        isServiceRunning(false)
+        isRunning = false
         stopForeground(true)
         stopSensors()
         stopLoggingUpdates()
@@ -131,11 +145,6 @@ class LoggingService : Service() {
         }
     }
 
-    private fun isServiceRunning(isServiceRunning: Boolean) {
-        isRunning = isServiceRunning
-        SharePrefManager.saveBoolean(this, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, isRunning)
-    }
-
     private fun createSensorList(): MutableList<AbstractSensor> {
         val list = arrayListOf<AbstractSensor>()
         list.add(AirplaneModeSensor())
@@ -143,14 +152,17 @@ class LoggingService : Service() {
         list.add(NotificationSensor())
         list.add(WifiSensor())
         list.add(PowerSensor())
-        //list.add(AppSensor())
         list.add(AccessibilitySensor())
         list.add(CallSensor())
         list.add(SmsSensor())
         list.add(ScreenOrientationSensor())
         list.add(RingerModeSensor())
         list.add(AccelerometerSensor())
+        list.add(GyroscopeSensor())
+        list.add(LightSensor())
+        list.add(ProximitySensor())
         list.add(BluetoothSensor())
+        list.add(ActivityRecognitionSensor())
         return list
     }
 

@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.connection
 
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice

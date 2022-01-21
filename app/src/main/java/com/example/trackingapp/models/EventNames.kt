@@ -13,18 +13,23 @@ enum class EventName {
     APPS,
     AIRPLANEMODE,
     ACCELEROMETER,
+    ACTIVITY,
     BLUETOOTH,
     BOOT,
+    ESM,
+    GYROSCOPE,
+    INTERNET,
+    LIGHT,
+    LOGIN,
+    NOTIFICATION,
+    PHONE_ORIENTATION,
     PHONE,
     POWER,
-    NOTIFICATION,
+    PROXIMITY,
+    RINGER_MODE,
     SCREEN,
     SCREEN_ORIENTATION,
-    RINGER_MODE,
-    SMS,
-    INTERNET,
-    LOGIN,
-    ESM,
+    SMS
 }
 
 enum class ESMState {
@@ -92,6 +97,24 @@ enum class RingerMode {
     UNKNOWN
 }
 
-enum class AccelerometerAccuracy {
-    ACCURACY_UNRELAIABLE
+enum class SensorAccuracy {
+    ACCURACY_UNRELAIABLE,
+    ACCURACY_ELSE
+}
+
+enum class ActivityType {
+    IN_VEHICLE,
+    ON_BICYCLE,
+    ON_FOOT,
+    RUNNING,
+    STILL,
+    TILTING,
+    WALKING,
+    UNKNOWN
+}
+
+enum class ActivityTransitionType {
+    ACTIVITY_TRANSITION_ENTER,
+    ACTIVITY_TRANSITION_EXIT,
+    ACTIVITY_TRANSITION_UNKNOWN
 }

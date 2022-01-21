@@ -12,9 +12,10 @@ object CONST {
     var currentLocale: Locale = Locale.GERMAN
     var dateTimeFormat: DateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss,SSS", currentLocale)
 
-    const val PREFERENCES_FILE: String = "ESM_INTENTION"
+    const val PREFERENCES_FILE: String = "TRACKING_APP"
     const val PREFERENCES_INTENTION_NAME: String = "SAVED_INTENTION"
     const val PREFERENCES_IS_LOGGING_SERVICE_RUNNING: String = "IS_LOGGING_SERVICE_RUNNING"
+    const val PREFERENCES_INTENTION_LIST: String = "INTENTION_LIST"
 
     const val firebaseReferenceUsers = "users"
     const val firebaseReferenceLogs = "logs"
@@ -37,5 +38,5 @@ object CONST {
 
     const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 
-    val numberFormat = NumberFormat.getInstance()
+    val numberFormat: NumberFormat = NumberFormat.getInstance()
 }

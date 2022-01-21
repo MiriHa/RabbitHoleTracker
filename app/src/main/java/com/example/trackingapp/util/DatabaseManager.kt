@@ -4,7 +4,9 @@ import android.util.Log
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.models.User
+import com.example.trackingapp.models.metadata.MetaType
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.SharedPrefManager
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DataSnapshot
@@ -34,8 +36,10 @@ object DatabaseManager {
     init {
         //TODO Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
         //Firebase.database.setPersistenceEnabled(true)
+        Log.d(TAG, "initDatabaseManager")
+        //TODO getSavedIntentions()
+        intentionList = SharedPrefManager.getIntentionList()
         intentionList.addAll(arrayOf("Browsing", "Passing Time", "Search for Information"))
-        getSavedIntentions()
     }
 
     fun saveUserToFirebase(email: String) {
@@ -55,15 +59,18 @@ object DatabaseManager {
 
     }
 
-    fun Event.saveToDataBase() {
+    fun Event.saveToDataBase(metadata: MetaType? = null) {
         Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
-        if (this.metaData != null) {
+        if (metadata != null) {
+            //val logID = "${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}"
             user?.let {
-                Firebase.database.reference.child(CONST.firebaseReferenceUsers)
+                val logChild = Firebase.database.reference.child(CONST.firebaseReferenceUsers)
                     .child(it.uid)
                     .child(CONST.firebaseReferenceLogs)
                     .child("${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}")
-                    .setValue(this)
+
+                logChild.setValue(this)
+                logChild.child("metaData").setValue(metadata)
             }
         } else {
             user?.let {
@@ -76,7 +83,12 @@ object DatabaseManager {
         }
     }
 
-    fun saveIntentionToFirebase(time: Date, intention: String) {
+    fun saveNewIntention(time: Date, intention: String) {
+        Log.d(TAG, "save new IntentionToDatabase: $intention")
+        intentionList.add(intention)
+        SharedPrefManager.saveIntentionList(intentionList)
+        SharedPrefManager.saveLastIntention(intention)
+
         val timestamp = CONST.dateTimeFormat.format(time)
         user?.let {
             database.child(CONST.firebaseReferenceUsers)
@@ -89,7 +101,8 @@ object DatabaseManager {
 
     fun getSavedIntentions() {
         val intentionRef = database.child(CONST.firebaseReferenceUsers).child(userID).child(CONST.firebaseReferenceIntentions)
-        intentionRef.addValueEventListener(object : ValueEventListener {
+//        intentionRef.addValueEventListener(object : ValueEventListener {
+        intentionRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 Log.d(TAG, "OnDataChange: IntentionChanged")
                 for (postSnapshot in snapshot.children) {

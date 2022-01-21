@@ -15,7 +15,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.SharePrefManager
 import java.util.concurrent.TimeUnit
 
 
@@ -26,8 +25,9 @@ object LoggingManager {
     var userPresent = false
 
     fun isServiceRunning(context: Context): Boolean {
-
-        return SharePrefManager.getBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING)
+        Log.d(TAG, "isServiceRunning: ${LoggingService.isRunning}")
+        return LoggingService.isRunning
+        //return SharedPrefManager.getBoolean(CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING)
     }
 
     var isDataRecordingActive: Boolean? = null
@@ -46,9 +46,8 @@ object LoggingManager {
     fun stopLoggingService(context: Context) {
         //if (isServiceRunning(context)) {
         Log.d(TAG, "stopService called")
-        LoggingManager.isDataRecordingActive = false
+        isDataRecordingActive = false
         Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
-        SharePrefManager.saveBoolean(context, CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING, false)
         val stopIntent = Intent(context, LoggingService::class.java )
         context.applicationContext.stopService(stopIntent)
         cancleServiceViaWorker(context)

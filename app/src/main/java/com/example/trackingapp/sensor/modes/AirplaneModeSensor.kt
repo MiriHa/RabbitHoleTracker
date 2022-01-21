@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.modes
 
 import android.content.Context
 import android.provider.Settings

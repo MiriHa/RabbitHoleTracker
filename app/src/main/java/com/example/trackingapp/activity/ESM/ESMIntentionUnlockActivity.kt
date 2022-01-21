@@ -14,7 +14,7 @@ import com.example.trackingapp.models.ESMState
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
-import com.example.trackingapp.util.SharePrefManager
+import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
 
@@ -75,7 +75,6 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
                ESMState.ESM_UNLOCK.name,
                intention
            ).saveToDataBase()
-        SharePrefManager.saveLastIntention(this@ESMIntentionUnlockActivity, intention)
        } else {
            Toast.makeText(this, R.string.esm_unlock_intention_error, Toast.LENGTH_LONG).show()
        }

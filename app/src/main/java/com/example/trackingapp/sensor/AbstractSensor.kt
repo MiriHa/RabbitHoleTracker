@@ -33,8 +33,4 @@ abstract class AbstractSensor protected constructor(
     open fun saveSnapshot(context: Context){
         //Log.i(TAG, "save Snapshot if possible")
     }
-
-    companion object {
-        private const val serialVersionUID = 1L
-    }
 }

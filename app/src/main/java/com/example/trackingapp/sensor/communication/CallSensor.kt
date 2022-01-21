@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.communication
 
 import android.Manifest
 import android.app.Activity
@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
-import com.example.trackingapp.models.metadata.CallMeta
+import com.example.trackingapp.models.metadata.MetaCall
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
@@ -214,7 +214,7 @@ class CallSensor : AbstractSensor(
             phoneNumber: String?, countryCode: String?, contactName: String?, contactUid: Int,
             timestamp: Long, duration: Int, event: String?
         ) {
-            val callMeta = CallMeta(
+            val callMeta = MetaCall(
                 phoneNumber = PhoneNumberHelper.formatNumber(phoneNumber).hashCode().toString(),
                 countryCode = countryCode,
                 partner = contactName.hashCode().toString(),
@@ -226,8 +226,7 @@ class CallSensor : AbstractSensor(
                 eventName = EventName.PHONE,
                 timestamp = timestamp,
                 event = event,
-                metaData = callMeta
-            ).saveToDataBase()
+            ).saveToDataBase(callMeta)
         }
 
         /**

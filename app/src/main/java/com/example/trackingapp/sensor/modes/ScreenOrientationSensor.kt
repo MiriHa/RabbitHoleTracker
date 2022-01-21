@@ -1,4 +1,4 @@
-package com.example.trackingapp.sensor.implementation
+package com.example.trackingapp.sensor.modes
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -99,7 +99,4 @@ class ScreenOrientationSensor : AbstractSensor(
         }
     }
 
-    companion object {
-        private const val serialVersionUID = 1L
-    }
 }

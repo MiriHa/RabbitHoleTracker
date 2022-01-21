@@ -1,6 +1,5 @@
 package com.example.trackingapp.models
 
-import com.example.trackingapp.models.metadata.MetaType
 import java.util.*
 
 class Event(
@@ -10,7 +9,6 @@ class Event(
     val description: String? = null,
     val name: String? = null,
     val packageName: String? = null,
-    val metaData: MetaType? = null,
     var timezoneOffset: Int? = null
 ) {
     init {

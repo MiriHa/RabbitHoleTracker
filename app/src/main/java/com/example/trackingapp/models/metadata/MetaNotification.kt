@@ -1,6 +1,6 @@
 package com.example.trackingapp.models.metadata
 
-class NotificationMeta(
+class MetaNotification(
     val priority: Int? = 0,
     val category: String? = null
 ): MetaType("NOTIFICATION_META") {

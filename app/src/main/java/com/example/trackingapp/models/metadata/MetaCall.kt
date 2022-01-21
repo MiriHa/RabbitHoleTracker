@@ -1,6 +1,6 @@
 package com.example.trackingapp.models.metadata
 
-class CallMeta(
+class MetaCall(
     val META_TYPE_NAME: String = "APP_META",
     private val phoneNumber: String? = null,
     private val countryCode: String? = null,

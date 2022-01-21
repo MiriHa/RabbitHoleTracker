@@ -12,6 +12,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityMainBinding
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.SharedPrefManager
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        SharedPrefManager.init(this.applicationContext)
 
         auth = Firebase.auth
 

@@ -2,9 +2,6 @@ package com.example.trackingapp.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
-import android.content.ComponentName
-import android.content.pm.ActivityInfo
-import android.content.pm.PackageManager
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.example.trackingapp.DatabaseManager.saveToDataBase
@@ -17,16 +14,16 @@ import com.google.firebase.FirebaseApp
 // at com.example.trackingapp.service.AccessibilityLogService.onStartCommand(Unknown Source:2)
 
 class AccessibilityLogService : AccessibilityService() {
-   // private var mWakeLock: PowerManager.WakeLock? = null
+    // private var mWakeLock: PowerManager.WakeLock? = null
     private val info = AccessibilityServiceInfo()
 
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
         FirebaseApp.initializeApp(this)
-       // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
+        // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
         //mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG)
-       // mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, classTAG)
+        // mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, classTAG)
     }
 
     override fun onInterrupt() {
@@ -60,6 +57,7 @@ class AccessibilityLogService : AccessibilityService() {
         info.flags = AccessibilityServiceInfo.DEFAULT
         info.notificationTimeout = 100
         this.serviceInfo = info
+        isRunning = true
     }
 
     private fun getEventText(event: AccessibilityEvent?): String {
@@ -70,14 +68,6 @@ class AccessibilityLogService : AccessibilityService() {
             }
         }
         return sb.toString()
-    }
-
-    private fun tryGetActivity(componentName: ComponentName): ActivityInfo? {
-        return try {
-            packageManager.getActivityInfo(componentName, 0)
-        } catch (e: PackageManager.NameNotFoundException) {
-            null
-        }
     }
 
 //    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -108,6 +98,7 @@ class AccessibilityLogService : AccessibilityService() {
 //        }
         stopForeground(true)
         super.onDestroy()
+        isRunning = false
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -151,9 +142,9 @@ class AccessibilityLogService : AccessibilityService() {
             AccessibilityEvent.TYPE_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY -> return "TYPE_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY"
             AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> return "TYPE_WINDOW_CONTENT_CHANGED"
             AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> return "TYPE_WINDOW_STATE_CHANGED"
-            AccessibilityEvent.TYPE_ASSIST_READING_CONTEXT ->  return "TYPE_ASSIST_READING_CONTEXT"
-            AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED ->  return "TYPE_NOTIFICATION_STATE_CHANGED"
-            AccessibilityEvent.TYPE_VIEW_CONTEXT_CLICKED ->  return "TYPE_VIEW_CONTEXT_CLICKED"
+            AccessibilityEvent.TYPE_ASSIST_READING_CONTEXT -> return "TYPE_ASSIST_READING_CONTEXT"
+            AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return "TYPE_NOTIFICATION_STATE_CHANGED"
+            AccessibilityEvent.TYPE_VIEW_CONTEXT_CLICKED -> return "TYPE_VIEW_CONTEXT_CLICKED"
             AccessibilityEvent.TYPE_WINDOWS_CHANGED -> return "TYPE_WINDOWS_CHANGED"
         }
         return "default"
@@ -162,5 +153,10 @@ class AccessibilityLogService : AccessibilityService() {
     companion object {
         val TAG: String = "ACCESSIBILITYSERVICE" // AccessibilityLogService::class.java.simpleName
         //val classTAG = AccessibilityLogService::class.java.simpleName
+
+        @JvmStatic
+        var isRunning: Boolean = false
+
+
     }
 }
