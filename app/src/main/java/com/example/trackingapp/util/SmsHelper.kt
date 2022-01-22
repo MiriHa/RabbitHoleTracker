@@ -122,8 +122,7 @@ object SmsHelper {
                 timestamp = timestamp,
                 event = type.name,
                 description = smsID,
-                metaData = metaSms,
-            ).saveToDataBase()
+            ).saveToDataBase(metaSms)
         } else {
             Event(
                 eventName = EventName.SMS,

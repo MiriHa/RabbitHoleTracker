@@ -111,5 +111,8 @@ dependencies {
     //Activity Recognition
     implementation 'com.google.android.gms:play-services-location:19.0.1'
 
+    //Permissions
+    implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
+
 
 }

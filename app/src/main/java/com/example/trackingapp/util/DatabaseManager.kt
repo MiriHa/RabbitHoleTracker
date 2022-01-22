@@ -33,7 +33,7 @@ object DatabaseManager {
     val isUserLoggedIn: Boolean
         get() = user != null
 
-    init {
+    fun initIntentionList() {
         //TODO Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
         //Firebase.database.setPersistenceEnabled(true)
         Log.d(TAG, "initDatabaseManager")

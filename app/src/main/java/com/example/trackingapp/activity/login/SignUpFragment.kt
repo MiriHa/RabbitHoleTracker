@@ -18,7 +18,7 @@ import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
 
 class SignUpFragment: Fragment() {
-    private lateinit var loginSignUpViewModel: LoginSignUpViewModel
+    private lateinit var viewModel: LoginSignUpViewModel
     private lateinit var binding: FragmentSignupBinding
 
     override fun onCreateView(
@@ -27,7 +27,7 @@ class SignUpFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentSignupBinding.inflate(inflater)
-        loginSignUpViewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginSignUpViewModel::class.java]
+        viewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginSignUpViewModel::class.java]
 
         val usernameEditText = binding.signUpUsername
         val passwordEditText = binding.signUpPassword
@@ -35,7 +35,7 @@ class SignUpFragment: Fragment() {
         val createAccountButton = binding.signUpButton
         val loadingProgressBar = binding.loading
 
-        loginSignUpViewModel.loginFormState.observe(viewLifecycleOwner,
+        viewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
                 if (loginFormState == null) {
                     return@Observer
@@ -52,7 +52,7 @@ class SignUpFragment: Fragment() {
                 }
             })
 
-        loginSignUpViewModel.loginResult.observe(viewLifecycleOwner,
+        viewModel.loginResult.observe(viewLifecycleOwner,
             Observer { loginResult ->
                 loginResult ?: return@Observer
                 loadingProgressBar.visibility = View.GONE
@@ -72,7 +72,7 @@ class SignUpFragment: Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                loginSignUpViewModel.loginDataChanged(
+                viewModel.loginDataChanged(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString(),
                     passwordRepeatEditText.text.toString()
@@ -84,7 +84,7 @@ class SignUpFragment: Fragment() {
         passwordRepeatEditText.addTextChangedListener(afterTextChangedListener)
         passwordRepeatEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginSignUpViewModel.createEmailPasswordAccount(
+                viewModel.createEmailPasswordAccount(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -93,9 +93,9 @@ class SignUpFragment: Fragment() {
         }
 
         createAccountButton.setOnClickListener {
-            if(loginSignUpViewModel.isButtonEnabled) {
+            if(viewModel.isButtonEnabled) {
                 loadingProgressBar.visibility = View.VISIBLE
-                loginSignUpViewModel.createEmailPasswordAccount(
+                viewModel.createEmailPasswordAccount(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -108,10 +108,13 @@ class SignUpFragment: Fragment() {
     }
 
     private fun goToMainScreen(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        navigate(ScreenType.HomeScreen, ScreenType.SignUp)
+        if(viewModel.hasUserFinishedOnboarding()) {
+            val welcome = getString(R.string.welcome) + model.displayName
+            val appContext = context?.applicationContext ?: return
+            navigate(ScreenType.HomeScreen, ScreenType.SignUp)
+        } else {
+            navigate(ScreenType.Permission, ScreenType.SignUp)
+        }
     }
 
     private fun showSignUpFailed(@StringRes errorString: Int) {

@@ -16,6 +16,7 @@ object CONST {
     const val PREFERENCES_INTENTION_NAME: String = "SAVED_INTENTION"
     const val PREFERENCES_IS_LOGGING_SERVICE_RUNNING: String = "IS_LOGGING_SERVICE_RUNNING"
     const val PREFERENCES_INTENTION_LIST: String = "INTENTION_LIST"
+    const val PREFERENCES_ONBOARDING_FINISHED: String = "ONBOARDING_FINISHED"
 
     const val firebaseReferenceUsers = "users"
     const val firebaseReferenceLogs = "logs"

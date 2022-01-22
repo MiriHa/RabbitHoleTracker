@@ -49,8 +49,16 @@
 
     <!-- LOGGING -->
     <string name="logging_notification_service_title">Logging is Running</string>
-    <string name="logging_notification_service_descrption">TrackingApp is collecting your usage data.</string>
+    <string name="logging_notification_service_description">TrackingApp is collecting your usage data.</string>
 
+    <!-- Permissions -->
+    <string name="permission_title">Allow Permissions</string>
+    <string name="permission_explanation_description">Please provide us access to following permissions, as this applications needs these to collect your usage data.</string>
+    <string name="permission_request_accessibility_service_title">Enable Accessibility Service</string>
+    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your usage events.</string>
+    <string name="permission_request_notification_listener_title">Enable Notifications</string>
+    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect information about your recived notificatioms.</string>
+    <string name="permission_button_text">Go to Settings</string>
 
     <!-- LogEverything -->
     <string name="hello_world">Hello world!</string>

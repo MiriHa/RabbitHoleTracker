@@ -17,8 +17,6 @@ import com.example.trackingapp.databinding.FragmentMainscreenBinding
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
 import com.example.trackingapp.service.LoggingManager
-import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.PermissionManager
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
 import com.google.firebase.auth.ktx.auth
@@ -81,12 +79,12 @@ class MainScreenFragment : Fragment() {
         }
 
         //TODO move to Onboarding
-        this.activity?.let {
-            val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
-            managePermissions.checkPermissions()
-           val notifiperission = managePermissions.checkForNotificationListenerPermissionEnabled()
-           //val accesibilityperission = managePermissions.checkAccessibilityPermission()
-        }
+//        this.activity?.let {
+//            val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
+//            managePermissions.checkPermissions()
+//           val notifiperission = managePermissions.checkForNotificationListenerPermissionEnabled()
+//           //val accesibilityperission = managePermissions.checkAccessibilityPermission()
+//        }
 
         return view
     }

@@ -19,7 +19,7 @@ import com.example.trackingapp.util.navigate
 
 class LoginFragment : Fragment() {
 
-    private lateinit var loginSignUpViewModel: LoginSignUpViewModel
+    private lateinit var viewModel: LoginSignUpViewModel
     private var _binding: FragmentLoginBinding? = null
 
     // This property is only valid between onCreateView and
@@ -39,14 +39,14 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginSignUpViewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginSignUpViewModel::class.java]
+        viewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginSignUpViewModel::class.java]
 
         val usernameEditText = binding.username
         val passwordEditText = binding.password
         val loginButton = binding.login
         val loadingProgressBar = binding.loading
 
-        loginSignUpViewModel.loginFormState.observe(viewLifecycleOwner,
+        viewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
                 if (loginFormState == null) {
                     return@Observer
@@ -60,7 +60,7 @@ class LoginFragment : Fragment() {
                 }
             })
 
-        loginSignUpViewModel.loginResult.observe(viewLifecycleOwner,
+        viewModel.loginResult.observe(viewLifecycleOwner,
             Observer { loginResult ->
                 loginResult ?: return@Observer
                 loadingProgressBar.visibility = View.GONE
@@ -80,7 +80,7 @@ class LoginFragment : Fragment() {
             }
 
             override fun afterTextChanged(s: Editable) {
-                loginSignUpViewModel.loginDataChanged(
+                viewModel.loginDataChanged(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -90,7 +90,7 @@ class LoginFragment : Fragment() {
         passwordEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginSignUpViewModel.loginInWithEmailandPassword(
+                viewModel.loginInWithEmailandPassword(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -99,9 +99,9 @@ class LoginFragment : Fragment() {
         }
 
         loginButton.setOnClickListener {
-            if(loginSignUpViewModel.isButtonEnabled) {
+            if(viewModel.isButtonEnabled) {
                 loadingProgressBar.visibility = View.VISIBLE
-                loginSignUpViewModel.loginInWithEmailandPassword(
+                viewModel.loginInWithEmailandPassword(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -112,11 +112,14 @@ class LoginFragment : Fragment() {
     }
 
     private fun goToMainScreen(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
-        navigate(to = ScreenType.HomeScreen, from = ScreenType.Login)
+        if(viewModel.hasUserFinishedOnboarding()) {
+            val welcome = getString(R.string.welcome)
+            val appContext = context?.applicationContext ?: return
+            Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+            navigate(to = ScreenType.HomeScreen, from = ScreenType.Login)
+        } else {
+            navigate(to = ScreenType.Permission, from = ScreenType.Login)
+        }
     }
 
     private fun showLoginFailed(@StringRes errorString: Int) {

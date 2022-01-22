@@ -9,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityMainBinding
 import com.example.trackingapp.util.CONST
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         SharedPrefManager.init(this.applicationContext)
+        DatabaseManager.initIntentionList()
 
         auth = Firebase.auth
 

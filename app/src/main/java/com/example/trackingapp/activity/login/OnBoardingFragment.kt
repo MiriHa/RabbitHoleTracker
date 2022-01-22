@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
+import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ScreenType
+import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.navigate
 
 class OnBoardingFragment: Fragment() {
@@ -30,7 +32,11 @@ class OnBoardingFragment: Fragment() {
             navigate(ScreenType.SignUp, ScreenType.Welcome)
         }
         binding.onboardingTestBUtton.setOnClickListener {
-            navigate(ScreenType.HomeScreen, ScreenType.Welcome)
+            if(SharedPrefManager.getBoolean(CONST.PREFERENCES_ONBOARDING_FINISHED)) {
+                navigate(ScreenType.HomeScreen, ScreenType.Welcome)
+            } else {
+                navigate(ScreenType.Permission, ScreenType.Welcome)
+            }
         }
 
         return view

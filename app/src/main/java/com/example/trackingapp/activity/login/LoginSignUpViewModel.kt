@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.R
+import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.SharedPrefManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -47,6 +49,10 @@ class LoginSignUpViewModel : ViewModel() {
     val loginResult: LiveData<LoginResult> = _loginResult
 
     var isButtonEnabled = false
+
+    fun hasUserFinishedOnboarding(): Boolean {
+        return SharedPrefManager.getBoolean(CONST.PREFERENCES_ONBOARDING_FINISHED)
+    }
 
     fun loginInWithEmailandPassword(email: String, password: String){
         Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->

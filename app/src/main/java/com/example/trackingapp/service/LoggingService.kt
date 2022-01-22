@@ -62,7 +62,7 @@ class LoggingService : Service() {
         val notification = NotificationCompat.Builder(this, CONST.CHANNEL_ID_LOGGING)
             .setSmallIcon(R.drawable.ic_logo_placholder)
             .setContentTitle(getString(R.string.logging_notification_service_title))
-            .setContentText(getString(R.string.logging_notification_service_descrption))
+            .setContentText(getString(R.string.logging_notification_service_description))
             .setContentIntent(notificationPendingIntent)
 
         startForeground(CONST.NOTIFICATION_ID_LOGGING, notification.build())

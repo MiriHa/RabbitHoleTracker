@@ -15,6 +15,9 @@
         <action
             android:id="@+id/action_loginFragment_to_mainScreenFragment"
             app:destination="@id/mainScreenFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_permissionHolderFragmente"
+            app:destination="@id/permissionHolderFragmente" />
     </fragment>
     <fragment
         android:id="@+id/OnBoardingFragment"
@@ -29,6 +32,9 @@
         <action
             android:id="@+id/action_OnBoardingFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_OnBoardingFragment_to_permissionHolderFragmente"
+            app:destination="@id/permissionHolderFragmente" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -48,6 +54,17 @@
         android:label="SignUpFragment" >
         <action
             android:id="@+id/action_signUpFragment_to_mainScreenFragment"
+            app:destination="@id/mainScreenFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_permissionHolderFragmente"
+            app:destination="@id/permissionHolderFragmente" />
+    </fragment>
+    <fragment
+        android:id="@+id/permissionHolderFragmente"
+        android:name="com.example.trackingapp.activity.permissions.PermissionHolderFragmente"
+        android:label="PermissionHolderFragmente" >
+        <action
+            android:id="@+id/action_permissionHolderFragmente_to_mainScreenFragment"
             app:destination="@id/mainScreenFragment" />
     </fragment>
 </navigation>

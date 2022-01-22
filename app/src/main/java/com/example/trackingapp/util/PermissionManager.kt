@@ -3,12 +3,14 @@ package com.example.trackingapp.util
 import android.Manifest
 import android.app.Activity
 import android.app.AppOpsManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Process
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -32,11 +34,11 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             // ?? l.add(Manifest.permission.WRITE_SMS)
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
-            l.add(Manifest.permission.BIND_ACCESSIBILITY_SERVICE)
-            l.add(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
+           // l.add(Manifest.permission.BIND_ACCESSIBILITY_SERVICE)
+            //l.add(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
             l.add(Manifest.permission.BLUETOOTH)
 //            l.add(Manifest.permission.WAKE_LOCK)
-            l.add(Manifest.permission.PACKAGE_USAGE_STATS)
+            //TODO l.add(Manifest.permission.PACKAGE_USAGE_STATS)
             l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 l.add(Manifest.permission.FOREGROUND_SERVICE)
@@ -52,13 +54,15 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
 
     // Check permissions at runtime
-    fun checkPermissions() {
-        Log.d(TAG,"checkPermissions")
+    fun checkPermissions(): Boolean {
+        Log.d(TAG, "checkPermissions")
         if (arePermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
             //showAlert()
             requestPermissions()
+            return false
         } else {
             Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
+            return true
         }
     }
 
@@ -66,27 +70,22 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         //val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
         //activity.startActivity(intent)
 
-        return if (Settings.Secure.getString(activity.contentResolver, "enabled_notification_listeners")
-                .contains(activity.applicationContext.packageName)) {
-            //service is enabled do something
-            true
-        } else {
+//        return if (Settings.Secure.getString(activity.contentResolver, "enabled_notification_listeners")
+//                .contains(activity.applicationContext.packageName)
+//        ) {
+//            //service is enabled do something
+//            true
+//        } else {
             val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
             activity.startActivity(intent)
-            false
-        }
+            return true
     }
 
     // method to check is the user has permitted the accessibility permission
     // if not then prompt user to the system's Settings activity
     fun checkAccessibilityPermission(): Boolean {
-        var accessEnabled = 0
-        try {
-            accessEnabled = Settings.Secure.getInt(activity.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
-        } catch (e: Settings.SettingNotFoundException) {
-            e.printStackTrace()
-        }
-        return if (accessEnabled == 0) {
+        return if (accessibilityServiceEnabled() == 0) {
+            Log.d(TAG, "checkAccesibiltyPermission open settings")
             // if not construct intent to request permission
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
@@ -94,8 +93,36 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             activity.startActivity(intent)
             false
         } else {
+            Log.d(TAG, "checkAccesibiltyPermission given")
             true
         }
+    }
+    fun accessibilityServiceEnabled(): Int {
+        var accessEnabled = 0
+        Log.d(TAG, "checkAccesibiltyPermission")
+        try {
+            accessEnabled = Settings.Secure.getInt(activity.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
+            Log.d(TAG, "checkAccesibiltyPermission enabed: $accessEnabled")
+        } catch (e: Settings.SettingNotFoundException) {
+            e.printStackTrace()
+        }
+        return accessEnabled
+    }
+
+    fun isAccessibilityServiceEnabled(context: Context, accessibilityService: Class<*>?): Boolean {
+        accessibilityService?.let {
+            val expectedComponentName = ComponentName(context, it)
+            val enabledServicesSetting: String =
+                Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
+            val colonSplitter = TextUtils.SimpleStringSplitter(':')
+            colonSplitter.setString(enabledServicesSetting)
+            while (colonSplitter.hasNext()) {
+                val componentNameString = colonSplitter.next()
+                val enabledService = ComponentName.unflattenFromString(componentNameString)
+                if (enabledService != null && enabledService == expectedComponentName) return true
+            }
+        }
+        return false
     }
 
     /**
@@ -120,13 +147,13 @@ class PermissionManager(val activity: Activity, private val code: Int) {
 
 
     // Check permissions status
-    private fun arePermissionsGranted(): Int {
+    fun arePermissionsGranted(): Int {
         // PERMISSION_GRANTED : Constant Value: 0
         // PERMISSION_DENIED : Constant Value: -1
         var counter = 0;
         for (permission in appPermissions) {
             val granted = ContextCompat.checkSelfPermission(activity, permission) == PackageManager.PERMISSION_GRANTED
-            Log.d(TAG,"IsPermissionGranted: $permission $granted")
+            Log.d(TAG, "IsPermissionGranted: $permission $granted")
             counter += ContextCompat.checkSelfPermission(activity, permission)
         }
         return counter

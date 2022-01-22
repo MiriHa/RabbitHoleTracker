@@ -23,10 +23,9 @@ object SharedPrefManager {
         return sharedPrefs.getString(CONST.PREFERENCES_INTENTION_NAME, "last intention")
     }
 
-    //TODO remove?
-    fun saveBoolean(key: String, intention: Boolean){
+    fun saveBoolean(key: String, value: Boolean){
         val editor = sharedPrefs.edit()
-        editor.putBoolean(key, intention)
+        editor.putBoolean(key, value)
         editor.apply()
     }
 
@@ -44,7 +43,7 @@ object SharedPrefManager {
 
     fun getIntentionList(): MutableSet<String?> {
         val json: String? = sharedPrefs.getString(CONST.PREFERENCES_INTENTION_LIST, "")
-        return Gson().fromJson<MutableSet<String?>>(json, MutableSet::class.java)
+        return Gson().fromJson<MutableSet<String?>>(json, MutableSet::class.java) ?: HashSet()
     }
 
 }
