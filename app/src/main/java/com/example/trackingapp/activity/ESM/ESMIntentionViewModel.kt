@@ -8,6 +8,7 @@ import com.example.trackingapp.models.ESMState
 import com.example.trackingapp.models.ESM_Intention_Lock_Answer
 import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.EventName
+import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
 class ESMIntentionViewModel : ViewModel() {
@@ -40,6 +41,7 @@ class ESMIntentionViewModel : ViewModel() {
     }
 
     fun checkDuplicateIntentionAnSave(newIntention: String) {
+        SharedPrefManager.saveLastIntention(newIntention)
         if (!DatabaseManager.intentionList.contains(newIntention)) {
             //save new Intention to Firebase
             DatabaseManager.saveNewIntention(Date(), newIntention)

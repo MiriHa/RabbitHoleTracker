@@ -12,10 +12,7 @@ import com.example.trackingapp.R
 import com.example.trackingapp.activity.MainActivity
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.sensor.activityrecognition.ActivityRecognitionSensor
-import com.example.trackingapp.sensor.androidsensors.AccelerometerSensor
-import com.example.trackingapp.sensor.androidsensors.GyroscopeSensor
-import com.example.trackingapp.sensor.androidsensors.LightSensor
-import com.example.trackingapp.sensor.androidsensors.ProximitySensor
+import com.example.trackingapp.sensor.androidsensors.*
 import com.example.trackingapp.sensor.communication.CallSensor
 import com.example.trackingapp.sensor.communication.NotificationSensor
 import com.example.trackingapp.sensor.communication.SmsSensor
@@ -161,6 +158,7 @@ class LoggingService : Service() {
         list.add(GyroscopeSensor())
         list.add(LightSensor())
         list.add(ProximitySensor())
+        list.add(OrientationSensor())
         list.add(BluetoothSensor())
         list.add(ActivityRecognitionSensor())
         return list

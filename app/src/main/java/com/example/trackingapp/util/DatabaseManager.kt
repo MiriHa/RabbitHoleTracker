@@ -33,9 +33,12 @@ object DatabaseManager {
     val isUserLoggedIn: Boolean
         get() = user != null
 
-    fun initIntentionList() {
+    init {
         //TODO Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
         //Firebase.database.setPersistenceEnabled(true)
+    }
+
+    fun initIntentionList() {
         Log.d(TAG, "initDatabaseManager")
         //TODO getSavedIntentions()
         intentionList = SharedPrefManager.getIntentionList()
@@ -87,7 +90,6 @@ object DatabaseManager {
         Log.d(TAG, "save new IntentionToDatabase: $intention")
         intentionList.add(intention)
         SharedPrefManager.saveIntentionList(intentionList)
-        SharedPrefManager.saveLastIntention(intention)
 
         val timestamp = CONST.dateTimeFormat.format(time)
         user?.let {

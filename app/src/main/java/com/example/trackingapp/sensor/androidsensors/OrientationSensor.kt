@@ -28,6 +28,7 @@ class OrientationSensor : AbstractSensor(
 
     override fun isAvailable(context: Context?): Boolean {
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        Log.d(TAG, "is Sensor available: ${sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null}")
         return sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null
     }
 

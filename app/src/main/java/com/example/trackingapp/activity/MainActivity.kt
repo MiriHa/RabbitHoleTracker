@@ -17,6 +17,7 @@ import com.example.trackingapp.util.SharedPrefManager
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        Firebase.database.setPersistenceEnabled(true)
         SharedPrefManager.init(this.applicationContext)
         DatabaseManager.initIntentionList()
 

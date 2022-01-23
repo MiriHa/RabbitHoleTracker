@@ -35,7 +35,7 @@ object CONST {
     const val PERMISSION_REQUEST_CODE = 123
 
     const val LOGGING_INTERVAL = 60 * 0.1; // 60 * 1 = 1 minutes
-    const val LOGGING_FREQUENCY: Long = 500 //milliseconds
+    const val LOGGING_FREQUENCY: Long = 100 //milliseconds
 
     const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 
