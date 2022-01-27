@@ -58,7 +58,10 @@
     <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your usage events.</string>
     <string name="permission_request_notification_listener_title">Enable Notifications</string>
     <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect information about your recived notificatioms.</string>
-    <string name="permission_button_text">Go to Settings</string>
+    <string name="permission_request_usage_stats_title">Give Usage Information Access</string>
+    <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics.</string>
+    <string name="permission_settings_button_text">Go to Settings</string>
+    <string name="permission_button_text">Allow Permissions</string>
 
     <!-- LogEverything -->
     <string name="hello_world">Hello world!</string>

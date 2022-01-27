@@ -1,13 +1,13 @@
 package com.example.trackingapp.models
 
-enum class ESM_Intention_Lock_Answer{
+enum class ESM_Intention_Lock_Answer {
     ESM_INTENTION_FINISHED,
     ESM_INTENTION_UNFINISHED,
     ESM_MORE_THAN_INITIAL_INTENTION,
     ESM_NOT_MORE_THAN_INITIAL_INTENTION
 }
 
-enum class EventName {
+enum class LogEventName {
 
     ACCESSIBILITY,
     APPS,
@@ -16,8 +16,10 @@ enum class EventName {
     ACTIVITY,
     BLUETOOTH,
     BOOT,
+    DATA_TRAFFIC,
     ESM,
     GYROSCOPE,
+    INPUT,
     INTERNET,
     LIGHT,
     LOGIN,
@@ -43,7 +45,7 @@ enum class BootEventType {
     SHUTDOWM
 }
 
-enum class ONOFFSTATE{
+enum class ONOFFSTATE {
     ON,
     OFF
 }
@@ -117,4 +119,15 @@ enum class ActivityTransitionType {
     ACTIVITY_TRANSITION_ENTER,
     ACTIVITY_TRANSITION_EXIT,
     ACTIVITY_TRANSITION_UNKNOWN
+}
+
+enum class DataTrafficType {
+    BYTES_TRANSMITTED,
+    BYTES_RECEIVED
+}
+
+enum class EventInputMode {
+    DEFAULT,
+    GESTURE_DETECTING,
+    GESTURE
 }

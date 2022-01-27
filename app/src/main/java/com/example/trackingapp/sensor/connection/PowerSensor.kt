@@ -8,8 +8,8 @@ import android.os.BatteryManager
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.PowerState
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
@@ -113,8 +113,8 @@ class PowerSensor : AbstractSensor(
      * @param charge the charge level
      */
     private fun saveEntry(type: PowerState?, charge: String, timestamp: Long) {
-        Event(
-            EventName.POWER,
+        LogEvent(
+            LogEventName.POWER,
             timestamp,
             type?.name,
             charge

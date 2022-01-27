@@ -8,8 +8,8 @@ import android.hardware.SensorManager
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.SensorAccuracy
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
@@ -55,11 +55,13 @@ class ProximitySensor : AbstractSensor(
     }
 
     fun saveEntry(timestamp: Long, sensorData: String, accuracy: String) {
-        Event(EventName.PROXIMITY, timestamp, sensorData, accuracy).saveToDataBase()
+        LogEvent(LogEventName.PROXIMITY, timestamp, sensorData, accuracy).saveToDataBase()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
+    // The Proximity sensor returns a single value either 0 or 5 (also 1 depends on Sensor manufacturer).
+    // 0 for near and 5 for far
     override fun onSensorChanged(event: SensorEvent?) {
         val time = System.currentTimeMillis()
         if (isRunning && LoggingManager.userPresent) {

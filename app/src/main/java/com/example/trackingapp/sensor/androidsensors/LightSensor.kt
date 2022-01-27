@@ -8,8 +8,8 @@ import android.hardware.SensorManager
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.SensorAccuracy
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
@@ -54,7 +54,7 @@ class LightSensor: AbstractSensor(
     }
 
     fun saveEntry(timestamp: Long, sensorData: String, accuracy: String) {
-        Event(EventName.LIGHT, timestamp, sensorData, accuracy).saveToDataBase()
+        LogEvent(LogEventName.LIGHT, timestamp, sensorData, accuracy).saveToDataBase()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

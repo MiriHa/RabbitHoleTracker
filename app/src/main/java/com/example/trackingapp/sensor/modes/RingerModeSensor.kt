@@ -8,8 +8,8 @@ import android.media.AudioManager
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.RingerMode
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
@@ -67,7 +67,7 @@ class RingerModeSensor: AbstractSensor(
     }
 
     private fun saveEntry(ringerMode: RingerMode, timestamp: Long){
-        Event(EventName.RINGER_MODE, timestamp, ringerMode.name).saveToDataBase()
+        LogEvent(LogEventName.RINGER_MODE, timestamp, ringerMode.name).saveToDataBase()
     }
 
     private fun getCurrentRingerMode(context: Context?): RingerMode{

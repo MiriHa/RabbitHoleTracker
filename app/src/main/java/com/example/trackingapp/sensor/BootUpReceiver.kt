@@ -1,13 +1,14 @@
 package com.example.trackingapp.sensor
 
+import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.BootEventType
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.service.LoggingManager
 
 class BootUpReceiver : BroadcastReceiver() {
@@ -38,7 +39,8 @@ class BootUpReceiver : BroadcastReceiver() {
 
     private fun startLoggingManager(context: Context) {
         if (!LoggingManager.isServiceRunning(context)) {
-            LoggingManager.startLoggingService(context)
+            //TODO -> test if this is not killing the app
+            LoggingManager.startLoggingService(context as Activity)
         }
     }
 
@@ -47,8 +49,8 @@ class BootUpReceiver : BroadcastReceiver() {
      * @param type a BootEventType
      */
     private fun saveEntry(type: BootEventType, timestamp: Long) {
-        Event(
-            EventName.BOOT,
+        LogEvent(
+            LogEventName.BOOT,
            timestamp,
             type.name
         ).saveToDataBase()

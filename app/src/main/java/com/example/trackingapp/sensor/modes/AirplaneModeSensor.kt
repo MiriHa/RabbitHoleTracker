@@ -4,8 +4,8 @@ import android.content.Context
 import android.provider.Settings
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.ONOFFSTATE
 import com.example.trackingapp.sensor.AbstractSensor
 
@@ -55,6 +55,6 @@ class AirplaneModeSensor: AbstractSensor(
     }
 
     private fun saveEntry(state: ONOFFSTATE, timestamp: Long) {
-        Event(EventName.AIRPLANEMODE, timestamp, state.name).saveToDataBase()
+        LogEvent(LogEventName.AIRPLANEMODE, timestamp, state.name).saveToDataBase()
     }
 }

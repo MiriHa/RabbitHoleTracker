@@ -1,8 +1,8 @@
 package com.example.trackingapp
 
 import android.util.Log
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.User
 import com.example.trackingapp.models.metadata.MetaType
 import com.example.trackingapp.util.CONST
@@ -53,8 +53,8 @@ object DatabaseManager {
                 .child(userId)
                 .setValue(user)
 
-            Event(
-                EventName.LOGIN,
+            LogEvent(
+                LogEventName.LOGIN,
                 System.currentTimeMillis(),
                 "Account created"
             ).saveToDataBase()
@@ -62,10 +62,10 @@ object DatabaseManager {
 
     }
 
-    fun Event.saveToDataBase(metadata: MetaType? = null) {
+    fun LogEvent.saveToDataBase(metadata: MetaType? = null, metadataList: List<MetaType>? = null) {
+        //TODO save eventlist??
         Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
         if (metadata != null) {
-            //val logID = "${CONST.dateTimeFormat.format(this.timestamp)} ${this.eventName.name}"
             user?.let {
                 val logChild = Firebase.database.reference.child(CONST.firebaseReferenceUsers)
                     .child(it.uid)

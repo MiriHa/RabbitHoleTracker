@@ -84,6 +84,7 @@ private class PermissionIterator(val activity: Activity, val permissions: Array<
                 PermissionView.ACCESSIBILITY_SERVICE -> {
                     managePermissions.accessibilityServiceEnabled() == 1
                 }
+                else -> false
             }
         }
         return false

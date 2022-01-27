@@ -11,8 +11,8 @@ import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.BluetoothDeviceType
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
@@ -198,7 +198,7 @@ class BluetoothSensor : AbstractSensor(
 
 
         fun saveEntry(type: String, name: String, event: String, timestamp: Long) {
-            Event(EventName.BLUETOOTH, timestamp, event, type, name.hashCode().toString()).saveToDataBase()
+            LogEvent(LogEventName.BLUETOOTH, timestamp, event, type, name.hashCode().toString()).saveToDataBase()
         }
 
 

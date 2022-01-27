@@ -10,8 +10,8 @@ import android.os.Build
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import java.util.*
 
@@ -64,8 +64,8 @@ class AppSensor : AbstractSensor(
     }
 
     private fun saveEntry(foregroundApp: String?, timestamp: Long) {
-        Event(
-            EventName.APPS,
+        LogEvent(
+            LogEventName.APPS,
             timestamp,
             foregroundApp
         ).saveToDataBase()
@@ -170,7 +170,7 @@ class AppSensor : AbstractSensor(
 
          */
             Log.i(TAG, "Logging app $applicationName")
-            Event(EventName.APPS, timestampMillis,eventType,description, applicationName, packageName).saveToDataBase()
+            LogEvent(LogEventName.APPS, timestampMillis,eventType,description, applicationName, packageName).saveToDataBase()
 
     }
 

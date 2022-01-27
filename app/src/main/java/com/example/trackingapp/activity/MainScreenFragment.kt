@@ -3,7 +3,9 @@ package com.example.trackingapp.activity
 
 import android.app.Activity
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -14,9 +16,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.FragmentMainscreenBinding
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.service.LoggingManager
+import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.PermissionManager
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
 import com.google.firebase.auth.ktx.auth
@@ -53,13 +57,18 @@ class MainScreenFragment : Fragment() {
                 Log.d(TAG, "startLoggingButton Click: running")
                 LoggingManager.isDataRecordingActive = true
                 val isServiceRunning = LoggingManager.isServiceRunning(mContext)
-                if (!isServiceRunning) {
-                    LoggingManager.stopLoggingService(mContext)
-                    LoggingManager.userPresent = true
-                    LoggingManager.startLoggingService(mContext as Activity)
-                    Event(EventName.LOGIN, System.currentTimeMillis(), "startLoggingService","test").saveToDataBase()
-                    //text = getString(R.string.logging_stop_button)
-            }
+                val arePermissionGranted = checkPermissionsGranted(mContext as Activity)
+                if(arePermissionGranted) {
+                    if (!isServiceRunning) {
+                        LoggingManager.stopLoggingService(mContext)
+                        LoggingManager.userPresent = true
+                        LoggingManager.startLoggingService(mContext as Activity)
+                        LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToDataBase()
+                        //text = getString(R.string.logging_stop_button)
+                    }
+                } else {
+                    navigate(to = ScreenType.Permission, from = ScreenType.HomeScreen)
+                }
         }
 
         binding.buttonTestStop.apply {
@@ -78,15 +87,19 @@ class MainScreenFragment : Fragment() {
             navigate(ScreenType.Welcome, ScreenType.HomeScreen)
         }
 
-        //TODO move to Onboarding
-//        this.activity?.let {
-//            val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
-//            managePermissions.checkPermissions()
-//           val notifiperission = managePermissions.checkForNotificationListenerPermissionEnabled()
-//           //val accesibilityperission = managePermissions.checkAccessibilityPermission()
-//        }
-
         return view
+    }
+
+    private fun checkPermissionsGranted(context: Activity): Boolean {
+        val managePermissions = PermissionManager(context, CONST.PERMISSION_REQUEST_CODE)
+
+        val permissionsGranted = managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
+        val notificationListenerEnabled = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+            .contains(context.applicationContext.packageName)
+        val accessibilityServiceEnabled = managePermissions.accessibilityServiceEnabled() == 1
+        val usageStatsPermissionGranted = managePermissions.isUsageInformationPermissionEnabled()
+
+        return permissionsGranted && notificationListenerEnabled && accessibilityServiceEnabled && usageStatsPermissionGranted
     }
 
     override fun onAttach(context: Context) {

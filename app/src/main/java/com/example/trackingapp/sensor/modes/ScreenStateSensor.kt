@@ -10,8 +10,8 @@ import android.view.View
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.ScreenState
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
@@ -142,8 +142,8 @@ class ScreenStateSensor : AbstractSensor(
         }
 
         private fun saveEntry(type: ScreenState,  timestamp: Long) {
-            Event(
-                EventName.SCREEN,
+            LogEvent(
+                LogEventName.SCREEN,
                timestamp,
                 type.name,
             ).saveToDataBase()

@@ -14,8 +14,8 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaCall
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
@@ -222,8 +222,8 @@ class CallSensor : AbstractSensor(
                 contactId = contactUid
             )
 
-            Event(
-                eventName = EventName.PHONE,
+            LogEvent(
+                eventName = LogEventName.PHONE,
                 timestamp = timestamp,
                 event = event,
             ).saveToDataBase(callMeta)

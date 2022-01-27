@@ -17,7 +17,7 @@
             app:destination="@id/mainScreenFragment" />
         <action
             android:id="@+id/action_loginFragment_to_permissionHolderFragmente"
-            app:destination="@id/permissionHolderFragmente" />
+            app:destination="@id/permissionHolderFragment" />
     </fragment>
     <fragment
         android:id="@+id/OnBoardingFragment"
@@ -34,7 +34,7 @@
             app:destination="@id/signUpFragment" />
         <action
             android:id="@+id/action_OnBoardingFragment_to_permissionHolderFragmente"
-            app:destination="@id/permissionHolderFragmente" />
+            app:destination="@id/permissionHolderFragment" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -47,6 +47,9 @@
         <action
             android:id="@+id/action_mainScreenFragment_to_OnBoardingFragment"
             app:destination="@id/OnBoardingFragment" />
+        <action
+            android:id="@+id/action_mainScreenFragment_to_permissionHolderFragmente"
+            app:destination="@id/permissionHolderFragment" />
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
@@ -57,14 +60,14 @@
             app:destination="@id/mainScreenFragment" />
         <action
             android:id="@+id/action_signUpFragment_to_permissionHolderFragmente"
-            app:destination="@id/permissionHolderFragmente" />
+            app:destination="@id/permissionHolderFragment" />
     </fragment>
     <fragment
-        android:id="@+id/permissionHolderFragmente"
-        android:name="com.example.trackingapp.activity.permissions.PermissionHolderFragmente"
-        android:label="PermissionHolderFragmente" >
+        android:id="@+id/permissionHolderFragment"
+        android:name="com.example.trackingapp.activity.permissions.PermissionHolderFragment"
+        android:label="PermissionHolderFragment" >
         <action
-            android:id="@+id/action_permissionHolderFragmente_to_mainScreenFragment"
+            android:id="@+id/action_permissionHolderFragment_to_mainScreenFragment"
             app:destination="@id/mainScreenFragment" />
     </fragment>
 </navigation>

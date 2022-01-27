@@ -14,9 +14,9 @@ object CONST {
 
     const val PREFERENCES_FILE: String = "TRACKING_APP"
     const val PREFERENCES_INTENTION_NAME: String = "SAVED_INTENTION"
-    const val PREFERENCES_IS_LOGGING_SERVICE_RUNNING: String = "IS_LOGGING_SERVICE_RUNNING"
     const val PREFERENCES_INTENTION_LIST: String = "INTENTION_LIST"
     const val PREFERENCES_ONBOARDING_FINISHED: String = "ONBOARDING_FINISHED"
+    const val PREFERENCES_LAST_DATA_TRAFFIC_TIMESTAMP: String = "PREFERENCES_LAST_DATA_TRAFFIC_TIMESTAMP"
 
     const val firebaseReferenceUsers = "users"
     const val firebaseReferenceLogs = "logs"
@@ -35,7 +35,7 @@ object CONST {
     const val PERMISSION_REQUEST_CODE = 123
 
     const val LOGGING_INTERVAL = 60 * 0.1; // 60 * 1 = 1 minutes
-    const val LOGGING_FREQUENCY: Long = 100 //milliseconds
+    const val LOGGING_FREQUENCY: Long = 500 //milliseconds
 
     const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 

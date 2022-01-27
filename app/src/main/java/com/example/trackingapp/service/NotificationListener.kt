@@ -8,8 +8,8 @@ import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaNotification
 
 class NotificationListener: NotificationListenerService() {
@@ -68,7 +68,7 @@ class NotificationListener: NotificationListenerService() {
         var titleHashed = ""
         var textHashed = ""
         //hash every title and text
-        if (context!!.packageName != packageName) {
+        if (context?.packageName != packageName) {
             if ("" != title) {
                 titleHashed = title.hashCode().toString()
             }
@@ -82,7 +82,8 @@ class NotificationListener: NotificationListenerService() {
         /*if(notification.actions != null){
             LogHelper.d(TAG, "Notification actions: "+getString(notification.actions));
         }*/
-        checkIfNotificationExistsAndSave(titleHashed, timestamp, textHashed, priority, packageName, category)
+        //TODO hash
+        checkIfNotificationExistsAndSave(title, timestamp, "$text, info: $infoText, subText: $subText", priority, packageName, category)
 
         Log.d(TAG, "onNotificationPosted done")
     }
@@ -125,16 +126,18 @@ class NotificationListener: NotificationListenerService() {
 
     private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
         Log.d(TAG, "checkIfNotificationExistsAndSave()")
-        if (packageName != "com.example.trackingapp" &&
-            !(packageName == "com.whatsapp" && category != null && category == Notification.CATEGORY_CALL && priority == 2)
-        ) {
+//        if (packageName != "com.example.trackingapp" &&
+//            //why not whatsapp?
+//            !(/*packageName == "com.whatsapp" &&*/ category != null && category == Notification.CATEGORY_CALL && priority == 2)
+//        ) {
+        if(packageName != "com.example.trackingapp"){
             saveEntry(title, timestamp, text, priority, packageName, category)
         }
     }
 
     private fun saveEntry(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
         val metaNotification = MetaNotification(priority, category)
-        Event(EventName.NOTIFICATION, timestamp, event= title, description= text, packageName = packageName).saveToDataBase(metaNotification)
+        LogEvent(LogEventName.NOTIFICATION, timestamp, event= title, description= text, packageName = packageName).saveToDataBase(metaNotification)
 
     }
 }

@@ -13,8 +13,8 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.SensorAccuracy
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
@@ -77,7 +77,7 @@ class AccelerometerSensor : AbstractSensor(
     }
 
     fun saveEntry(timestamp: Long, sensorData: String, accuracy: String) {
-        Event(EventName.ACCELEROMETER, timestamp, sensorData, accuracy).saveToDataBase()
+        LogEvent(LogEventName.ACCELEROMETER, timestamp, sensorData, accuracy).saveToDataBase()
     }
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}

@@ -48,7 +48,7 @@ fun Fragment.navigate(to: ScreenType, from: ScreenType) {
             findNavController().navigate(R.id.mainScreenFragment,null, navOptions)
         }
         ScreenType.Permission -> {
-            findNavController().navigate(R.id.permissionHolderFragmente, null, navOptions)
+            findNavController().navigate(R.id.permissionHolderFragment, null, navOptions)
         }
     }
 

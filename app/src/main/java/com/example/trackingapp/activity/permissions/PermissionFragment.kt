@@ -72,6 +72,11 @@ class PermissionFragment() : Fragment() {
                         viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
                     }
                 }
+                PermissionView.USAGE_STATS -> {
+                    if(managePermissions.isUsageInformationPermissionEnabled()) {
+                        viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
+                    }
+                }
             }
         }
     }
@@ -99,6 +104,11 @@ class PermissionFragment() : Fragment() {
                    if(managePermissions.checkAccessibilityPermission()){
                        checkPermissionsOrProceed()
                    }
+                }
+                PermissionView.USAGE_STATS -> {
+                    if(managePermissions.checkForUsageStatsPermissions()){
+                        checkPermissionsOrProceed()
+                    }
                 }
             }
         }

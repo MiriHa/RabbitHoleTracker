@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.os.Process
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -16,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+
 
 class PermissionManager(val activity: Activity, private val code: Int) {
     val TAG = "TRACKINGAPP_PERMISSION_MANAGER"
@@ -38,7 +38,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             //l.add(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
             l.add(Manifest.permission.BLUETOOTH)
 //            l.add(Manifest.permission.WAKE_LOCK)
-            //TODO l.add(Manifest.permission.PACKAGE_USAGE_STATS)
+            //l.add(Manifest.permission.PACKAGE_USAGE_STATS)
             l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 l.add(Manifest.permission.FOREGROUND_SERVICE)
@@ -56,29 +56,69 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     // Check permissions at runtime
     fun checkPermissions(): Boolean {
         Log.d(TAG, "checkPermissions")
-        if (arePermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
+        return if (arePermissionsGranted() != PackageManager.PERMISSION_GRANTED) {
             //showAlert()
             requestPermissions()
-            return false
+            false
         } else {
             Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
-            return true
+            true
+        }
+    }
+
+    fun checkForUsageStatsPermissions(): Boolean{
+        return if(!isUsageInformationPermissionEnabled()) {
+            val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
+            // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            activity.startActivity(intent)
+            false
+        } else {
+            Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
+            true
+        }
+    }
+
+    fun isUsageInformationPermissionEnabled(): Boolean{
+        return try {
+            val packageManager: PackageManager = activity.packageManager
+            val applicationInfo = packageManager.getApplicationInfo(activity.packageName, 0)
+            val appOpsManager = activity.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+            var mode = 0
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                mode = appOpsManager.unsafeCheckOpNoThrow(
+                    AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    applicationInfo.uid,
+                    applicationInfo.packageName
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                mode = appOpsManager.checkOpNoThrow(
+                    AppOpsManager.OPSTR_GET_USAGE_STATS,
+                    applicationInfo.uid,
+                    applicationInfo.packageName
+                )
+            }
+            if (mode == AppOpsManager.MODE_DEFAULT) {
+                activity.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+            } else {
+                mode == AppOpsManager.MODE_ALLOWED
+            }
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
         }
     }
 
     fun checkForNotificationListenerPermissionEnabled(): Boolean {
-        //val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
-        //activity.startActivity(intent)
-
-//        return if (Settings.Secure.getString(activity.contentResolver, "enabled_notification_listeners")
-//                .contains(activity.applicationContext.packageName)
-//        ) {
-//            //service is enabled do something
-//            true
-//        } else {
+        return if (Settings.Secure.getString(activity.contentResolver, "enabled_notification_listeners")
+                .contains(activity.applicationContext.packageName)
+        ) {
+            Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
+            true
+        } else {
             val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
             activity.startActivity(intent)
-            return true
+            false
+        }
     }
 
     // method to check is the user has permitted the accessibility permission
@@ -124,27 +164,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
         return false
     }
-
-    /**
-     * //TODO Method to check if UsageStats are allowed
-     */
-    fun checkUsageAccess(context: Context): Boolean {
-        Log.d(TAG, "checkUsageAccess()")
-        var granted = false
-        val appOps = context
-            .getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-        val mode = appOps.checkOpNoThrow(
-            AppOpsManager.OPSTR_GET_USAGE_STATS,
-            Process.myUid(), context.packageName
-        )
-        granted = if (mode == AppOpsManager.MODE_DEFAULT) {
-            context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
-        } else {
-            mode == AppOpsManager.MODE_ALLOWED
-        }
-        return granted
-    }
-
 
     // Check permissions status
     fun arePermissionsGranted(): Int {

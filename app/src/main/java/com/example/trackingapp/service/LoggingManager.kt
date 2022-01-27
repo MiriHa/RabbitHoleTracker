@@ -1,12 +1,8 @@
 package com.example.trackingapp.service
 
-import android.app.AlarmManager
 import android.app.PendingIntent
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings
-import android.text.TextUtils.SimpleStringSplitter
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -37,7 +33,7 @@ object LoggingManager {
         if (!isServiceRunning(context)) {
             Log.d(TAG, "startService called")
             Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
-            val serviceIntent = Intent(context, LoggingService::class.java )
+            val serviceIntent = Intent(context, LoggingService::class.java)
             ContextCompat.startForegroundService(context, serviceIntent)
             startServiceViaWorker(context)
         }
@@ -48,29 +44,10 @@ object LoggingManager {
         Log.d(TAG, "stopService called")
         isDataRecordingActive = false
         Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
-        val stopIntent = Intent(context, LoggingService::class.java )
+        val stopIntent = Intent(context, LoggingService::class.java)
         context.applicationContext.stopService(stopIntent)
         cancleServiceViaWorker(context)
         // }
-    }
-
-
-    fun scheduleStartRecordingAlarmManager(context: Context) {
-        val startTime = System.currentTimeMillis()
-        Log.d(TAG, "Start Recording AlarmManager $startTime")
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = getPendingIntent(context)
-        val m_AlarmInterval = CONST.LOGGING_INTERVAL.toLong()
-        //alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC, startTime, pendingIntent)
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + m_AlarmInterval, m_AlarmInterval, pendingIntent)
-
-    }
-
-    fun cancleRecordingAlarmManager(context: Context){
-        Log.d(TAG, "Cancel Recording AlarmManager")
-        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val pendingIntent = getPendingIntent(context)
-        alarmManager.cancel(pendingIntent)
     }
 
     private fun getPendingIntent(context: Context): PendingIntent? {
@@ -99,7 +76,7 @@ object LoggingManager {
         )
     }
 
-    fun cancleServiceViaWorker(context: Context){
+    fun cancleServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
     }
 }

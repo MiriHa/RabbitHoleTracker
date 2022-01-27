@@ -10,8 +10,8 @@ import android.widget.Toast
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.ActivityTransitionType
 import com.example.trackingapp.models.ActivityType
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
 import com.google.android.gms.location.*
@@ -153,7 +153,7 @@ class ActivityRecognitionSensor : AbstractSensor(
     }
 
     fun saveEntry(timestamp: Long, activity: String, transition: String, elapasedTime: Long) {
-        Event(EventName.ACTIVITY, timestamp, activity, transition, elapasedTime.toString()).saveToDataBase()
+        LogEvent(LogEventName.ACTIVITY, timestamp, activity, transition, elapasedTime.toString()).saveToDataBase()
     }
 
     companion object {

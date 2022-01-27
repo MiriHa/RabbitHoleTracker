@@ -15,7 +15,7 @@ import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.navigate
 
-class PermissionHolderFragmente: Fragment() {
+class PermissionHolderFragment: Fragment() {
 
     private val TAG = "PermissionHolderFragment"
 
@@ -91,11 +91,5 @@ class PermissionHolderFragmente: Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
         mContext = context
-    }
-
-    companion object {
-        fun newInstance(viewModel: PermissionViewModel): PermissionFragment {
-            return PermissionFragment().apply { this.viewModel = viewModel }
-        }
     }
 }

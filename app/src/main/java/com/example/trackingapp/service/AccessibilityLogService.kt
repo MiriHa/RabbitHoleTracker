@@ -2,11 +2,14 @@ package com.example.trackingapp.service
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
+import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.models.ContentChangeEvent
 import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.google.firebase.FirebaseApp
 
 
@@ -14,6 +17,9 @@ import com.google.firebase.FirebaseApp
 // at com.example.trackingapp.service.AccessibilityLogService.onStartCommand(Unknown Source:2)
 
 class AccessibilityLogService : AccessibilityService() {
+
+    val TAG = "ACCESSIBILITYLOGSERVICE"
+
     // private var mWakeLock: PowerManager.WakeLock? = null
     private val info = AccessibilityServiceInfo()
 
@@ -101,22 +107,120 @@ class AccessibilityLogService : AccessibilityService() {
         isRunning = false
     }
 
+    var keyboardEvents = mutableListOf<Event>()
+    var initialContent: String? = null
+    var cachedHintText: String? = null
+
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED == event?.eventType) return //TODO also record window content? -> to much info?
+        val time = System.currentTimeMillis()
+        try {
+            when {
+                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> return //TODO also record window content? -> to much info?
 
-        var eventName = EventName.ACCESSIBILITY
-        if (AccessibilityEvent.TYPE_WINDOWS_CHANGED == event?.eventType) {
-            eventName = EventName.APPS
+                event?.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
+                    LogEvent(
+                        LogEventName.ACCESSIBILITY,
+                        timestamp = time,
+                        event = getEventType(event),
+                        description = getWindowChangeType(event)
+                    ).saveToDataBase()
+                }
+                //represents and foreground change
+                event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
+                    LogEvent(
+                        LogEventName.APPS,
+                        timestamp = time,
+                        event = getEventType(event),
+                        description = getEventText(event),
+                        name = event?.className.toString(),
+                        packageName = event?.packageName.toString()
+                    ).saveToDataBase()
+                }
+                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED && !event.isPassword -> {
+
+                    // create ContentChangeEvents
+                    val contentChangeEvent = ContentChangeEvent(event.text[0].toString(), null)
+                    // ---- hint text ----
+                    // first: try to get hint text property
+                    if (event.source != null && event.source.hintText != null) {
+                        contentChangeEvent.fieldHintText = event.source.hintText.toString()
+
+                    } else if (cachedHintText != null) {
+                        // if that doesnt work, use the previous text if there is one cached
+                        // TODO using cached hint text is disabeld, as it may sometimes log user content
+                        //                    contentChangeEvent.setFieldHintText(cachedHintText);
+                        //                    LogHelper.i(TAG,"used cached hint text: "+cachedHintText);
+                    }
+                    try {
+                        contentChangeEvent.fieldPackageName = event.packageName.toString()
+                    } catch (e: Exception) {
+                        Log.i(
+                            TAG,
+                            "Could not fetch packageName of event source node",
+                            e
+                        )
+                    }
+                    keyboardEvents.add(contentChangeEvent)
+                    if (keyboardEvents.size == 1) {
+                        initialContent = if (event.beforeText != null) {
+                            event.beforeText.toString()
+                        } else {
+                            ""
+                        }
+                    }
+                }
+
+                // entering a new node -> cache the hint text, in case this is a textfield
+                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents.size == 0 -> {
+                    try {
+                        cachedHintText = event.text[0].toString()
+                        Log.i(TAG, "caching hint text: $cachedHintText")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "could not fetch hint text from event: $event", e)
+                    }
+                }
+                // leaving a textfield
+                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents.size > 0 -> {
+                    onFinishInput(event, time)
+                }
+
+                else -> {
+                    LogEvent(
+                        LogEventName.ACCESSIBILITY,
+                        timestamp = time,
+                        event = getEventType(event),
+                        description = getEventText(event),
+                        name = event?.className.toString(),
+                        packageName = event?.packageName.toString()
+                    ).saveToDataBase()
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "exception in onAccessibilityEvent() for event " + (event?.toString() ?: ""), e)
         }
+    }
 
-        Event(
-            eventName,
-            timestamp = System.currentTimeMillis(),
+    private fun onFinishInput(event: AccessibilityEvent?, time: Long) { //TODO public only for testing
+        if (keyboardEvents.size < 1) {
+            return
+        }
+        // take current events, and decouple this list from the actively used for collecting new events
+        val currentKeyboardEvents = keyboardEvents
+        val currentInitialContent: String? = initialContent
+        keyboardEvents = mutableListOf()
+        initialContent = null
+        cachedHintText = null
+
+        LogEvent(
+            LogEventName.INPUT,
+            timestamp = time,
             event = getEventType(event),
             description = getEventText(event),
             name = event?.className.toString(),
             packageName = event?.packageName.toString()
-        ).saveToDataBase()
+        ).saveToDataBase(metadataList = currentKeyboardEvents)
+
+
     }
 
     private fun getEventType(event: AccessibilityEvent?): String {
@@ -148,6 +252,25 @@ class AccessibilityLogService : AccessibilityService() {
             AccessibilityEvent.TYPE_WINDOWS_CHANGED -> return "TYPE_WINDOWS_CHANGED"
         }
         return "default"
+    }
+
+    private fun getWindowChangeType(event: AccessibilityEvent?): String {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return when (event?.windowChanges) {
+                AccessibilityEvent.WINDOWS_CHANGE_ADDED -> "WINDOWS_CHANGE_ADDED"
+                AccessibilityEvent.WINDOWS_CHANGE_REMOVED -> "WINDOWS_CHANGE_REMOVED"
+                AccessibilityEvent.WINDOWS_CHANGE_TITLE -> "WINDOWS_CHANGE_TITLE"
+                AccessibilityEvent.WINDOWS_CHANGE_BOUNDS -> "WINDOWS_CHANGE_BOUNDS"
+                AccessibilityEvent.WINDOWS_CHANGE_LAYER -> "WINDOWS_CHANGE_LAYER"
+                AccessibilityEvent.WINDOWS_CHANGE_ACTIVE -> "WINDOWS_CHANGE_ACTIVE"
+                AccessibilityEvent.WINDOWS_CHANGE_FOCUSED -> "WINDOWS_CHANGE_FOCUSED"
+                AccessibilityEvent.WINDOWS_CHANGE_ACCESSIBILITY_FOCUSED -> "WINDOWS_CHANGE_ACCESSIBILITY_FOCUSED"
+                AccessibilityEvent.WINDOWS_CHANGE_PARENT -> "WINDOWS_CHANGE_PARENT"
+                AccessibilityEvent.WINDOWS_CHANGE_CHILDREN -> "WINDOWS_CHANGE_CHILDREN"
+                AccessibilityEvent.WINDOWS_CHANGE_PIP -> "WINDOWS_CHANGE_PIP"
+                else -> "WINDOW_CHANGE"
+            }
+        } else return " "
     }
 
     companion object {

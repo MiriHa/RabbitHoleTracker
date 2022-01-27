@@ -33,6 +33,16 @@ object SharedPrefManager {
         return sharedPrefs.getBoolean(key, false)
     }
 
+    fun saveLong(key: String, value: Long){
+        val editor = sharedPrefs.edit()
+        editor.putLong(key, value)
+        editor.apply()
+    }
+
+    fun getLong(key: String): Long {
+        return sharedPrefs.getLong(key, 0)
+    }
+
     fun saveIntentionList(intentionMap: MutableSet<String?>?) {
         val json: String = Gson().toJson(intentionMap)
 

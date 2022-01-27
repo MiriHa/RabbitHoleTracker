@@ -6,8 +6,8 @@ import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.SmsEventType
 import com.example.trackingapp.models.metadata.MetaSMS
 
@@ -78,7 +78,7 @@ object SmsHelper {
     }
 
     /**
-     * Method to save an SMS Event to the database.
+     * Method to save an SMS LogEvent to the database.
      *
      * @param save indicates wether dataset should be inserted or saved. Meaning of save: checks if exists, if true update, else insert.) see: https://agrosner.gitbooks.io/dbflow/content/StoringData.html
      * @param type SmsEventType
@@ -117,15 +117,15 @@ object SmsHelper {
                 messageHash = messageHash,
                 contactId = contactUID
             )
-            Event(
-                eventName = EventName.SMS,
+            LogEvent(
+                eventName = LogEventName.SMS,
                 timestamp = timestamp,
                 event = type.name,
                 description = smsID,
             ).saveToDataBase(metaSms)
         } else {
-            Event(
-                eventName = EventName.SMS,
+            LogEvent(
+                eventName = LogEventName.SMS,
                 timestamp = timestamp,
                 event = type.name,
                 description = smsID,

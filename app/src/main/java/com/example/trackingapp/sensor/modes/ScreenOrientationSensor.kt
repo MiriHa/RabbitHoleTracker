@@ -8,8 +8,8 @@ import android.content.res.Configuration
 import android.util.Log
 import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.ScreenOrientationType
 import com.example.trackingapp.sensor.AbstractSensor
 
@@ -63,7 +63,7 @@ class ScreenOrientationSensor : AbstractSensor(
     }
 
     fun saveEntry(orientation: ScreenOrientationType, timestamp: Long) {
-        Event(EventName.SCREEN_ORIENTATION, timestamp, orientation.name).saveToDataBase()
+        LogEvent(LogEventName.SCREEN_ORIENTATION, timestamp, orientation.name).saveToDataBase()
     }
 
     fun getScreenOrientation(context: Context?): ScreenOrientationType {

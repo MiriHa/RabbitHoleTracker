@@ -11,10 +11,9 @@ import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
 import com.example.trackingapp.models.ESMState
-import com.example.trackingapp.models.Event
-import com.example.trackingapp.models.EventName
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
-import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
 
@@ -69,8 +68,8 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
        if(intention.isNotBlank()){
         viewModel.checkDuplicateIntentionAnSave(intention)
         dismissFullScreenNotification()
-           Event(
-               EventName.ESM,
+           LogEvent(
+               LogEventName.ESM,
                System.currentTimeMillis(),
                ESMState.ESM_UNLOCK.name,
                intention
