@@ -8,7 +8,7 @@ class MainScreenViewModel: ViewModel() {
 
 }
 
-class MainScreenViewModelFactory() : ViewModelProvider.Factory {
+class MainScreenViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(MainScreenViewModel::class.java)) {

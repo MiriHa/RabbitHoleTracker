@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.example.trackingapp.activity.permissions.PermissionView
 
 
 class PermissionManager(val activity: Activity, private val code: Int) {
@@ -32,13 +33,10 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.RECEIVE_SMS)
             // ?? l.add(Manifest.permission.WRITE_SMS)
+            // l.add(Manifest.permission.WAKE_LOCK)
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
-           // l.add(Manifest.permission.BIND_ACCESSIBILITY_SERVICE)
-            //l.add(Manifest.permission.BIND_NOTIFICATION_LISTENER_SERVICE)
             l.add(Manifest.permission.BLUETOOTH)
-//            l.add(Manifest.permission.WAKE_LOCK)
-            //l.add(Manifest.permission.PACKAGE_USAGE_STATS)
             l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 l.add(Manifest.permission.FOREGROUND_SERVICE)
@@ -66,8 +64,8 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
     }
 
-    fun checkForUsageStatsPermissions(): Boolean{
-        return if(!isUsageInformationPermissionEnabled()) {
+    fun checkForUsageStatsPermissions(): Boolean {
+        return if (!isUsageInformationPermissionEnabled()) {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             activity.startActivity(intent)
@@ -78,7 +76,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
     }
 
-    fun isUsageInformationPermissionEnabled(): Boolean{
+    fun isUsageInformationPermissionEnabled(): Boolean {
         return try {
             val packageManager: PackageManager = activity.packageManager
             val applicationInfo = packageManager.getApplicationInfo(activity.packageName, 0)
@@ -137,6 +135,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             true
         }
     }
+
     fun accessibilityServiceEnabled(): Int {
         var accessEnabled = 0
         Log.d(TAG, "checkAccesibiltyPermission")
@@ -227,6 +226,50 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
         if (result == PackageManager.PERMISSION_GRANTED) return true
         return false
+    }
+
+    companion object {
+        fun checkPermission(permissionView: PermissionView, activity: Activity?): Boolean {
+            activity?.let {
+                val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
+                return when (permissionView) {
+                    PermissionView.PERMISSIONS -> {
+                        managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
+                    }
+                    PermissionView.NOTIFICATION_LISTENER -> {
+                        Settings.Secure.getString(it.contentResolver, "enabled_notification_listeners")
+                            .contains(it.applicationContext.packageName)
+                    }
+                    PermissionView.ACCESSIBILITY_SERVICE -> {
+                        managePermissions.accessibilityServiceEnabled() == 1
+
+                    }
+                    PermissionView.USAGE_STATS -> {
+                        managePermissions.isUsageInformationPermissionEnabled()
+                    }
+                }
+            }
+            return false
+        }
+
+        fun areAllPermissionGiven(activity: Activity?): Boolean {
+            activity?.let {
+                val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
+
+                val permissions = managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
+
+                val notificationListener =  Settings.Secure.getString(it.contentResolver, "enabled_notification_listeners")
+                    .contains(it.applicationContext.packageName)
+
+                val accessibilityService = managePermissions.accessibilityServiceEnabled() == 1
+
+                val usageStats = managePermissions.isUsageInformationPermissionEnabled()
+
+                Log.d("PERMISSIONMANAGER","AreAllPermissionsGive: ${permissions && notificationListener && accessibilityService && usageStats}")
+                return permissions && notificationListener && accessibilityService && usageStats
+            }
+            return false
+        }
     }
 }
 

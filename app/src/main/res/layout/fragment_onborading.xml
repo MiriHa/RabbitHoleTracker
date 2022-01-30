@@ -64,16 +64,6 @@
             android:text="@string/login_signup"
             android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/onboardingTestBUtton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="32dp"
-            android:backgroundTint="@color/milkGreen"
-            android:text="home"
-            android:textColor="@color/white" />
     </LinearLayout>
 
 

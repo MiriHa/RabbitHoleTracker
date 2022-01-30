@@ -1,6 +1,5 @@
 package com.example.trackingapp.service
 
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -48,11 +47,6 @@ object LoggingManager {
         context.applicationContext.stopService(stopIntent)
         cancleServiceViaWorker(context)
         // }
-    }
-
-    private fun getPendingIntent(context: Context): PendingIntent? {
-        val alarmIntent = Intent(context.applicationContext, LoggingService::class.java)
-        return PendingIntent.getService(context, 1, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun startServiceViaWorker(context: Context) {

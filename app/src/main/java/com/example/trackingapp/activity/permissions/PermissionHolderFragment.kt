@@ -11,11 +11,12 @@ import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.FragmentPermissionHolderBinding
+import com.example.trackingapp.util.PermissionManager
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.navigate
 
-class PermissionHolderFragment: Fragment() {
+class PermissionHolderFragment : Fragment() {
 
     private val TAG = "PermissionHolderFragment"
 
@@ -30,21 +31,32 @@ class PermissionHolderFragment: Fragment() {
     ): View? {
         val binding: FragmentPermissionHolderBinding = FragmentPermissionHolderBinding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(this, PermissionHolderViewModelFactory())[PermissionHolderViewModel::class.java]
-        viewModel.initPermissionIterator(this.activity)
 
         SharedPrefManager.init(mContext.applicationContext)
+        getPermissionList()
+        viewModel.initPermissionIterator(this.activity)
 
         binding.frameLayoutPermissionContainer.setOnClickListener {
             // This ClickListener catches clicks that are forwarded to the background
         }
 
 
-        if(viewModel.currentPermission == null){
+        if (viewModel.currentPermission == null) {
             Log.d(TAG, "showNextPermissionFragment()")
             showNextPermissionFragment()
         }
 
         return binding.root
+    }
+
+    private fun getPermissionList() {
+        viewModel.permissions = arrayOf(
+            PermissionView.PERMISSIONS.takeIf { !PermissionManager.checkPermission(PermissionView.PERMISSIONS, this.activity) },
+            PermissionView.ACCESSIBILITY_SERVICE.takeIf { !PermissionManager.checkPermission(PermissionView.ACCESSIBILITY_SERVICE, this.activity) },
+            PermissionView.NOTIFICATION_LISTENER.takeIf { !PermissionManager.checkPermission(PermissionView.NOTIFICATION_LISTENER, this.activity) },
+            PermissionView.USAGE_STATS.takeIf { !PermissionManager.checkPermission(PermissionView.USAGE_STATS, this.activity) }
+        ).filterNotNull()
+        Log.d(TAG, "PermissionListsize: ${viewModel.permissions.size}")
     }
 
     private fun showNextPermissionFragment() {
@@ -54,7 +66,8 @@ class PermissionHolderFragment: Fragment() {
         if (nextPermissionFragment != null) {
             swapContent(nextPermissionFragment)
         } else {
-            viewModel.userFinishedOnboarding()
+            //viewModel.userFinishedOnboarding()
+            viewModel.reset()
             navigate(to = ScreenType.HomeScreen, from = ScreenType.Permission)
         }
     }

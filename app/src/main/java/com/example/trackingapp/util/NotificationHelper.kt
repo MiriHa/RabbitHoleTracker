@@ -9,8 +9,8 @@ import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.R
-import com.example.trackingapp.activity.ESM.ESMIntentionLockActivity
-import com.example.trackingapp.activity.ESM.ESMIntentionUnlockActivity
+import com.example.trackingapp.activity.esm.ESMIntentionLockActivity
+import com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity
 
 object NotificationHelper {
 

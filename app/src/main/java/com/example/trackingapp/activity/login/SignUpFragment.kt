@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.FragmentSignupBinding
+import com.example.trackingapp.util.PermissionManager
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
 
@@ -108,9 +109,7 @@ class SignUpFragment: Fragment() {
     }
 
     private fun goToMainScreen(model: LoggedInUserView) {
-        if(viewModel.hasUserFinishedOnboarding()) {
-            val welcome = getString(R.string.welcome) + model.displayName
-            val appContext = context?.applicationContext ?: return
+        if(PermissionManager.areAllPermissionGiven(this.activity)) {
             navigate(ScreenType.HomeScreen, ScreenType.SignUp)
         } else {
             navigate(ScreenType.Permission, ScreenType.SignUp)

@@ -1,6 +1,5 @@
 package com.example.trackingapp.sensor
 
-import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -40,7 +39,7 @@ class BootUpReceiver : BroadcastReceiver() {
     private fun startLoggingManager(context: Context) {
         if (!LoggingManager.isServiceRunning(context)) {
             //TODO -> test if this is not killing the app
-            LoggingManager.startLoggingService(context as Activity)
+            LoggingManager.startLoggingService(context)
         }
     }
 

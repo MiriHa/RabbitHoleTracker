@@ -172,12 +172,14 @@ class AccessibilityLogService : AccessibilityService() {
 
                 // entering a new node -> cache the hint text, in case this is a textfield
                 AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents.size == 0 -> {
-                    try {
-                        cachedHintText = event.text[0].toString()
-                        Log.i(TAG, "caching hint text: $cachedHintText")
-                    } catch (e: Exception) {
-                        Log.w(TAG, "could not fetch hint text from event: $event", e)
-                    }
+//                    try {
+//                        cachedHintText = event.text[0].toString()
+//                        Log.i(TAG, "caching hint text: $cachedHintText")
+//                    } catch (e: Exception) {
+//                        Log.w(TAG, "could not fetch hint text from event: $event", e)
+//                    }
+//                    CESSIBILITYLOGSERVICE: could not fetch hint text from event: EventType: TYPE_VIEW_FOCUSED; EventTime: 4569009; PackageName: com.android.systemui; MovementGranularity: 0; Action: 0; ContentChangeTypes: []; WindowChangeTypes: [] [ ClassName: android.widget.EditText; Text: []; ContentDescription: PIN area; ItemCount: 15; CurrentItemIndex: 2; Enabled: true; Password: true; Checked: false; FullScreen: false; Scrollable: false; BeforeText: null; FromIndex: -1; ToIndex: -1; ScrollX: -1; ScrollY: -1; MaxScrollX: -1; MaxScrollY: -1; AddedCount: -1; RemovedCount: -1; ParcelableData: null ]; recordCount: 0
+//                    java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
                 }
                 // leaving a textfield
                 AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents.size > 0 -> {

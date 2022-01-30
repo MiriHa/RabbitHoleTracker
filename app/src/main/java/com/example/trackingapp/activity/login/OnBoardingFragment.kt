@@ -7,13 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
-import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ScreenType
-import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.navigate
 
 class OnBoardingFragment: Fragment() {
 
+    val TAG = "ONBORADING_FRAGMENT"
     private lateinit var binding: FragmentOnboradingBinding
 
     override fun onCreateView(
@@ -30,13 +29,6 @@ class OnBoardingFragment: Fragment() {
         }
         binding.onboradingSignupButton.setOnClickListener {
             navigate(ScreenType.SignUp, ScreenType.Welcome)
-        }
-        binding.onboardingTestBUtton.setOnClickListener {
-            if(SharedPrefManager.getBoolean(CONST.PREFERENCES_ONBOARDING_FINISHED)) {
-                navigate(ScreenType.HomeScreen, ScreenType.Welcome)
-            } else {
-                navigate(ScreenType.Permission, ScreenType.Welcome)
-            }
         }
 
         return view

@@ -1,6 +1,6 @@
 package com.example.trackingapp.models
 
-class ContentChangeEvent(var content: String?, inputMode: EventInputMode?, override val dataKey: String? = content?.hashCode().toString()) : Event(Type.CONTENT_CHANGE) {
+class ContentChangeEvent(var content: String?, inputMode: EventInputMode?) : Event(Type.CONTENT_CHANGE) {
 
     var contentLength: Int? = null
     var inputMode: String? = null

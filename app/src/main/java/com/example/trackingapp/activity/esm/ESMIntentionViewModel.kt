@@ -1,4 +1,4 @@
-package com.example.trackingapp.activity.ESM
+package com.example.trackingapp.activity.esm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -55,7 +55,7 @@ class ESMIntentionViewModel : ViewModel() {
 
 }
 
-class ESMIntentionViewModelFactory() : ViewModelProvider.Factory {
+class ESMIntentionViewModelFactory : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ESMIntentionViewModel::class.java)) {

@@ -7,7 +7,4 @@ class MetaCall(
     private val partner: String? = null,
     private val duration: Int = 0,
     private val contactId: Int = 0
-): MetaType("CALL_META") {
-
-    override val dataKey: String = "CALL_META"
-}
+): MetaType("CALL_META")

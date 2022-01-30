@@ -24,6 +24,8 @@ import com.example.trackingapp.sensor.modes.RingerModeSensor
 import com.example.trackingapp.sensor.modes.ScreenOrientationSensor
 import com.example.trackingapp.sensor.modes.ScreenStateSensor
 import com.example.trackingapp.sensor.usage.AccessibilitySensor
+import com.example.trackingapp.sensor.usage.DataTrafficSensor
+import com.example.trackingapp.sensor.usage.UsageStatsSensor
 import com.example.trackingapp.util.CONST
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -161,6 +163,8 @@ class LoggingService : Service() {
         list.add(OrientationSensor())
         list.add(BluetoothSensor())
         list.add(ActivityRecognitionSensor())
+        list.add(DataTrafficSensor())
+        list.add(UsageStatsSensor())
         return list
     }
 

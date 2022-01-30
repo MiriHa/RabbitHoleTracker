@@ -31,7 +31,8 @@ enum class LogEventName {
     RINGER_MODE,
     SCREEN,
     SCREEN_ORIENTATION,
-    SMS
+    SMS,
+    USAGE_EVENTS
 }
 
 enum class ESMState {
@@ -76,6 +77,12 @@ enum class ConnectionType {
     CONNECTED_ETHERNET,
     CONNECTED_VPN,
     UNKNOWN
+}
+
+enum class Connection {
+    TYPE_WIFI,
+    TYPE_MOBIL,
+    TYPE_ALL
 }
 
 enum class SmsEventType {

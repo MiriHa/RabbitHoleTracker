@@ -31,6 +31,9 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
+<!--    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" tools:ignore="ProtectedPermissions"/>-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+
 
     <!--e: Starting with Build.VERSION_CODES#S, apps targeting SDK level 31 or higher
 need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
@@ -60,13 +63,13 @@ need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
         </activity>
 
         <activity
-            android:name="com.example.trackingapp.activity.ESM.ESMIntentionLockActivity"
+            android:name="com.example.trackingapp.activity.esm.ESMIntentionLockActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:showOnLockScreen="true" />
 
         <activity
-            android:name="com.example.trackingapp.activity.ESM.ESMIntentionUnlockActivity"
+            android:name="com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity"
             android:exported="true"
             android:launchMode="singleTop" />
 

@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -59,6 +60,7 @@ class MainScreenFragment : Fragment() {
                 val isServiceRunning = LoggingManager.isServiceRunning(mContext)
                 val arePermissionGranted = checkPermissionsGranted(mContext as Activity)
                 if(arePermissionGranted) {
+                    Log.d(TAG, "startLoggingButton permissions are granted")
                     if (!isServiceRunning) {
                         LoggingManager.stopLoggingService(mContext)
                         LoggingManager.userPresent = true
@@ -67,6 +69,8 @@ class MainScreenFragment : Fragment() {
                         //text = getString(R.string.logging_stop_button)
                     }
                 } else {
+                    Log.d(TAG, "startLoggingButton Click: permissions are denied")
+                    Toast.makeText(mContext, "Not all permissions are granted", Toast.LENGTH_LONG).show()
                     navigate(to = ScreenType.Permission, from = ScreenType.HomeScreen)
                 }
         }

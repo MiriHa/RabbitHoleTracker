@@ -12,11 +12,7 @@ import com.example.trackingapp.util.SharedPrefManager
 
 class PermissionHolderViewModel : ViewModel() {
 
-    private val permissions: Array<PermissionView> = arrayOf(
-        PermissionView.PERMISSIONS,
-        PermissionView.ACCESSIBILITY_SERVICE,
-        PermissionView.NOTIFICATION_LISTENER,
-    )
+    var permissions: List<PermissionView> = listOf()
 
     var currentPermission: PermissionView? = null
 
@@ -42,7 +38,7 @@ class PermissionHolderViewModel : ViewModel() {
 
 }
 
-private class PermissionIterator(val activity: Activity, val permissions: Array<PermissionView>) {
+private class PermissionIterator(val activity: Activity, val permissions: List<PermissionView>) {
 
     private val askedPermission = mutableListOf<PermissionView>()
 
@@ -64,18 +60,18 @@ private class PermissionIterator(val activity: Activity, val permissions: Array<
         val p = permissions.firstOrNull { permission ->
             val permissionGranted =  isPermissionGranted(permission)
             val permissionAsked = askedPermission.contains(permission)
-             !permissionGranted && !permissionAsked
+             !permissionGranted //&& !permissionAsked
         }
         Log.d("PERMISSIONITERATOR", "nextPermission: ${p?.name} ")
         return p
     }
 
     private fun isPermissionGranted(permissionView: PermissionView): Boolean {
-        this.activity?.let {
+        this.activity.let {
             val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
-            when (permissionView) {
+            return when (permissionView) {
                 PermissionView.PERMISSIONS -> {
-                    return managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
+                    managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
                 }
                 PermissionView.NOTIFICATION_LISTENER -> {
                     Settings.Secure.getString(it.contentResolver, "enabled_notification_listeners")
@@ -84,10 +80,11 @@ private class PermissionIterator(val activity: Activity, val permissions: Array<
                 PermissionView.ACCESSIBILITY_SERVICE -> {
                     managePermissions.accessibilityServiceEnabled() == 1
                 }
-                else -> false
+                PermissionView.USAGE_STATS -> {
+                    managePermissions.isUsageInformationPermissionEnabled()
+                }
             }
         }
-        return false
     }
 }
 

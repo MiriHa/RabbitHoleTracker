@@ -7,7 +7,4 @@ class MetaSMS(
     val length: Int = 0,
     val messageHash: String? = null,
     val contactId: Int = 0
-) : MetaType("SMS_META") {
-
-    override val dataKey: String = "SMS_META"
-}
+) : MetaType("SMS_META")

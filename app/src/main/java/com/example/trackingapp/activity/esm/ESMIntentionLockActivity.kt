@@ -1,4 +1,4 @@
-package com.example.trackingapp.activity.ESM
+package com.example.trackingapp.activity.esm
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
