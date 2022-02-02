@@ -45,9 +45,9 @@ need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
     //<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
 
     <application
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_rabbit_hole_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_rabbit_hole_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TrackingApp">
         <activity

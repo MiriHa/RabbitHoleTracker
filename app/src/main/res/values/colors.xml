@@ -13,5 +13,7 @@
     <color name="DarkBlackishGray">#444653</color>
     <color name="LightBlackishGray">#6E707C</color>
     <color name="milkGreen">#0BCB85</color>
+    <color name="blueish">#0378C5</color>
+    <color name="darkblue">#002F43</color>
 
 </resources>

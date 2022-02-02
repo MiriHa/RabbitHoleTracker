@@ -36,13 +36,6 @@ class NotificationSensor: AbstractSensor(
         isRunning = true
     }
 
-    override fun saveSnapshot(context: Context) {
-        super.saveSnapshot(context)
-        val timestamp = System.currentTimeMillis()
-        //TODO save
-
-    }
-
     override fun stop() {
         if (isRunning) {
             isRunning = false

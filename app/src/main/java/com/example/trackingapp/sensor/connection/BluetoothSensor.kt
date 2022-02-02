@@ -123,7 +123,6 @@ class BluetoothSensor : AbstractSensor(
                     }
                 }
                 BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED -> {
-                    //@TODO: Has to be tested on JB devices. If it's not used it can be returned then (also in manifest)
                     deviceName = resolveRemoteDeviceName(intent)
                     deviceType = resolveRemoteDeviceType(intent)
                     extras?.let {

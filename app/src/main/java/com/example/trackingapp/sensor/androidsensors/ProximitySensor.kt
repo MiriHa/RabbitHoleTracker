@@ -71,7 +71,6 @@ class ProximitySensor : AbstractSensor(
                         val sensorData = CONST.numberFormat.format(event.values[0])
                         saveEntry(time, sensorData, SensorAccuracy.ACCURACY_UNRELAIABLE.name)
                     }
-                    //TODO USE Accuracy in logs`? SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM
                     else -> {
                         val sensorData = CONST.numberFormat.format(event?.values?.get(0))
                         saveEntry(time, sensorData, SensorAccuracy.ACCURACY_ELSE.name)

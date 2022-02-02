@@ -45,7 +45,7 @@ object NotificationHelper {
         val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, 0)
 
         val builder = NotificationCompat.Builder(context, CONST.CHANNEL_ID_ESM)
-            .setSmallIcon(R.drawable.ic_logo_placholder)
+            .setSmallIcon(R.drawable.ic_logo)
             .setContentTitle(title)
             .setContentText(description)
             .setFullScreenIntent(fullScreenPendingIntent, true)

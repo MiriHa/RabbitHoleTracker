@@ -33,14 +33,8 @@ object DatabaseManager {
     val isUserLoggedIn: Boolean
         get() = user != null
 
-    init {
-        //TODO Calls to setPersistenceEnabled() must be made before any other usage of FirebaseDatabase instance.
-        //Firebase.database.setPersistenceEnabled(true)
-    }
-
     fun initIntentionList() {
         Log.d(TAG, "initDatabaseManager")
-        //TODO getSavedIntentions()
         intentionList = SharedPrefManager.getIntentionList()
         intentionList.addAll(arrayOf("Browsing", "Passing Time", "Search for Information"))
     }
@@ -63,7 +57,6 @@ object DatabaseManager {
     }
 
     fun LogEvent.saveToDataBase(metadata: MetaType? = null, metadataList: List<MetaType>? = null) {
-        //TODO save eventlist??
         Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
         if (metadata != null) {
             user?.let {

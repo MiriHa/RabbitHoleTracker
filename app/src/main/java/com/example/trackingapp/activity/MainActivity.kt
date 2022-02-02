@@ -44,11 +44,6 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         navView.setupWithNavController(navController)
 
-        //TODO
-       // checkPermissions(PermissionManager.appPermissions)
-
-       // val managePermissions = PermissionManager(this, CONST.PERMISSION_REQUEST_CODE)
-       // managePermissions.checkPermissions()
     }
 
     private fun checkPermissions(givenPermissionsToVerify: List<String>) {

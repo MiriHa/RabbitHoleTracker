@@ -12,10 +12,6 @@ import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.google.firebase.FirebaseApp
 
-
-//TODO lPointerException: Parameter specified as non-null is null: method kotlin.jvm.internal.Intrinsics.checkNotNullParameter, parameter intent
-// at com.example.trackingapp.service.AccessibilityLogService.onStartCommand(Unknown Source:2)
-
 class AccessibilityLogService : AccessibilityService() {
 
     val TAG = "ACCESSIBILITYLOGSERVICE"
@@ -115,7 +111,7 @@ class AccessibilityLogService : AccessibilityService() {
         val time = System.currentTimeMillis()
         try {
             when {
-                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> return //TODO also record window content? -> to much info?
+                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> return
 
                 event?.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
                     LogEvent(

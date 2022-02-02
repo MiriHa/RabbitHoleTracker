@@ -41,13 +41,7 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
         }
         lastOnChangeCall = System.currentTimeMillis()
         //TODO maybe to with coroutine?
-        //job = scope.launch {
-        //            while (true) {
-        //                if(LoggingManager.userPresent)
-        //                    collectSnapShots() // the function that should be ran every second
-        //                delay(CONST.LOGGING_FREQUENCY)
-        //            }
-        //        }
+
         val t = HandlerThread("HANDLER")
         t.start()
         val handler = Handler(t.looper)
@@ -55,6 +49,13 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
             Log.d(TAG, "In Runnable ")
             getSMS(context)
         }, 1000)
+//        val scope = MainScope()
+//        scope.launch {  }
+
+//        CoroutineScope(Dispatchers.IO).launch {
+//            delay(1000)
+//            getSMS(context)
+//        }
     }
 
     /**

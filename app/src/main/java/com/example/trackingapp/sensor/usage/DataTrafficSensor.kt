@@ -83,6 +83,8 @@ class DataTrafficSensor : AbstractSensor(
                 mobileRX = networkBucket.rxBytes
                 mobileTX = networkBucket.txBytes
             }
+
+            //TODO substract from bytes bevor to get difference??
             saveEntry(timestamp, mobileRX = mobileRX, mobileTX = mobileTX, wifiRX = wifiRX, wifiTX = wifiTX)
             lastTimeStamp = timestamp
 

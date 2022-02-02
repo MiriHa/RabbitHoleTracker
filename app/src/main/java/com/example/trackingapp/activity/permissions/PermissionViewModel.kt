@@ -14,8 +14,6 @@ class PermissionViewModel(
         Log.d("PERMISSIONVIEWMODEL","userResponded: ${userResponse.name}")
         if(userResponse == UserResponse.ACCEPTED) {
             userResponseHandler(userResponse)
-        } else {
-            //TODO Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
         }
     }
 

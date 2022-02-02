@@ -59,7 +59,7 @@ class LoggingService : Service() {
         val notificationPendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
 
         val notification = NotificationCompat.Builder(this, CONST.CHANNEL_ID_LOGGING)
-            .setSmallIcon(R.drawable.ic_logo_placholder)
+            .setSmallIcon(R.drawable.ic_logo)
             .setContentTitle(getString(R.string.logging_notification_service_title))
             .setContentText(getString(R.string.logging_notification_service_description))
             .setContentIntent(notificationPendingIntent)
@@ -126,8 +126,6 @@ class LoggingService : Service() {
             for (sensor in list) {
                 if (sensor.isEnabled && sensor.isAvailable(this)) {
                     sensor.start(this)
-                    //TODO TEst Collect initial snapshots
-                    //sensor.saveSnapshot(this)
                     Log.d(mTAG, sensor.sensorName + " turned on")
                 }
             }
