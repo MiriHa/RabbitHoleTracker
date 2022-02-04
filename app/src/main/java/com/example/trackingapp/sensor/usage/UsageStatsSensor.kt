@@ -5,7 +5,6 @@ import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Context.USAGE_STATS_SERVICE
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -15,18 +14,15 @@ import com.example.trackingapp.util.CONST
 
 class UsageStatsSensor : AbstractSensor(
     "USAGE_STATS_SENSOR",
-    "usageStats"
+    "Usage Stats"
 ) {
 
     private lateinit var usageStatsManager: UsageStatsManager
     private var mContext: Context? = null
     private var lastTimeStamp : Long = 0
 
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
-
     override fun isAvailable(context: Context?): Boolean {
+        //TODO check for permission?
         return true
     }
 

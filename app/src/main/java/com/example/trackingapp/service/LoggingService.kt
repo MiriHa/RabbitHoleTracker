@@ -10,22 +10,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.trackingapp.R
 import com.example.trackingapp.activity.MainActivity
-import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.sensor.activityrecognition.ActivityRecognitionSensor
-import com.example.trackingapp.sensor.androidsensors.*
-import com.example.trackingapp.sensor.communication.CallSensor
-import com.example.trackingapp.sensor.communication.NotificationSensor
-import com.example.trackingapp.sensor.communication.SmsSensor
-import com.example.trackingapp.sensor.connection.BluetoothSensor
-import com.example.trackingapp.sensor.connection.PowerSensor
-import com.example.trackingapp.sensor.connection.WifiSensor
-import com.example.trackingapp.sensor.modes.AirplaneModeSensor
-import com.example.trackingapp.sensor.modes.RingerModeSensor
-import com.example.trackingapp.sensor.modes.ScreenOrientationSensor
-import com.example.trackingapp.sensor.modes.ScreenStateSensor
-import com.example.trackingapp.sensor.usage.AccessibilitySensor
-import com.example.trackingapp.sensor.usage.DataTrafficSensor
-import com.example.trackingapp.sensor.usage.UsageStatsSensor
 import com.example.trackingapp.util.CONST
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -35,8 +19,6 @@ import kotlinx.coroutines.launch
 
 class LoggingService : Service() {
     private val mTAG = "TRACKINGAPP_LOGGING_SERVICE"
-
-    lateinit var sensorList: MutableList<AbstractSensor>
 
     private val scope = MainScope()
     var job: Job? = null
@@ -48,7 +30,6 @@ class LoggingService : Service() {
     override fun onCreate() {
         super.onCreate()
         Log.d(mTAG, "onCreate")
-        sensorList = createSensorList()
 
         val notificationManager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(CONST.CHANNEL_ID_LOGGING, CONST.CHANNEL_NAME_ESM_LOGGING, NotificationManager.IMPORTANCE_DEFAULT)
@@ -92,7 +73,7 @@ class LoggingService : Service() {
     }
 
     private fun collectSnapShots() {
-        sensorList?.let { list ->
+        LoggingManager.sensorList.let { list ->
             Log.d(mTAG, "size: " + list.size)
             for (sensor in list) {
                 if (sensor.isEnabled && sensor.isAvailable(this)) {
@@ -121,7 +102,7 @@ class LoggingService : Service() {
     }
 
     private fun startSensors() {
-        sensorList.let { list ->
+        LoggingManager.sensorList.let { list ->
             Log.d(mTAG, "size: " + list.size)
             for (sensor in list) {
                 if (sensor.isEnabled && sensor.isAvailable(this)) {
@@ -133,37 +114,13 @@ class LoggingService : Service() {
     }
 
     private fun stopSensors() {
-        sensorList.let { list ->
+        LoggingManager.sensorList.let { list ->
             for (sensor in list) {
                 if (sensor.isRunning) {
                     sensor.stop()
                 }
             }
         }
-    }
-
-    private fun createSensorList(): MutableList<AbstractSensor> {
-        val list = arrayListOf<AbstractSensor>()
-        list.add(AirplaneModeSensor())
-        list.add(ScreenStateSensor())
-        list.add(NotificationSensor())
-        list.add(WifiSensor())
-        list.add(PowerSensor())
-        list.add(AccessibilitySensor())
-        list.add(CallSensor())
-        list.add(SmsSensor())
-        list.add(ScreenOrientationSensor())
-        list.add(RingerModeSensor())
-        list.add(AccelerometerSensor())
-        list.add(GyroscopeSensor())
-        list.add(LightSensor())
-        list.add(ProximitySensor())
-        list.add(OrientationSensor())
-        list.add(BluetoothSensor())
-        list.add(ActivityRecognitionSensor())
-        list.add(DataTrafficSensor())
-        list.add(UsageStatsSensor())
-        return list
     }
 
     companion object {

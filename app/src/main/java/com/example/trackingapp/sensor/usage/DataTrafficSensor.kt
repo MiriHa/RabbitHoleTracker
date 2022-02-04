@@ -8,7 +8,6 @@ import android.net.NetworkCapabilities
 import android.os.Build
 import android.telephony.TelephonyManager
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -20,7 +19,7 @@ import com.example.trackingapp.util.SharedPrefManager
 
 class DataTrafficSensor : AbstractSensor(
     "DATA_TRAFFIC_SENSOR",
-    "dataTraffic"
+    "Data Traffic"
 ) {
 
     private lateinit var networkManager: NetworkStatsManager
@@ -28,11 +27,7 @@ class DataTrafficSensor : AbstractSensor(
 
     private var lastTimeStamp : Long = 0
 
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
-
-    override fun isAvailable(context: Context?): Boolean {
+   override fun isAvailable(context: Context?): Boolean {
         return true
     }
 

@@ -19,17 +19,13 @@ import com.example.trackingapp.util.CONST
 
 class BluetoothSensor : AbstractSensor(
     "BLUETOOTH_SENSOR",
-    "bluetooth"
+    "Bluetooth"
 ) {
 
     private var mReceiver: BroadcastReceiver? = null
     private var mContext: Context? = null
 
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
-
-    override fun isAvailable(context: Context?): Boolean {
+   override fun isAvailable(context: Context?): Boolean {
         return true
     }
 

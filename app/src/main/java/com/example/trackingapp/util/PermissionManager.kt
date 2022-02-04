@@ -65,7 +65,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     }
 
     fun checkForUsageStatsPermissions(): Boolean {
-        return if (!isUsageInformationPermissionEnabled()) {
+        return if (!isUsageInformationPermissionEnabled(activity)) {
             val intent = Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS)
             // intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             activity.startActivity(intent)
@@ -76,39 +76,8 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
     }
 
-    fun isUsageInformationPermissionEnabled(): Boolean {
-        return try {
-            val packageManager: PackageManager = activity.packageManager
-            val applicationInfo = packageManager.getApplicationInfo(activity.packageName, 0)
-            val appOpsManager = activity.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
-            var mode = 0
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                mode = appOpsManager.unsafeCheckOpNoThrow(
-                    AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    applicationInfo.uid,
-                    applicationInfo.packageName
-                )
-            } else {
-                @Suppress("DEPRECATION")
-                mode = appOpsManager.checkOpNoThrow(
-                    AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    applicationInfo.uid,
-                    applicationInfo.packageName
-                )
-            }
-            if (mode == AppOpsManager.MODE_DEFAULT) {
-                activity.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
-            } else {
-                mode == AppOpsManager.MODE_ALLOWED
-            }
-        } catch (e: PackageManager.NameNotFoundException) {
-            false
-        }
-    }
-
     fun checkForNotificationListenerPermissionEnabled(): Boolean {
-        return if (Settings.Secure.getString(activity.contentResolver, "enabled_notification_listeners")
-                .contains(activity.applicationContext.packageName)
+        return if (isNotificationListenerEnabled(activity)
         ) {
             Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
             true
@@ -122,7 +91,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     // method to check is the user has permitted the accessibility permission
     // if not then prompt user to the system's Settings activity
     fun checkAccessibilityPermission(): Boolean {
-        return if (accessibilityServiceEnabled() == 0) {
+        return if (isAccessibilityServiceEnabled(activity) == 0) {
             Log.d(TAG, "checkAccesibiltyPermission open settings")
             // if not construct intent to request permission
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
@@ -136,19 +105,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
     }
 
-    fun accessibilityServiceEnabled(): Int {
-        var accessEnabled = 0
-        Log.d(TAG, "checkAccesibiltyPermission")
-        try {
-            accessEnabled = Settings.Secure.getInt(activity.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
-            Log.d(TAG, "checkAccesibiltyPermission enabed: $accessEnabled")
-        } catch (e: Settings.SettingNotFoundException) {
-            e.printStackTrace()
-        }
-        return accessEnabled
-    }
-
-    fun isAccessibilityServiceEnabled(context: Context, accessibilityService: Class<*>?): Boolean {
+    fun isAccessibilityServiceEnabled2(context: Context, accessibilityService: Class<*>?): Boolean {
         accessibilityService?.let {
             val expectedComponentName = ComponentName(context, it)
             val enabledServicesSetting: String =
@@ -229,6 +186,59 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     }
 
     companion object {
+
+        fun isPermissionGranted(context: Context, permission: String): Boolean {
+            return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun isNotificationListenerEnabled(context: Context): Boolean {
+            return Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
+                    .contains(context.applicationContext.packageName)
+        }
+
+        fun isAccessibilityServiceEnabled(context: Context): Int {
+            var accessEnabled = 0
+            Log.d(TAG, "checkAccesibiltyPermission")
+            try {
+                accessEnabled = Settings.Secure.getInt(context.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
+                Log.d(TAG, "checkAccesibiltyPermission enabed: $accessEnabled")
+            } catch (e: Settings.SettingNotFoundException) {
+                e.printStackTrace()
+            }
+            return accessEnabled
+        }
+
+        fun isUsageInformationPermissionEnabled(context: Context): Boolean {
+            return try {
+                val packageManager: PackageManager = context.packageManager
+                val applicationInfo = packageManager.getApplicationInfo(context.packageName, 0)
+                val appOpsManager = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
+                var mode = 0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    mode = appOpsManager.unsafeCheckOpNoThrow(
+                        AppOpsManager.OPSTR_GET_USAGE_STATS,
+                        applicationInfo.uid,
+                        applicationInfo.packageName
+                    )
+                } else {
+                    @Suppress("DEPRECATION")
+                    mode = appOpsManager.checkOpNoThrow(
+                        AppOpsManager.OPSTR_GET_USAGE_STATS,
+                        applicationInfo.uid,
+                        applicationInfo.packageName
+                    )
+                }
+                if (mode == AppOpsManager.MODE_DEFAULT) {
+                    //ContextCompat.checkSelfPermission(context, Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+                    context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
+                } else {
+                    mode == AppOpsManager.MODE_ALLOWED
+                }
+            } catch (e: PackageManager.NameNotFoundException) {
+                false
+            }
+        }
+
         fun checkPermission(permissionView: PermissionView, activity: Activity?): Boolean {
             activity?.let {
                 val managePermissions = PermissionManager(it, CONST.PERMISSION_REQUEST_CODE)
@@ -241,11 +251,11 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                             .contains(it.applicationContext.packageName)
                     }
                     PermissionView.ACCESSIBILITY_SERVICE -> {
-                        managePermissions.accessibilityServiceEnabled() == 1
+                        isAccessibilityServiceEnabled(it) == 1
 
                     }
                     PermissionView.USAGE_STATS -> {
-                        managePermissions.isUsageInformationPermissionEnabled()
+                        isUsageInformationPermissionEnabled(it)
                     }
                 }
             }
@@ -261,9 +271,9 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                 val notificationListener =  Settings.Secure.getString(it.contentResolver, "enabled_notification_listeners")
                     .contains(it.applicationContext.packageName)
 
-                val accessibilityService = managePermissions.accessibilityServiceEnabled() == 1
+                val accessibilityService = isAccessibilityServiceEnabled(it) == 1
 
-                val usageStats = managePermissions.isUsageInformationPermissionEnabled()
+                val usageStats = isUsageInformationPermissionEnabled(it)
 
                 Log.d("PERMISSIONMANAGER","AreAllPermissionsGive: ${permissions && notificationListener && accessibilityService && usageStats}")
                 return permissions && notificationListener && accessibilityService && usageStats

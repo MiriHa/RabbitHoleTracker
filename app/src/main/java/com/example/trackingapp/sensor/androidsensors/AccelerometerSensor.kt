@@ -6,12 +6,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import android.util.TypedValue
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.RadioButton
-import android.widget.RadioGroup
-import android.widget.TextView
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -22,32 +16,9 @@ import com.example.trackingapp.util.CONST
 
 class AccelerometerSensor : AbstractSensor(
     "ACCELEROMETER_SENSOR",
-    "accelerometer"
+    "Accelerometer"
 ), SensorEventListener {
     private var sensorManager: SensorManager? = null
-
-    override fun getSettingsView(context: Context?): View {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation = LinearLayout.VERTICAL
-        linearLayout.setPadding(20, 10, 20, 10)
-        val textView = TextView(context)
-        textView.text = "Sensor delay"
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18f)
-        val radioGroup = RadioGroup(context)
-        val r1 = RadioButton(context)
-        r1.text = "Normal"
-        radioGroup.addView(r1)
-        val r2 = RadioButton(context)
-        r2.text = "Game"
-        radioGroup.addView(r2)
-        val r3 = RadioButton(context)
-        r3.text = "Fastest"
-        radioGroup.addView(r3)
-        r3.isChecked = true
-        linearLayout.addView(textView)
-        linearLayout.addView(radioGroup)
-        return linearLayout
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager

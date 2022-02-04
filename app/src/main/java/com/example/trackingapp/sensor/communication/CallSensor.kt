@@ -24,14 +24,10 @@ import com.example.trackingapp.util.PhoneNumberHelper
 
 class CallSensor : AbstractSensor(
     "CALL_SENSOR",
-    "call"
+    "Call"
 ) {
     private var mReceiver: BroadcastReceiver? = null
     private var mContext: Context? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

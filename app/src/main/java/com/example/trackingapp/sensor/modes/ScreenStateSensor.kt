@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import android.view.View
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
@@ -26,10 +25,6 @@ class ScreenStateSensor : AbstractSensor(
     private var mReceiver: BroadcastReceiver? = null
     private var mContext: Context? = null
     private var screenOffAsked = false
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

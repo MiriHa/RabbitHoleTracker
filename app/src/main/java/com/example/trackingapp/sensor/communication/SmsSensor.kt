@@ -16,10 +16,6 @@ class SmsSensor: AbstractSensor(
     private var mReceiver: BroadcastReceiver? = null
     private var m_context: Context? = null
 
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
-
     override fun isAvailable(context: Context?): Boolean {
         return true
     }

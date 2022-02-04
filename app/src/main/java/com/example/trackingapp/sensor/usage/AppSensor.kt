@@ -8,7 +8,6 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -18,13 +17,8 @@ import java.util.*
 
 class AppSensor : AbstractSensor(
     "APP_SENSOR",
-    "app"
+    "App"
 ) {
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
-
     override fun isAvailable(context: Context?): Boolean {
         return true
     }

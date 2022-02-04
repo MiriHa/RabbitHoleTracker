@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BlackishGray"
-    android:clickable="true"
-    android:padding="16dp">
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/imageview_onboarding_logo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_logogreen"
-        android:layout_marginTop="32dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginHorizontal="64dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_logolight"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
+        app:layout_constraintVertical_bias="0.25" />
 
     <TextView
         android:id="@+id/textView_title"
@@ -40,14 +41,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_title">
+        app:layout_constraintTop_toBottomOf="@+id/textView_title"
+        app:layout_constraintVertical_bias="0.77">
 
         <Button
             android:id="@+id/onborading_login_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_gravity="start"
-            android:layout_marginHorizontal="32dp"
+            android:layout_marginHorizontal="64dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/milkGreen"
             android:text="@string/login_button"
@@ -56,9 +58,9 @@
         <Button
             android:id="@+id/onborading_signup_button"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:layout_gravity="start"
-            android:layout_marginHorizontal="32dp"
+            android:layout_marginHorizontal="64dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/milkGreen"
             android:text="@string/login_signup"

@@ -55,22 +55,20 @@
     <string name="permission_title">Allow Permissions</string>
     <string name="permission_explanation_description">Please provide us access to following permissions, as this applications needs these to collect your usage data.</string>
     <string name="permission_request_accessibility_service_title">Enable Accessibility Service</string>
-    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your usage events.</string>
+    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your usage events. \n\nPlease scroll in the settings to the section Downloaded Services and enable the accessibility service for this application Rabbit Hole Tracker.</string>
     <string name="permission_request_notification_listener_title">Enable Notifications</string>
-    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect information about your recived notificatioms.</string>
+    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect information about your received notifications. \n\nPlease select this application Rabbit Hole Tracker and enable the notification listener</string>
     <string name="permission_request_usage_stats_title">Give Usage Information Access</string>
     <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics.</string>
     <string name="permission_settings_button_text">Go to Settings</string>
     <string name="permission_button_text">Allow Permissions</string>
 
     <!-- LogEverything -->
-    <string name="hello_world">Hello world!</string>
+    <string name="mainScreen_logging_start_button">Start Logging</string>
+    <string name="mainScreen_logging_stop_button">Stop Logging</string>
 
-    <string name="action_settings">Settings</string>
-    <string name="action_dropbox">Auth Dropbox</string>
-
-    <string name="logging_start_button">Start Logging</string>
-    <string name="logging_stop_button">Stop Logging</string>
+    <string name="mainScreen_sensorList_is_running">is running</string>
+    <string name="mainScreen_sensorList_not_running">not running</string>
 
     <string name="sensor_settings_save">Save</string>
     <string name="sensor_settings_cancel">Cancel</string>
@@ -94,7 +92,6 @@
     <string name="dbColumnName">name</string>
 
     <string name="dbColumnIsAvailable">isavailable</string>
-    <string name="dbColumnIsEnabled">isenabled</string>
 
     <string name="dbColumnSettingsState">settingsstate</string>
     <string name="dbColumnSettings">settings</string>

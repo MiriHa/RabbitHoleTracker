@@ -15,14 +15,10 @@ import com.example.trackingapp.sensor.AbstractSensor
 
 class ScreenOrientationSensor : AbstractSensor(
     "SCREEN_ORIENTATION_SENSOR",
-    "screenOrientation"
+    "Screen Orientation"
 ) {
     private var m_Receiver: BroadcastReceiver? = null
     private var mContext: Context? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

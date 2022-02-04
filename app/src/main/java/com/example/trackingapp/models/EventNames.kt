@@ -11,6 +11,7 @@ enum class LogEventName {
 
     ACCESSIBILITY,
     APPS,
+    APPS_INSTALL,
     AIRPLANEMODE,
     ACCELEROMETER,
     ACTIVITY,
@@ -137,4 +138,13 @@ enum class EventInputMode {
     DEFAULT,
     GESTURE_DETECTING,
     GESTURE
+}
+
+enum class InstallEventType {
+    INSTALLED,
+    UPDATED,
+    UNINSTALLED_AND_DATA_REMOVED,
+    UNINSTALLED,
+    DATA_CLEARED,
+    UNKNOWN
 }

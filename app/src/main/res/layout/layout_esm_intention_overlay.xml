@@ -4,7 +4,6 @@
     android:id="@+id/esm_unlock_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
     android:background="@color/BlackishGray">
 
     <TextView
@@ -15,6 +14,7 @@
         android:text="@string/esm_unlock_intention_question"
         android:textColor="@color/white"
         android:textSize="24sp"
+        android:layout_marginHorizontal="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,12 +48,12 @@
 
     <Button
         android:id="@+id/esm_unlock_buttonstart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
         android:backgroundTint="@color/milkGreen"
-        android:onClick="btnSendToDatabase"
         android:text="@string/esm_unlock_intention_button_start"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginHorizontal="64dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4"

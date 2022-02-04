@@ -22,11 +22,7 @@ class RingerModeSensor: AbstractSensor(
     private var mContext: Context? = null
     private var mReceiver: BroadcastReceiver? = null
 
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
-
-    override fun isAvailable(context: Context?): Boolean {
+   override fun isAvailable(context: Context?): Boolean {
         return true
     }
 

@@ -4,9 +4,10 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
-import android.view.View
 import android.widget.Toast
+import com.example.trackingapp.BuildConfig
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.ActivityTransitionType
 import com.example.trackingapp.models.ActivityType
@@ -19,13 +20,11 @@ import com.google.android.gms.location.*
 
 class ActivityRecognitionSensor : AbstractSensor(
     "ACTIVITY_RECOGNITION_SENSOR",
-    "activityRecognition"
+    "Activity Recognition"
 ) {
     private var mContext: Context? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
+    private var mReceiver: BroadcastReceiver? = null
+    val filter = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER"
 
     override fun isAvailable(context: Context?): Boolean {
         return true
@@ -42,9 +41,13 @@ class ActivityRecognitionSensor : AbstractSensor(
         val transitions = createTransitions()
         val request = ActivityTransitionRequest(transitions)
 
-        val task = ActivityRecognition.getClient(context).requestActivityTransitionUpdates(request, getPendingIntent(context))
+        val client = ActivityRecognition.getClient(context)
+        Log.d("xxx", "client: $client")
+        val task = client.requestActivityTransitionUpdates(request, getPendingIntent(context))
+        //val task2 = client.requestActivityUpdates(1000, getPendingIntent(context))
 
         task.addOnSuccessListener {
+            Log.d("xxx", "Successfully requested activity updates  ${task.result}")
             Toast.makeText(
                 context,
                 "Successfully requested activity updates",
@@ -52,6 +55,7 @@ class ActivityRecognitionSensor : AbstractSensor(
             ).show()
         }
         task.addOnFailureListener {
+            Log.d("xxx", "Requesting activity updates failed to start ${task.result} ${it.message} ${it.cause?.message}")
             Toast.makeText(
                 context,
                 "Requesting activity updates failed to start",
@@ -59,9 +63,26 @@ class ActivityRecognitionSensor : AbstractSensor(
             ).show()
         }
 
+//        task2.addOnSuccessListener {
+//            Log.d("xxx", "2 Successfully requested activity updates")
+//            Toast.makeText(
+//                context,
+//                " 2 Successfully requested activity updates",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//        }
+//        task2.addOnFailureListener   {
+//            Log.d("xxx", " 2 Requesting activity updates failed to start")
+//                Toast.makeText(
+//                    context,
+//                    " 2 Requesting activity updates failed to start",
+//                    Toast.LENGTH_SHORT
+//                ).show()
+//            }
 
-        isRunning = true
-    }
+
+            isRunning = true
+        }
 
     override fun stop() {
         if (isRunning) {
@@ -92,6 +113,14 @@ class ActivityRecognitionSensor : AbstractSensor(
 
     private fun getPendingIntent(context: Context?): PendingIntent {
         val intent = Intent(context, ActivityRecognitionReceiver()::class.java)
+        mReceiver = ActivityRecognitionReceiver()
+        val intentFilter = IntentFilter(filter)
+        try {
+            context?.unregisterReceiver(mReceiver)
+        } catch (e: Exception) {
+            //Not Registered
+        }
+        context?.registerReceiver(mReceiver, intentFilter)
         return PendingIntent.getBroadcast(context, REQUEST_CODE_INTENT_ACTIVITY_TRANSITION, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
     }
@@ -101,10 +130,10 @@ class ActivityRecognitionSensor : AbstractSensor(
         val activities: List<Int> = listOf(
             DetectedActivity.IN_VEHICLE,
             DetectedActivity.ON_BICYCLE,
-            DetectedActivity.ON_FOOT,
+//            DetectedActivity.ON_FOOT,
             DetectedActivity.RUNNING,
             DetectedActivity.STILL,
-            DetectedActivity.TILTING,
+//            DetectedActivity.TILTING,
             DetectedActivity.WALKING
         )
 

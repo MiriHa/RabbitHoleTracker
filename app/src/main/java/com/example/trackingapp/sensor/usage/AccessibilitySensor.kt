@@ -2,7 +2,6 @@ package com.example.trackingapp.sensor.usage
 
 import android.content.Context
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
 
@@ -12,10 +11,6 @@ class AccessibilitySensor : AbstractSensor(
 ) {
 
     private var mContext: Context? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

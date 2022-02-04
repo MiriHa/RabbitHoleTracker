@@ -14,11 +14,15 @@ import android.widget.Toast
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
+import com.example.trackingapp.databinding.CustomListItemBinding
 import com.example.trackingapp.databinding.FragmentMainscreenBinding
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
+import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.PermissionManager
@@ -37,6 +41,8 @@ class MainScreenFragment : Fragment() {
 
     private lateinit var notificationManager: NotificationManagerCompat
 
+    private lateinit var listAdapter: ListAdapter
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,11 +55,16 @@ class MainScreenFragment : Fragment() {
         val view = binding.root
         notificationManager = NotificationManagerCompat.from(mContext)
 
-        //DatabaseManager.getSavedIntentions()
+        Log.d("xxx" ,"oncreate: ${LoggingManager.sensorList.size}")
+        listAdapter = ListAdapter(LoggingManager.sensorList)
+        binding.recyclerviewFragmentMainscreen.apply {
+            adapter = listAdapter
+            layoutManager = LinearLayoutManager(this@MainScreenFragment.mContext)
+        }
 
         binding.buttonTest.apply {
             text = getString(
-                    R.string.logging_start_button)
+                    R.string.mainScreen_logging_start_button)
             setOnClickListener {
                 Log.d(TAG, "startLoggingButton Click: running")
                 LoggingManager.isDataRecordingActive = true
@@ -73,14 +84,16 @@ class MainScreenFragment : Fragment() {
                     Toast.makeText(mContext, "Not all permissions are granted", Toast.LENGTH_LONG).show()
                     navigate(to = ScreenType.Permission, from = ScreenType.HomeScreen)
                 }
+                listAdapter.notifyDataSetChanged()
         }
 
         binding.buttonTestStop.apply {
-            text = getString(R.string.logging_stop_button)
+            text = getString(R.string.mainScreen_logging_stop_button)
             setOnClickListener {
                 LoggingManager.isDataRecordingActive = false
                 LoggingManager.stopLoggingService(mContext)
                 }
+            listAdapter.notifyDataSetChanged()
             }
         }
 
@@ -100,8 +113,8 @@ class MainScreenFragment : Fragment() {
         val permissionsGranted = managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
         val notificationListenerEnabled = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
             .contains(context.applicationContext.packageName)
-        val accessibilityServiceEnabled = managePermissions.accessibilityServiceEnabled() == 1
-        val usageStatsPermissionGranted = managePermissions.isUsageInformationPermissionEnabled()
+        val accessibilityServiceEnabled = PermissionManager.isAccessibilityServiceEnabled(context) == 1
+        val usageStatsPermissionGranted = PermissionManager.isUsageInformationPermissionEnabled(context)
 
         return permissionsGranted && notificationListenerEnabled && accessibilityServiceEnabled && usageStatsPermissionGranted
     }
@@ -111,5 +124,30 @@ class MainScreenFragment : Fragment() {
         mContext = context
     }
 
+    inner class ListAdapter(val items: List<AbstractSensor>): RecyclerView.Adapter<ListAdapter.ViewHolder>(){
+
+        inner class ViewHolder(val binding: CustomListItemBinding): RecyclerView.ViewHolder(binding.root)
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            Log.d("xxx","onCreateViewHolder: ${items.size}")
+            val binding = CustomListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return  ViewHolder(binding)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            Log.d("xxx","onBindVIewHolder")
+            with(holder){
+                with(items[position]){
+                    binding.textViewListItemTitle.text = this.sensorName
+                    binding.textViewListItemSubtile.text =
+                        if (this.isRunning) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
+                }
+            }
+        }
+
+        override fun getItemCount(): Int {
+          return items.size
+        }
+    }
 
 }

@@ -11,7 +11,6 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.ConnectionType
 import com.example.trackingapp.models.LogEvent
@@ -22,15 +21,11 @@ import com.example.trackingapp.service.LoggingManager
 
 class WifiSensor : AbstractSensor(
     "WIFI_SENSOR",
-    "wifi"
+    "Internet Connection"
 ) {
 
     private var mReceiver: BroadcastReceiver? = null
     private var m_context: Context? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

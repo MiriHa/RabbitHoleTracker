@@ -3,21 +3,16 @@ package com.example.trackingapp.sensor.communication
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.NotificationListener
 import com.example.trackingapp.util.CONST
 
 class NotificationSensor: AbstractSensor(
     "NOTIFICATION_SENSOR",
-    "notifications"
+    "Notifications"
 ) {
 
     var mContext: Context? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

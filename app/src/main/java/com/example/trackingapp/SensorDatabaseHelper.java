@@ -35,7 +35,7 @@ public class SensorDatabaseHelper extends SQLiteOpenHelper {
 		COLUMN_ID = m_context.getResources().getString(R.string.dbColumnId);
 		COLUMN_NAME = m_context.getResources().getString(R.string.dbColumnName);
 		COLUMN_ISAVAILABLE = m_context.getResources().getString(R.string.dbColumnIsAvailable);
-		COLUMN_ISENABLED = m_context.getResources().getString(R.string.dbColumnIsEnabled);
+		COLUMN_ISENABLED = "m_context.getResources().getString(R.string.dbColumnIsEnabled);";
 		COLUMN_SETTINGSSTATE = m_context.getResources().getString(R.string.dbColumnSettingsState);
 		COLUMN_SETTINGS = m_context.getResources().getString(R.string.dbColumnSettings);
 	}

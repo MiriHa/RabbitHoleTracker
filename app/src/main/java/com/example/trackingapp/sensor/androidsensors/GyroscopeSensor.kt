@@ -6,7 +6,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -17,14 +16,10 @@ import com.example.trackingapp.util.CONST
 
 class GyroscopeSensor : AbstractSensor(
     "GYROSCOPE_SENSOR",
-    "gyroscope"
+    "Gyroscope"
 ), SensorEventListener {
 
     private var sensorManager: SensorManager? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager

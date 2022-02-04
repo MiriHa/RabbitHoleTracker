@@ -8,6 +8,23 @@ import androidx.core.content.ContextCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.sensor.activityrecognition.ActivityRecognitionSensor
+import com.example.trackingapp.sensor.androidsensors.*
+import com.example.trackingapp.sensor.communication.CallSensor
+import com.example.trackingapp.sensor.communication.NotificationSensor
+import com.example.trackingapp.sensor.communication.SmsSensor
+import com.example.trackingapp.sensor.connection.BluetoothSensor
+import com.example.trackingapp.sensor.connection.PowerSensor
+import com.example.trackingapp.sensor.connection.WifiSensor
+import com.example.trackingapp.sensor.modes.AirplaneModeSensor
+import com.example.trackingapp.sensor.modes.RingerModeSensor
+import com.example.trackingapp.sensor.modes.ScreenOrientationSensor
+import com.example.trackingapp.sensor.modes.ScreenStateSensor
+import com.example.trackingapp.sensor.usage.AccessibilitySensor
+import com.example.trackingapp.sensor.usage.DataTrafficSensor
+import com.example.trackingapp.sensor.usage.InstalledAppSensor
+import com.example.trackingapp.sensor.usage.UsageStatsSensor
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
 import java.util.concurrent.TimeUnit
@@ -18,6 +35,13 @@ object LoggingManager {
     private const val TAG = "TRACKINGAPP_LOGGING_MANAGER"
 
     var userPresent = false
+
+    var sensorList: MutableList<AbstractSensor>
+
+    init {
+        Log.d("xxx", "init LoggingManager/sensorlist")
+        sensorList = createSensorList()
+    }
 
     fun isServiceRunning(context: Context): Boolean {
         Log.d(TAG, "isServiceRunning: ${LoggingService.isRunning}")
@@ -72,5 +96,30 @@ object LoggingManager {
 
     fun cancleServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
+    }
+
+    private fun createSensorList(): MutableList<AbstractSensor> {
+        val list = arrayListOf<AbstractSensor>()
+        list.add(AirplaneModeSensor())
+        list.add(ScreenStateSensor())
+        list.add(NotificationSensor())
+        list.add(WifiSensor())
+        list.add(PowerSensor())
+        list.add(AccessibilitySensor())
+        list.add(CallSensor())
+        list.add(SmsSensor())
+        list.add(ScreenOrientationSensor())
+        list.add(RingerModeSensor())
+        list.add(AccelerometerSensor())
+        list.add(GyroscopeSensor())
+        list.add(LightSensor())
+        list.add(ProximitySensor())
+        list.add(OrientationSensor())
+        list.add(BluetoothSensor())
+        list.add(ActivityRecognitionSensor())
+        list.add(DataTrafficSensor())
+        list.add(UsageStatsSensor())
+        list.add(InstalledAppSensor())
+        return list
     }
 }

@@ -2,7 +2,6 @@ package com.example.trackingapp.sensor.modes
 
 import android.content.Context
 import android.provider.Settings
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -11,12 +10,8 @@ import com.example.trackingapp.sensor.AbstractSensor
 
 class AirplaneModeSensor: AbstractSensor(
     "AIRPLANE_MODE_SENSOR",
-    "airplane"
+    "Airplane"
 ) {
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         return true

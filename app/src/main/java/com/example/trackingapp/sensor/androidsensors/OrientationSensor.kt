@@ -17,14 +17,10 @@ import com.example.trackingapp.util.CONST
 
 class OrientationSensor : AbstractSensor(
     "ORIENTATION_SENSOR",
-    "orientation"
+    "Orientation"
 ), SensorEventListener {
 
     private var sensorManager: SensorManager? = null
-
-    override fun getSettingsView(context: Context?): View? {
-        return null
-    }
 
     override fun isAvailable(context: Context?): Boolean {
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
