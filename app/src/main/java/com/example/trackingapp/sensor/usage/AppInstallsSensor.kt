@@ -14,9 +14,9 @@ import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 
-class InstalledAppSensor : AbstractSensor(
-    "INSTALLED_APP_SENSOR",
-    "Installed Apps"
+class AppInstallsSensor : AbstractSensor(
+    "APP_INSTALLS_SENSOR",
+    "App installs"
 ) {
 
     private lateinit var mContext: Context

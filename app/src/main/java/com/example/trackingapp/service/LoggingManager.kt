@@ -21,10 +21,7 @@ import com.example.trackingapp.sensor.modes.AirplaneModeSensor
 import com.example.trackingapp.sensor.modes.RingerModeSensor
 import com.example.trackingapp.sensor.modes.ScreenOrientationSensor
 import com.example.trackingapp.sensor.modes.ScreenStateSensor
-import com.example.trackingapp.sensor.usage.AccessibilitySensor
-import com.example.trackingapp.sensor.usage.DataTrafficSensor
-import com.example.trackingapp.sensor.usage.InstalledAppSensor
-import com.example.trackingapp.sensor.usage.UsageStatsSensor
+import com.example.trackingapp.sensor.usage.*
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
 import java.util.concurrent.TimeUnit
@@ -56,6 +53,7 @@ object LoggingManager {
         if (!isServiceRunning(context)) {
             Log.d(TAG, "startService called")
             Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
+            PhoneState.logCurrentPhoneState(context)
             val serviceIntent = Intent(context, LoggingService::class.java)
             ContextCompat.startForegroundService(context, serviceIntent)
             startServiceViaWorker(context)
@@ -67,6 +65,7 @@ object LoggingManager {
         Log.d(TAG, "stopService called")
         isDataRecordingActive = false
         Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
+        PhoneState.logCurrentPhoneState(context)
         val stopIntent = Intent(context, LoggingService::class.java)
         context.applicationContext.stopService(stopIntent)
         cancleServiceViaWorker(context)
@@ -94,7 +93,7 @@ object LoggingManager {
         )
     }
 
-    fun cancleServiceViaWorker(context: Context) {
+    private fun cancleServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
     }
 
@@ -119,7 +118,7 @@ object LoggingManager {
         list.add(ActivityRecognitionSensor())
         list.add(DataTrafficSensor())
         list.add(UsageStatsSensor())
-        list.add(InstalledAppSensor())
+        list.add(AppInstallsSensor())
         return list
     }
 }

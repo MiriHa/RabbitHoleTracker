@@ -60,7 +60,7 @@ private class PermissionIterator(val activity: Activity, val permissions: List<P
         val p = permissions.firstOrNull { permission ->
             val permissionGranted =  isPermissionGranted(permission)
             val permissionAsked = askedPermission.contains(permission)
-             !permissionGranted //&& !permissionAsked
+             !permissionGranted && !permissionAsked
         }
         Log.d("PERMISSIONITERATOR", "nextPermission: ${p?.name} ")
         return p
@@ -78,10 +78,10 @@ private class PermissionIterator(val activity: Activity, val permissions: List<P
                         .contains(it.applicationContext.packageName)
                 }
                 PermissionView.ACCESSIBILITY_SERVICE -> {
-                    managePermissions.accessibilityServiceEnabled() == 1
+                    PermissionManager.isAccessibilityServiceEnabled(it) == 1
                 }
                 PermissionView.USAGE_STATS -> {
-                    managePermissions.isUsageInformationPermissionEnabled()
+                    PermissionManager.isUsageInformationPermissionEnabled(it)
                 }
             }
         }
