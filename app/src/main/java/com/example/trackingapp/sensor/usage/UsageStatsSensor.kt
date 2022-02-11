@@ -4,12 +4,18 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.content.Context.USAGE_STATS_SERVICE
+import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.util.Log
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.PermissionManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class UsageStatsSensor : AbstractSensor(
@@ -19,11 +25,10 @@ class UsageStatsSensor : AbstractSensor(
 
     private lateinit var usageStatsManager: UsageStatsManager
     private var mContext: Context? = null
-    private var lastTimeStamp : Long = 0
+    private var lastTimeStamp: Long = 0L
 
-    override fun isAvailable(context: Context?): Boolean {
-        //TODO check for permission?
-        return true
+    override fun isAvailable(context: Context): Boolean {
+        return PermissionManager.isUsageInformationPermissionEnabled(context)
     }
 
     override fun start(context: Context) {
@@ -47,21 +52,22 @@ class UsageStatsSensor : AbstractSensor(
     override fun saveSnapshot(context: Context) {
         super.saveSnapshot(context)
 //        val timestamp = System.currentTimeMillis()
-      /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             val eventStats =
                 usageStatsManager.queryEventStats(UsageStatsManager.INTERVAL_DAILY, System.currentTimeMillis() - 1000 * 3600 * 24, System.currentTimeMillis())
         }*/
-       // CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.IO).launch {
             getEvents()
-        //}
+        }
     }
 
-    private fun getEvents(){
+    private fun getEvents() {
         val timestamp = System.currentTimeMillis()
         Log.d(TAG, "Savesnapshot: between  ${CONST.dateTimeFormat.format(lastTimeStamp)} ${CONST.dateTimeFormat.format(timestamp)}")
+        if (lastTimeStamp == 0L) lastTimeStamp = System.currentTimeMillis() - 500
         val events = usageStatsManager.queryEvents(lastTimeStamp, timestamp)
         val event = UsageEvents.Event()
-        while (events.hasNextEvent()){
+        while (events.hasNextEvent()) {
             events.getNextEvent(event)
             Log.d(TAG, "addEvent: ${event.eventType} ${event.className} ${event.packageName}")
             saveEntry(event)
@@ -71,17 +77,27 @@ class UsageStatsSensor : AbstractSensor(
     }
 
     private fun saveEntry(event: UsageEvents.Event) {
+        val pm = mContext?.packageManager
+        var appInfo: ApplicationInfo? = try {
+            pm?.getApplicationInfo(event.packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            null
+        }
+        val applicationName =
+            (if (appInfo != null) pm?.getApplicationLabel(appInfo) else "(unknown)") as String
+
         LogEvent(
             LogEventName.USAGE_EVENTS,
             timestamp = event.timeStamp,
             event = userFacingEventType(event.eventType),
             name = event.className,
-            description = event.packageName,
+            description = applicationName,
+            packageName = event.packageName
         ).saveToDataBase()
     }
 
-    private fun userFacingEventType(eventType: Int): String{
-        return when(eventType){
+    private fun userFacingEventType(eventType: Int): String {
+        return when (eventType) {
             UsageEvents.Event.ACTIVITY_PAUSED -> "ACTIVITY_PAUSED"
             UsageEvents.Event.ACTIVITY_RESUMED -> "ACTIVITY_RESUMED"
             UsageEvents.Event.ACTIVITY_STOPPED -> "ACTIVITY_STOPPED"
@@ -98,7 +114,15 @@ class UsageStatsSensor : AbstractSensor(
             UsageEvents.Event.STANDBY_BUCKET_CHANGED -> "STANDBY_BUCKET_CHANGED"
             UsageEvents.Event.USER_INTERACTION -> "USER_INTERACTION"
             UsageEvents.Event.NONE -> "NONE"
-            else -> "DEFAULT"
+            else -> {
+                var eventName = "UNKNOWN"
+                if (eventType == 10) {
+                    eventName = "NOTIFICATION_SEEN"
+                } else if (eventType == 12) {
+                    eventName = "NOTIFICATION_INTERRUPTION"
+                }
+                return "$eventType ($eventName)"
+            }
         }
     }
 }

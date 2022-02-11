@@ -6,7 +6,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -22,7 +21,7 @@ class OrientationSensor : AbstractSensor(
 
     private var sensorManager: SensorManager? = null
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         Log.d(TAG, "is Sensor available: ${sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null}")
         return sensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR) != null

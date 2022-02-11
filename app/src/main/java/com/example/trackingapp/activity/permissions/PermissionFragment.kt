@@ -68,7 +68,7 @@ class PermissionFragment() : Fragment() {
                     }
                 }
                 PermissionView.ACCESSIBILITY_SERVICE -> {
-                    if(PermissionManager.isAccessibilityServiceEnabled(it) == 1){
+                    if(PermissionManager.isAccessibilityServiceEnabled(it)){
                         viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
                     }
                 }

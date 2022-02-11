@@ -27,7 +27,7 @@ class DataTrafficSensor : AbstractSensor(
 
     private var lastTimeStamp : Long = 0
 
-   override fun isAvailable(context: Context?): Boolean {
+   override fun isAvailable(context: Context): Boolean {
         return true
     }
 

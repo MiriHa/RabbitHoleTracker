@@ -73,7 +73,7 @@ class LoggingService : Service() {
     }
 
     private fun collectSnapShots() {
-        LoggingManager.sensorList.let { list ->
+        LoggingManager.sensorList?.let { list ->
             Log.d(mTAG, "size: " + list.size)
             for (sensor in list) {
                 if (sensor.isEnabled && sensor.isAvailable(this)) {
@@ -102,7 +102,7 @@ class LoggingService : Service() {
     }
 
     private fun startSensors() {
-        LoggingManager.sensorList.let { list ->
+        LoggingManager.sensorList?.let { list ->
             Log.d(mTAG, "size: " + list.size)
             for (sensor in list) {
                 if (sensor.isEnabled && sensor.isAvailable(this)) {
@@ -114,7 +114,7 @@ class LoggingService : Service() {
     }
 
     private fun stopSensors() {
-        LoggingManager.sensorList.let { list ->
+        LoggingManager.sensorList?.let { list ->
             for (sensor in list) {
                 if (sensor.isRunning) {
                     sensor.stop()

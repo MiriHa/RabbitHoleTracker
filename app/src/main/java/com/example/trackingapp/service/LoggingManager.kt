@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.MutableLiveData
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
@@ -29,21 +30,25 @@ import java.util.concurrent.TimeUnit
 
 object LoggingManager {
 
-    private const val TAG = "TRACKINGAPP_LOGGING_MANAGER"
+    private const val TAG = "LOGGING_MANAGER"
 
     var userPresent = false
 
-    var sensorList: MutableList<AbstractSensor>
+    var sensorList: MutableList<AbstractSensor>? = null
 
-    init {
-        Log.d("xxx", "init LoggingManager/sensorlist")
-        sensorList = createSensorList()
+   init {
+        Log.d("TAG", "init LoggingManager/sensorlist $sensorList")
+       if(sensorList == null) sensorList = createSensorList()
     }
 
     fun isServiceRunning(context: Context): Boolean {
         Log.d(TAG, "isServiceRunning: ${LoggingService.isRunning}")
         return LoggingService.isRunning
         //return SharedPrefManager.getBoolean(CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING)
+    }
+
+    val isLoggingActive: MutableLiveData<Boolean> by lazy {
+        MutableLiveData<Boolean>()
     }
 
     var isDataRecordingActive: Boolean? = null
@@ -57,6 +62,7 @@ object LoggingManager {
             val serviceIntent = Intent(context, LoggingService::class.java)
             ContextCompat.startForegroundService(context, serviceIntent)
             startServiceViaWorker(context)
+            isLoggingActive.value = true
         }
     }
 
@@ -69,6 +75,7 @@ object LoggingManager {
         val stopIntent = Intent(context, LoggingService::class.java)
         context.applicationContext.stopService(stopIntent)
         cancleServiceViaWorker(context)
+        isLoggingActive.value = false
         // }
     }
 
@@ -98,27 +105,28 @@ object LoggingManager {
     }
 
     private fun createSensorList(): MutableList<AbstractSensor> {
+        Log.d(TAG, "createSensorList")
         val list = arrayListOf<AbstractSensor>()
-        list.add(AirplaneModeSensor())
-        list.add(ScreenStateSensor())
-        list.add(NotificationSensor())
-        list.add(WifiSensor())
-        list.add(PowerSensor())
-        list.add(AccessibilitySensor())
-        list.add(CallSensor())
-        list.add(SmsSensor())
-        list.add(ScreenOrientationSensor())
-        list.add(RingerModeSensor())
         list.add(AccelerometerSensor())
+        list.add(AccessibilitySensor())
+        list.add(ActivityRecognitionSensor())
+        list.add(AirplaneModeSensor())
+        list.add(AppInstallsSensor())
+        list.add(BluetoothSensor())
+        list.add(CallSensor())
+        list.add(DataTrafficSensor())
         list.add(GyroscopeSensor())
         list.add(LightSensor())
-        list.add(ProximitySensor())
+        list.add(NotificationSensor())
         list.add(OrientationSensor())
-        list.add(BluetoothSensor())
-        list.add(ActivityRecognitionSensor())
-        list.add(DataTrafficSensor())
+        list.add(PowerSensor())
+        list.add(ProximitySensor())
+        list.add(RingerModeSensor())
+        list.add(ScreenOrientationSensor())
+        list.add(ScreenStateSensor())
+        list.add(SmsSensor())
         list.add(UsageStatsSensor())
-        list.add(AppInstallsSensor())
+        list.add(WifiSensor())
         return list
     }
 }

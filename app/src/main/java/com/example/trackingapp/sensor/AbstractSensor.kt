@@ -20,7 +20,8 @@ abstract class AbstractSensor protected constructor(
     val settingsState: Int
         get() = 0
 
-    abstract fun isAvailable(context: Context?): Boolean
+    abstract fun isAvailable(context: Context): Boolean
+
     open fun start(context: Context) {
         m_isSensorAvailable = isAvailable(context)
         if (!m_isSensorAvailable) Log.i(TAG, "Sensor not available")

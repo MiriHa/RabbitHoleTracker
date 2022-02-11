@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.SmsObserver
 import com.example.trackingapp.util.CONST
@@ -16,7 +15,7 @@ class SmsSensor: AbstractSensor(
     private var mReceiver: BroadcastReceiver? = null
     private var m_context: Context? = null
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 

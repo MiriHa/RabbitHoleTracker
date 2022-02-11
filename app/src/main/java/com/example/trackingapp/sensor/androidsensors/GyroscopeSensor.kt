@@ -21,7 +21,7 @@ class GyroscopeSensor : AbstractSensor(
 
     private var sensorManager: SensorManager? = null
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         val sensorManager = context?.getSystemService(Context.SENSOR_SERVICE) as SensorManager
         return sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE) != null
     }

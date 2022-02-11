@@ -91,7 +91,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     // method to check is the user has permitted the accessibility permission
     // if not then prompt user to the system's Settings activity
     fun checkAccessibilityPermission(): Boolean {
-        return if (isAccessibilityServiceEnabled(activity) == 0) {
+        return if (!isAccessibilityServiceEnabled(activity)) {
             Log.d(TAG, "checkAccesibiltyPermission open settings")
             // if not construct intent to request permission
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
@@ -196,7 +196,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                     .contains(context.applicationContext.packageName)
         }
 
-        fun isAccessibilityServiceEnabled(context: Context): Int {
+        fun isAccessibilityServiceEnabled(context: Context): Boolean {
             var accessEnabled = 0
             Log.d(TAG, "checkAccesibiltyPermission")
             try {
@@ -205,7 +205,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             } catch (e: Settings.SettingNotFoundException) {
                 e.printStackTrace()
             }
-            return accessEnabled
+            return accessEnabled == 1
         }
 
         fun isUsageInformationPermissionEnabled(context: Context): Boolean {
@@ -251,7 +251,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                             .contains(it.applicationContext.packageName)
                     }
                     PermissionView.ACCESSIBILITY_SERVICE -> {
-                        isAccessibilityServiceEnabled(it) == 1
+                        isAccessibilityServiceEnabled(it)
 
                     }
                     PermissionView.USAGE_STATS -> {
@@ -271,7 +271,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                 val notificationListener =  Settings.Secure.getString(it.contentResolver, "enabled_notification_listeners")
                     .contains(it.applicationContext.packageName)
 
-                val accessibilityService = isAccessibilityServiceEnabled(it) == 1
+                val accessibilityService = isAccessibilityServiceEnabled(it)
 
                 val usageStats = isUsageInformationPermissionEnabled(it)
 
@@ -296,16 +296,13 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     */
 /**
  * Callback-Method that reacts to the user giving or denying the requested permissions
- *//*
-    fun onRequestPermissionsResult(
+ */
+   /* fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
         grantResults: IntArray
     ) {
-        LogHelper.d(
-            app.me.phonestudy.app.activities.SetupActivity.TAG,
-            "onRequestPermissionsResult()"
-        )
+
         when (requestCode) {
             app.me.phonestudy.app.activities.SetupActivity.PERMISSIONS_REQUEST_CODE -> {
 
@@ -327,10 +324,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                     i++
                 }
                 if (granted) {
-                    LogHelper.i(
-                        app.me.phonestudy.app.activities.SetupActivity.TAG,
-                        "All permissions granted."
-                    )
+
                     RequirementsManager.notify(
                         getApplicationContext(),
                         RequirementType.PERMISSIONS,

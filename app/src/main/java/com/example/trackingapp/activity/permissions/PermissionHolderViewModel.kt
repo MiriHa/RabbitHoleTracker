@@ -78,7 +78,7 @@ private class PermissionIterator(val activity: Activity, val permissions: List<P
                         .contains(it.applicationContext.packageName)
                 }
                 PermissionView.ACCESSIBILITY_SERVICE -> {
-                    PermissionManager.isAccessibilityServiceEnabled(it) == 1
+                    PermissionManager.isAccessibilityServiceEnabled(it)
                 }
                 PermissionView.USAGE_STATS -> {
                     PermissionManager.isUsageInformationPermissionEnabled(it)

@@ -27,7 +27,7 @@ class WifiSensor : AbstractSensor(
     private var mReceiver: BroadcastReceiver? = null
     private var m_context: Context? = null
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 

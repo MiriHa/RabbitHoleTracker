@@ -11,7 +11,6 @@ import android.provider.CallLog.Calls
 import android.provider.ContactsContract.PhoneLookup
 import android.telephony.TelephonyManager
 import android.util.Log
-import android.view.View
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
@@ -29,7 +28,7 @@ class CallSensor : AbstractSensor(
     private var mReceiver: BroadcastReceiver? = null
     private var mContext: Context? = null
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 

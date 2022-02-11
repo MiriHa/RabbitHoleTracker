@@ -4,8 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.ESMState
-import com.example.trackingapp.models.ESM_Intention_Lock_Answer
+import com.example.trackingapp.R
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.SharedPrefManager
@@ -13,34 +12,19 @@ import java.util.*
 
 class ESMIntentionViewModel : ViewModel() {
 
-    var esmLockQuestion1answered = false
-    var esmLockQuestion2Answered = false
+    val questionList = createQuestionList()
+    val answeredQuestions = mutableListOf<ESMQuestionType>()
 
     val savedIntention
         get() = SharedPrefManager.getLastSavedIntention()
 
-    fun makeLogQuestion1(isIntentionFinished: Boolean) {
-        esmLockQuestion1answered = true
-        val answer = if (isIntentionFinished) ESM_Intention_Lock_Answer.ESM_INTENTION_FINISHED else ESM_Intention_Lock_Answer.ESM_INTENTION_UNFINISHED
-
+    fun makeLogQuestion(answer: String, questionType: ESMQuestionType, time: Long) {
+        answeredQuestions.add(questionType)
         LogEvent(
             LogEventName.ESM,
-            System.currentTimeMillis(),
-            ESMState.ESM_LOCK_Q1.name,
-            answer.toString(),
-            savedIntention
-        ).saveToDataBase()
-    }
-
-    fun makeLogQuestion2(moreThanInitialIntention: Boolean) {
-        esmLockQuestion2Answered = true
-        val answer = if (moreThanInitialIntention) ESM_Intention_Lock_Answer.ESM_MORE_THAN_INITIAL_INTENTION else ESM_Intention_Lock_Answer.ESM_NOT_MORE_THAN_INITIAL_INTENTION
-
-        LogEvent(
-            LogEventName.ESM,
-            System.currentTimeMillis(),
-            ESMState.ESM_LOCK_Q2.name,
-            answer.toString(),
+            time,
+            questionType.name,
+            answer,
             savedIntention
         ).saveToDataBase()
     }
@@ -51,6 +35,28 @@ class ESMIntentionViewModel : ViewModel() {
             //save new Intention to Firebase
             DatabaseManager.saveNewIntention(Date(), newIntention)
         }
+    }
+
+    fun createQuestionList(): List<ESMItem>{
+        val list = arrayListOf(
+            ESMSliderItem(
+                R.string.esm_lock_intention_question_regret,
+                ESMQuestionType.ESM_LOCK_Q_REGRET,
+                sliderStepSize = 1F,
+                sliderMin = 0F,
+                sliderMax = 7F
+            ),
+            ESMButtonItem(
+                R.string.esm_lock_intention_question_intention_finished,
+                ESMQuestionType.ESM_LOCK_Q_FINISH,
+            ),
+            ESMButtonItem(
+                R.string.esm_lock_intention_question_intention_more,
+                ESMQuestionType.ESM_LOCK_Q_MORE,
+            )
+        )
+
+        return list
     }
 
 }

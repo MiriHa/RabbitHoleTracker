@@ -41,10 +41,13 @@
     <string name="esm_unlock_intention_hint">Your Intention</string>
     <string name="esm_unlock_intention_button_start">Start</string>
     <string name="esm_lock_intention_description_promt">Your intention was:</string>
-    <string name="esm_lock_intention_question_1">Did you finish your intention?</string>
-    <string name="esm_lock_intention_question_2">Did you do more than your intention?</string>
+    <string name="esm_lock_notification_title">Here are some questions about your usage time.</string>
+    <string name="esm_lock_intention_question_intention_finished">Did you finish your intention?</string>
+    <string name="esm_lock_intention_question_intention_more">Did you do more than your intention?</string>
+    <string name="esm_lock_intention_question_regret">How strong was your feeling of regret?</string>
     <string name="esm_button_yes">Yes</string>
     <string name="esm_button_no">No</string>
+    <string name="esm_button_other">Other</string>
     <string name="esm_button_newIntention">New Intention</string>
 
     <!-- LOGGING -->

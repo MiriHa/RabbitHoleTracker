@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.media.AudioManager
 import android.util.Log
-import android.view.View
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
@@ -22,7 +21,7 @@ class RingerModeSensor: AbstractSensor(
     private var mContext: Context? = null
     private var mReceiver: BroadcastReceiver? = null
 
-   override fun isAvailable(context: Context?): Boolean {
+   override fun isAvailable(context: Context): Boolean {
         return true
     }
 

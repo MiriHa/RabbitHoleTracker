@@ -4,7 +4,6 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
@@ -22,7 +21,7 @@ object PhoneState {
 
     fun logCurrentPhoneState(context: Context){
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            CoroutineScope(Dispatchers.Main).launch {
+            CoroutineScope(Dispatchers.IO).launch {
                 doInBackgroundApps(context)
                 doInBackgroundData()
             }
@@ -37,8 +36,6 @@ object PhoneState {
         //get a list of installed apps
         val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
 
-        Log.d("xxx","packages: ${packages.size} $packages ")
-
         //add new activity to db for each list item
         for (packageInfo in packages) {
             packageName = packageInfo.packageName
@@ -46,7 +43,6 @@ object PhoneState {
             try {
                 val appInfo = pm.getApplicationInfo(packageInfo.packageName, 0)
                 applicationName = (pm.getApplicationLabel(appInfo)) as String
-                Log.d("xxx","package: $applicationName")
             } catch (e: PackageManager.NameNotFoundException) {
                 e.printStackTrace()
             }
@@ -56,14 +52,11 @@ object PhoneState {
     }
 
     private fun saveEntryApps(applicationName: String?, packageName: String, timestamp: Long) {
-        //generate UsageActivity and insert to DB
-        Log.d("xxx","saveEntry: $applicationName")
         LogEvent(LogEventName.INSTALLED_APP, timestamp, name = applicationName, packageName = packageName).saveToDataBase()
     }
 
 
     private fun doInBackgroundData() {
-
         val timestamp = System.currentTimeMillis()
         val manufacturer = Build.MANUFACTURER
         val model = Build.MODEL

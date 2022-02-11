@@ -4,16 +4,17 @@ import android.content.Context
 import android.util.Log
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.PermissionManager
 
 class AccessibilitySensor : AbstractSensor(
     "ACCESIBILITY_SENSOR",
-    "accessibility"
+    "Accessibility"
 ) {
 
     private var mContext: Context? = null
 
-    override fun isAvailable(context: Context?): Boolean {
-        return true
+    override fun isAvailable(context: Context): Boolean {
+        return PermissionManager.isAccessibilityServiceEnabled(context)
     }
 
     override fun start(context: Context) {

@@ -13,7 +13,7 @@ class AirplaneModeSensor: AbstractSensor(
     "Airplane"
 ) {
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 

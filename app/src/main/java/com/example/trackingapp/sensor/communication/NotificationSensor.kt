@@ -6,6 +6,7 @@ import android.util.Log
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.NotificationListener
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.PermissionManager
 
 class NotificationSensor: AbstractSensor(
     "NOTIFICATION_SENSOR",
@@ -14,8 +15,8 @@ class NotificationSensor: AbstractSensor(
 
     var mContext: Context? = null
 
-    override fun isAvailable(context: Context?): Boolean {
-        return true
+    override fun isAvailable(context: Context): Boolean {
+        return PermissionManager.isNotificationListenerEnabled(context)
     }
 
     override fun start(context: Context) {

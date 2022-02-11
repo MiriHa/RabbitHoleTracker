@@ -26,7 +26,7 @@ class ActivityRecognitionSensor : AbstractSensor(
     private var mReceiver: BroadcastReceiver? = null
     val filter = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER"
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 
@@ -42,7 +42,6 @@ class ActivityRecognitionSensor : AbstractSensor(
         val request = ActivityTransitionRequest(transitions)
 
         val client = ActivityRecognition.getClient(context)
-        Log.d("xxx", "client: $client")
         val task = client.requestActivityTransitionUpdates(request, getPendingIntent(context))
         //val task2 = client.requestActivityUpdates(1000, getPendingIntent(context))
 

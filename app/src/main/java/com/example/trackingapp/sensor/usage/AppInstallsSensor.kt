@@ -22,7 +22,7 @@ class AppInstallsSensor : AbstractSensor(
     private lateinit var mContext: Context
     private lateinit var mReceiver: BroadcastReceiver
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 

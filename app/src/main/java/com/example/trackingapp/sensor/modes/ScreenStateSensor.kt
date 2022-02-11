@@ -26,7 +26,7 @@ class ScreenStateSensor : AbstractSensor(
     private var mContext: Context? = null
     private var screenOffAsked = false
 
-    override fun isAvailable(context: Context?): Boolean {
+    override fun isAvailable(context: Context): Boolean {
         return true
     }
 
@@ -80,7 +80,7 @@ class ScreenStateSensor : AbstractSensor(
                             screenOffAsked = true
                             NotificationHelper.createESMFullScreenNotification(
                                 context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
-                                context.getString(R.string.esm_lock_intention_question_1)
+                                context.getString(R.string.esm_lock_notification_title)
                             )
                         }
                         saveEntry(currentState, time)

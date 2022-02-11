@@ -1,9 +1,15 @@
 package com.example.trackingapp.activity
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
 class MainScreenViewModel: ViewModel() {
+
+    val _isLoggingActivetest = MutableLiveData<Boolean>()
+    val isLoggingActivetest: LiveData<Boolean> = _isLoggingActivetest
+
 
 
 }

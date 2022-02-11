@@ -10,7 +10,6 @@ import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
-import com.example.trackingapp.models.ESMState
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
@@ -71,7 +70,7 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
            LogEvent(
                LogEventName.ESM,
                System.currentTimeMillis(),
-               ESMState.ESM_UNLOCK.name,
+               ESMQuestionType.ESM_UNLOCK_INTENTION.name,
                intention
            ).saveToDataBase()
        } else {
