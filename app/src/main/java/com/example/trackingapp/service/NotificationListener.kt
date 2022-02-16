@@ -24,7 +24,7 @@ class NotificationListener: NotificationListenerService() {
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         super.onNotificationPosted(sbn)
-        if (LoggingManager.isDataRecordingActive == false) {
+        if (!LoggingManager.isDataRecordingActive) {
             return
         }
         Log.d(TAG, "onNotificationPosted()")
@@ -100,7 +100,7 @@ class NotificationListener: NotificationListenerService() {
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
-        if (LoggingManager.isDataRecordingActive == false) {
+        if (!LoggingManager.isDataRecordingActive) {
             return
         }
         Log.i(TAG, "Notification Removed")

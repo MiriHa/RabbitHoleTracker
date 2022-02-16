@@ -68,7 +68,7 @@ class AppInstallsSensor : AbstractSensor(
     inner class InstAppReceiver : BroadcastReceiver() {
         private val LABEL_UNKNOWN = "UNKNOWN"
         override fun onReceive(context: Context, intent: Intent) {
-            if (LoggingManager.isDataRecordingActive == false) {
+            if (!LoggingManager.isDataRecordingActive) {
                 return
             }
 
@@ -127,64 +127,3 @@ class AppInstallsSensor : AbstractSensor(
         }
     }
 }
-
-        // TODO move this to music module if needed
-        //
-        //    private void checkIfSpotiyGetInstalled(Context context, String packageName) {
-        //        if(packageName.equals("com.spotify.music")){
-        //                if(!spotifyAlreadyInstalledAndRegisteredInSharedPref()){
-        //                    WarningHelper.getInstance().promptWarning(context, "Spotify Einstellungen", "Bitte aktivieren Sie den Übertragungstatus", "Spotify",
-        //                            "Bitte aktivieren Sie den Übertragungstatus\n" +
-        //                                    "1.) Öffne Spotify\n" +
-        //                                    "2.) Gehe zu Bibliothek \n" +
-        //                                    "3.) Gehe zu Einstellungen\n" +
-        //                                    "4.) Aktiviere Übertragungsstatus");
-        //                }
-        //                setFlagForSpotifyInSharedPref();
-        //        }
-        //    }
-        //
-        //    private boolean spotifyAlreadyInstalledAndRegisteredInSharedPref(){
-        //        //proof flat if flag is already set
-        //        //read shared prefs
-        //
-        //        SharedPreferences pref = getContext().getSharedPreferences("spotifyFlag", 0); // 0 - for private mode
-        //
-        //        LogHelper.i(TAG, "flag was returned");
-        //        int returnvalue = pref.getInt("installed", -1);
-        //
-        //        if(returnvalue == 0) {
-        //            LogHelper.i(TAG, "Spotify was installed before (Flag = 0)");
-        //            return true;
-        //        }else if(returnvalue == 1){
-        //            LogHelper.i(TAG, "Spotify already installed (Flag = 1)");
-        //            return true;
-        //        }else {
-        //            LogHelper.i(TAG, "Flag not installed before (Flag = -1)");
-        //            return false;
-        //        }
-        //    }
-        //
-        //    private void setFlagForSpotifyInSharedPref(){
-        //        SharedPreferences pref = getContext().getSharedPreferences("spotifyFlag", 0); // 0 - for private mode
-        //        SharedPreferences.Editor editor = pref.edit();
-        //
-        //        LogHelper.i(TAG, "flag was set");
-        //        editor.putInt("installed", 1);
-        //
-        //        editor.apply();
-        //
-        //    }
-        //
-        //    private void removeFlagForSpotifyInSharedPref(String packageName){
-        //        LogHelper.i(TAG, "removeFlagForSpotifyInSharedPref was called");
-        //        if(packageName.equals("com.spotify.music")) {
-        //            SharedPreferences pref = getContext().getSharedPreferences("spotifyFlag", 0); // 0 - for private mode
-        //            SharedPreferences.Editor editor = pref.edit();
-        //
-        //            LogHelper.i(TAG, "flag was removed");
-        //            editor.putInt("installed", 0);
-        //            editor.apply();
-        //        }
-        //
-        //    }

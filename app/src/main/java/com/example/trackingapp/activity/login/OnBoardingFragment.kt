@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
+import com.example.trackingapp.service.LoggingManager
+import com.example.trackingapp.util.PermissionManager
 import com.example.trackingapp.util.ScreenType
 import com.example.trackingapp.util.navigate
 
@@ -25,10 +27,10 @@ class OnBoardingFragment: Fragment() {
         val view = binding.root
 
         binding.onboradingLoginButton.setOnClickListener {
-            navigate(ScreenType.Login, ScreenType.Welcome)
+            navigate(to=ScreenType.Login, from=ScreenType.Welcome)
         }
         binding.onboradingSignupButton.setOnClickListener {
-            navigate(ScreenType.SignUp, ScreenType.Welcome)
+            navigate(to=ScreenType.SignUp, from=ScreenType.Welcome)
         }
 
         return view
@@ -38,7 +40,14 @@ class OnBoardingFragment: Fragment() {
         super.onStart()
        if(DatabaseManager.isUserLoggedIn){
            //G0 to the MainScreen
-           navigate(ScreenType.HomeScreen, ScreenType.Welcome)
+           if(PermissionManager.areAllPermissionGiven(this.activity)) {
+               LoggingManager.isDataRecordingActive = true
+               navigate(to=ScreenType.HomeScreen, from=ScreenType.Welcome)
+           } else {
+               navigate(to=ScreenType.Permission, from=ScreenType.Welcome)
+           }
+       } else {
+           LoggingManager.isDataRecordingActive = false
        }
 
     }

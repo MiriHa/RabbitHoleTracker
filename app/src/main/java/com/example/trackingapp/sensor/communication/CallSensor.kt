@@ -86,7 +86,7 @@ class CallSensor : AbstractSensor(
 
 
         override fun onReceive(context: Context, intent: Intent) {
-            if (LoggingManager.isDataRecordingActive == false) {
+            if (!LoggingManager.isDataRecordingActive) {
                 return
             }
 

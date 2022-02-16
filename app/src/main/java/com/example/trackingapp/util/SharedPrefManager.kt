@@ -23,6 +23,19 @@ object SharedPrefManager {
         return sharedPrefs.getString(CONST.PREFERENCES_INTENTION_NAME, "last intention")
     }
 
+    fun saveIntentionList(intentionMap: MutableSet<String?>?) {
+        val json: String = Gson().toJson(intentionMap)
+
+        val editor: SharedPreferences.Editor = sharedPrefs.edit()
+        editor.putString(CONST.PREFERENCES_INTENTION_LIST, json)
+        editor.apply()
+    }
+
+    fun getIntentionList(): MutableSet<String?> {
+        val json: String? = sharedPrefs.getString(CONST.PREFERENCES_INTENTION_LIST, "")
+        return Gson().fromJson<MutableSet<String?>>(json, MutableSet::class.java) ?: HashSet()
+    }
+
     fun saveBoolean(key: String, value: Boolean){
         val editor = sharedPrefs.edit()
         editor.putBoolean(key, value)
@@ -39,21 +52,8 @@ object SharedPrefManager {
         editor.apply()
     }
 
-    fun getLong(key: String): Long {
-        return sharedPrefs.getLong(key, 0)
-    }
-
-    fun saveIntentionList(intentionMap: MutableSet<String?>?) {
-        val json: String = Gson().toJson(intentionMap)
-
-        val editor: SharedPreferences.Editor = sharedPrefs.edit()
-        editor.putString(CONST.PREFERENCES_INTENTION_LIST, json)
-        editor.apply()
-    }
-
-    fun getIntentionList(): MutableSet<String?> {
-        val json: String? = sharedPrefs.getString(CONST.PREFERENCES_INTENTION_LIST, "")
-        return Gson().fromJson<MutableSet<String?>>(json, MutableSet::class.java) ?: HashSet()
+    fun getLong(key: String, default: Long): Long {
+        return sharedPrefs.getLong(key, default)
     }
 
 }

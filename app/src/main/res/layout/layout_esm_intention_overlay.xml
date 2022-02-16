@@ -50,7 +50,6 @@
         android:id="@+id/esm_unlock_buttonstart"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:backgroundTint="@color/milkGreen"
         android:text="@string/esm_unlock_intention_button_start"
         android:layout_marginHorizontal="64dp"
         android:layout_marginTop="32dp"

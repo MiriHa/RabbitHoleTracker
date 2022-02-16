@@ -5,6 +5,7 @@ import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
@@ -25,6 +26,7 @@ import com.example.trackingapp.sensor.modes.ScreenStateSensor
 import com.example.trackingapp.sensor.usage.*
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.SharedPrefManager
 import java.util.concurrent.TimeUnit
 
 
@@ -36,47 +38,48 @@ object LoggingManager {
 
     var sensorList: MutableList<AbstractSensor>? = null
 
-   init {
+    init {
         Log.d("TAG", "init LoggingManager/sensorlist $sensorList")
-       if(sensorList == null) sensorList = createSensorList()
+        if (sensorList == null) sensorList = createSensorList()
     }
 
-    fun isServiceRunning(context: Context): Boolean {
-        Log.d(TAG, "isServiceRunning: ${LoggingService.isRunning}")
-        return LoggingService.isRunning
-        //return SharedPrefManager.getBoolean(CONST.PREFERENCES_IS_LOGGING_SERVICE_RUNNING)
+    val _isLoggingActive = MutableLiveData(false)
+    val isLoggingActive: LiveData<Boolean> = _isLoggingActive
+
+    var isDataRecordingActive: Boolean = false
+
+    private fun firstStartLoggingService(context: Context) {
+        PhoneState.logCurrentPhoneState(context)
     }
-
-    val isLoggingActive: MutableLiveData<Boolean> by lazy {
-        MutableLiveData<Boolean>()
-    }
-
-    var isDataRecordingActive: Boolean? = null
-
 
     fun startLoggingService(context: Context) {
-        if (!isServiceRunning(context)) {
+        if (!SharedPrefManager.getBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED)) {
+            firstStartLoggingService(context)
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED, true)
+        }
+        if (isLoggingActive.value == false) {
             Log.d(TAG, "startService called")
             Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
-            PhoneState.logCurrentPhoneState(context)
             val serviceIntent = Intent(context, LoggingService::class.java)
             ContextCompat.startForegroundService(context, serviceIntent)
             startServiceViaWorker(context)
-            isLoggingActive.value = true
+            _isLoggingActive.value = true
         }
     }
 
     fun stopLoggingService(context: Context) {
-        //if (isServiceRunning(context)) {
         Log.d(TAG, "stopService called")
-        isDataRecordingActive = false
         Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
-        PhoneState.logCurrentPhoneState(context)
         val stopIntent = Intent(context, LoggingService::class.java)
         context.applicationContext.stopService(stopIntent)
         cancleServiceViaWorker(context)
-        isLoggingActive.value = false
-        // }
+        _isLoggingActive.value = false
+    }
+
+    fun ensureLoggingManagerIsAlive(context: Context) {
+        if (isLoggingActive.value == false && isDataRecordingActive) {
+            startLoggingService(context)
+        }
     }
 
     private fun startServiceViaWorker(context: Context) {

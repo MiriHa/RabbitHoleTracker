@@ -16,7 +16,7 @@ class BootUpReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.i(TAG, "Unexpected intent type received")
-        if (LoggingManager.isDataRecordingActive == false) {
+        if (!LoggingManager.isDataRecordingActive) {
             return
         } else {
             val timestamp = System.currentTimeMillis()
@@ -37,8 +37,7 @@ class BootUpReceiver : BroadcastReceiver() {
     }
 
     private fun startLoggingManager(context: Context) {
-        if (!LoggingManager.isServiceRunning(context)) {
-            //TODO -> test if this is not killing the app
+        if (LoggingManager.isLoggingActive.value == false) {
             LoggingManager.startLoggingService(context)
         }
     }

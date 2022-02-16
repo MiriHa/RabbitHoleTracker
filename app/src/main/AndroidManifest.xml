@@ -8,7 +8,6 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
-<!--    <uses-permission android:name="android.permission.WAKE_LOCK" />-->
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
@@ -22,8 +21,7 @@
 
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE" tools:ignore="ProtectedPermissions"/>
-  <!--  <uses-permission android:name="android:permission.BIND_ACCESSIBILITY_SERVICE"/>
--->
+
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.READ_CALL_LOG" />
     <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
@@ -31,17 +29,7 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
-<!--    <uses-permission android:name="android.permission.READ_PRIVILEGED_PHONE_STATE" tools:ignore="ProtectedPermissions"/>-->
-
-
-    <!--e: Starting with Build.VERSION_CODES#S, apps targeting SDK level 31 or higher
-need to request the SCHEDULE_EXACT_ALARM permission to use this API,-->
     <uses-permission android:name="android.permission.SET_ALARM" />
-
-<!--    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
-    //<uses-permission android:name="android.permission.RECORD_AUDIO" />-->
 
     <application
         android:icon="@mipmap/ic_rabbit_hole_logo"

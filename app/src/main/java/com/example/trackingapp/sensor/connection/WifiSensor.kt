@@ -142,7 +142,7 @@ class WifiSensor : AbstractSensor(
     inner class WifiReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent) {
-            if (LoggingManager.isDataRecordingActive == false) {
+            if (!LoggingManager.isDataRecordingActive) {
                 return
             }
 

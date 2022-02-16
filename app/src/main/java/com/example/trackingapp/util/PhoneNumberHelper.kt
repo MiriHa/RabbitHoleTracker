@@ -59,12 +59,4 @@ object PhoneNumberHelper {
             DEFAULT_CC
         }
     }
-
-    fun extractCountryCodesFromNumbers(phoneNumbers: Array<String?>): Array<String?>? {
-        val countryCodes = arrayOfNulls<String>(phoneNumbers.size)
-        for (i in phoneNumbers.indices) {
-            countryCodes[i] = extractCountryCodeFromNumber(phoneNumbers[i])
-        }
-        return countryCodes
-    }
 }

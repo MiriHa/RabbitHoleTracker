@@ -120,7 +120,7 @@ class PowerSensor : AbstractSensor(
         private var state: PowerState? = null
 
         override fun onReceive(context: Context, intent: Intent) {
-            if (LoggingManager.isDataRecordingActive == false) {
+            if (!LoggingManager.isDataRecordingActive) {
                 return
             }
             val timestamp = System.currentTimeMillis()

@@ -63,7 +63,7 @@ class BluetoothSensor : AbstractSensor(
         var state = -1
 
         override fun onReceive(context: Context?, intent: Intent) {
-            if (LoggingManager.isDataRecordingActive == false) {
+            if (!LoggingManager.isDataRecordingActive) {
                 return
             }
 

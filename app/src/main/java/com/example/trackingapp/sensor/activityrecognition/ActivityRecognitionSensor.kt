@@ -87,7 +87,8 @@ class ActivityRecognitionSensor : AbstractSensor(
         if (isRunning) {
             isRunning = false
             mContext?.let {
-                val pendingIntent = getPendingIntent(mContext)
+                it.unregisterReceiver(mReceiver)
+                val pendingIntent = getPendingIntent(it)
                 val task = ActivityRecognition.getClient(it).removeActivityTransitionUpdates(pendingIntent)
                 task.addOnSuccessListener {
                     pendingIntent.cancel()
@@ -110,16 +111,16 @@ class ActivityRecognitionSensor : AbstractSensor(
         }
     }
 
-    private fun getPendingIntent(context: Context?): PendingIntent {
+    private fun getPendingIntent(context: Context): PendingIntent {
         val intent = Intent(context, ActivityRecognitionReceiver()::class.java)
-        mReceiver = ActivityRecognitionReceiver()
         val intentFilter = IntentFilter(filter)
         try {
-            context?.unregisterReceiver(mReceiver)
+            context.unregisterReceiver(mReceiver)
         } catch (e: Exception) {
             //Not Registered
         }
-        context?.registerReceiver(mReceiver, intentFilter)
+        if (mReceiver == null) mReceiver = ActivityRecognitionReceiver()
+        context.registerReceiver(mReceiver, intentFilter)
         return PendingIntent.getBroadcast(context, REQUEST_CODE_INTENT_ACTIVITY_TRANSITION, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
     }
@@ -129,10 +130,8 @@ class ActivityRecognitionSensor : AbstractSensor(
         val activities: List<Int> = listOf(
             DetectedActivity.IN_VEHICLE,
             DetectedActivity.ON_BICYCLE,
-//            DetectedActivity.ON_FOOT,
             DetectedActivity.RUNNING,
             DetectedActivity.STILL,
-//            DetectedActivity.TILTING,
             DetectedActivity.WALKING
         )
 

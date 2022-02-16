@@ -2,13 +2,16 @@ package com.example.trackingapp.activity.esm
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemButtonsBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemScaleBinding
@@ -78,7 +81,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
         override fun getItemViewType(position: Int): Int {
             return when (items[position]) {
-                is ESMButtonItem -> ItemViewType.ESM_BUTTON_ITEM.ordinal
+                is ESMRadioGroupItem -> ItemViewType.ESM_BUTTON_ITEM.ordinal
                 is ESMSliderItem -> ItemViewType.ESM_SLIDER_ITEM.ordinal
             }
         }
@@ -94,61 +97,39 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
         abstract inner class ListViewHolder<T>(root: View) : RecyclerView.ViewHolder(root) {
             abstract fun bindData(item: T)
-            fun setValue(item: ESMItem, value: String){
+            fun setValue(item: ESMItem, value: String) {
                 item.value = value
-                if(!viewModel.answeredQuestions.contains(item.questionType)) viewModel.answeredQuestions.add(item.questionType)
+                if (!viewModel.answeredQuestions.contains(item.questionType)) viewModel.answeredQuestions.add(item.questionType)
             }
         }
 
-        inner class ESMButtonItemViewHolder(private val itemBinding: LayoutEsmLockItemButtonsBinding) : ListViewHolder<ESMButtonItem>(itemBinding.root) {
+        inner class ESMButtonItemViewHolder(private val itemBinding: LayoutEsmLockItemButtonsBinding) : ListViewHolder<ESMRadioGroupItem>(itemBinding.root) {
 
-            override fun bindData(item: ESMButtonItem) {
+            override fun bindData(item: ESMRadioGroupItem) {
                 itemBinding.esmLockIntentionQuestion.text = getString(item.question)
-                itemBinding.buttonEsmLockOne.apply {
-                    val buttonText = getString(item.buttonOneText)
-                    text = buttonText
-                    isEnabled = true
-                    setOnClickListener {
-                        //viewModel.makeLogQuestion(buttonText, item.questionType, System.currentTimeMillis())
-                        setValue(item, buttonText)
-                        disableButtons()
-                        checkOrdismissFullScreenNotification()
-                    }
+
+                item.buttonList.forEach { label ->
+                    addButton(item, label)
                 }
-                itemBinding.buttonEsmLockTwo.apply {
-                    val buttonText = getString(item.buttonTwoText)
+            }
+
+            private fun addButton(item: ESMRadioGroupItem, label: Int){
+                val radioButton = RadioButton(ContextThemeWrapper(this@ESMIntentionLockActivity, R.style.RadioButtonESM))
+                radioButton.apply {
+                    val buttonText = getString(label)
                     text = buttonText
-                    isEnabled = true
-                    setOnClickListener {
-                        //viewModel.makeLogQuestion(buttonText, item.questionType, System.currentTimeMillis())
-                        setValue(item, buttonText)
-                        disableButtons()
-                        checkOrdismissFullScreenNotification()
-                    }
-                }
-                itemBinding.buttonEsmLockThree.apply {
-                    if (item.buttonThreeText != null) {
-                        visibility = View.VISIBLE
-                        val buttonText = getString(item.buttonThreeText)
-                        text = buttonText
-                        isEnabled = true
-                        setOnClickListener {
-                           // viewModel.makeLogQuestion(buttonText, item.questionType, System.currentTimeMillis())
+                    setTextColor(context.resources.getColor(R.color.white, null))
+                    setOnCheckedChangeListener { _, isChecked ->
+                        if (isChecked) {
                             setValue(item, buttonText)
-                            disableButtons()
                             checkOrdismissFullScreenNotification()
                         }
-                    } else {
-                        visibility = View.GONE
                     }
                 }
+                itemBinding.radioGroupEsmLock.addView(radioButton)
+
             }
 
-            private fun disableButtons() {
-                itemBinding.buttonEsmLockOne.isEnabled = false
-                itemBinding.buttonEsmLockTwo.isEnabled = false
-                itemBinding.buttonEsmLockThree.isEnabled = false
-            }
         }
 
         inner class ESMSliderItemViewHolder(private val itemBinding: LayoutEsmLockItemScaleBinding) : ListViewHolder<ESMSliderItem>(itemBinding.root) {
@@ -159,8 +140,8 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                 viewModel.answeredQuestions.add(item.questionType)
 
                 itemBinding.esmLockItemSliderQuestion.text = getString(item.question)
-                itemBinding.textviewEsmLockItemSliderMin.text = item.sliderMin.toInt().toString()
-                itemBinding.textviewEsmLockItemSliderMax.text = item.sliderMax.toInt().toString()
+                itemBinding.textviewEsmLockItemSliderMin.text = item.sliderMinLabel
+                itemBinding.textviewEsmLockItemSliderMax.text = item.sliderMaxLabel
                 itemBinding.sliderEsmLockItemSlider.apply {
                     stepSize = item.sliderStepSize
                     valueFrom = item.sliderMin

@@ -7,6 +7,7 @@ import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
+import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
@@ -37,26 +38,80 @@ class ESMIntentionViewModel : ViewModel() {
         }
     }
 
-    fun createQuestionList(): List<ESMItem>{
-        val list = arrayListOf(
-            ESMSliderItem(
-                R.string.esm_lock_intention_question_regret,
-                ESMQuestionType.ESM_LOCK_Q_REGRET,
-                sliderStepSize = 1F,
-                sliderMin = 0F,
-                sliderMax = 7F
-            ),
-            ESMButtonItem(
-                R.string.esm_lock_intention_question_intention_finished,
-                ESMQuestionType.ESM_LOCK_Q_FINISH,
-            ),
-            ESMButtonItem(
-                R.string.esm_lock_intention_question_intention_more,
-                ESMQuestionType.ESM_LOCK_Q_MORE,
-            )
-        )
-
-        return list
+    private fun createQuestionList(): List<ESMItem> {
+        val lastFullESM = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, 0L)
+        return when {
+            //Was Last full ESM over half an over ago?
+            System.currentTimeMillis() - lastFullESM > 30 * 60 * 1000 -> {
+                SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
+                arrayListOf(
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_emotion,
+                        ESMQuestionType.ESM_LOCK_Q_EMOTION,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 12F,
+                        sliderMaxLabel = "angry",
+                        sliderMinLabel = "relaxed"
+                    ),
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_agency,
+                        ESMQuestionType.ESM_LOCK_Q_AGENCY,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 7F,
+                    ),
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_track_of_time,
+                        ESMQuestionType.ESM_LOCK_Q_TRACK_OF_TIME,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 7F,
+                    ),
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_track_of_space,
+                        ESMQuestionType.ESM_LOCK_Q_TRACK_OF_SPACE,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 7F,
+                    ),
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_regret,
+                        ESMQuestionType.ESM_LOCK_Q_REGRET,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 7F,
+                    ),
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_finished,
+                        ESMQuestionType.ESM_LOCK_Q_FINISH,
+                    ),
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_more,
+                        ESMQuestionType.ESM_LOCK_Q_MORE,
+                    )
+                )
+            }
+            else -> {
+                arrayListOf(
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_regret,
+                        ESMQuestionType.ESM_LOCK_Q_REGRET,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 7F
+                    ),
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_finished,
+                        ESMQuestionType.ESM_LOCK_Q_FINISH,
+                    ),
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_more,
+                        ESMQuestionType.ESM_LOCK_Q_MORE,
+                    )
+                )
+            }
+        }
     }
 
 }

@@ -40,7 +40,6 @@ class PermissionHolderFragment : Fragment() {
             // This ClickListener catches clicks that are forwarded to the background
         }
 
-
         if (viewModel.currentPermission == null) {
             Log.d(TAG, "showNextPermissionFragment()")
             showNextPermissionFragment()
@@ -66,7 +65,6 @@ class PermissionHolderFragment : Fragment() {
         if (nextPermissionFragment != null) {
             swapContent(nextPermissionFragment)
         } else {
-            //viewModel.userFinishedOnboarding()
             viewModel.reset()
             navigate(to = ScreenType.HomeScreen, from = ScreenType.Permission)
         }
@@ -74,16 +72,6 @@ class PermissionHolderFragment : Fragment() {
 
     private fun swapContent(nextPermissionFragment: PermissionFragment) {
         Log.d(TAG, "swap Content")
-//        nextPermissionFragment.apply {
-//            exitTransition = Fade().also {
-//                it.duration = AnimationUtil.getScaledAnimationDuration(applicationContext, EXIT_ANIMATION_DURATION)
-//            }
-//
-//            enterTransition = Fade().also {
-//                it.duration = AnimationUtil.getScaledAnimationDuration(applicationContext, ENTER_ANIMATION_DURATION)
-//                it.startDelay = 0
-//            }
-//        }
 
         childFragmentManager.commit(allowStateLoss = true) {
             replace(R.id.frameLayout_permission_container, nextPermissionFragment)

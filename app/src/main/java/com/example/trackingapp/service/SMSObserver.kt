@@ -7,23 +7,22 @@ import android.database.ContentObserver
 import android.database.Cursor
 import android.net.Uri
 import android.os.Handler
-import android.os.HandlerThread
 import android.util.Log
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.models.SmsEventType
 import com.example.trackingapp.util.PhoneNumberHelper
 import com.example.trackingapp.util.SmsHelper
+import kotlinx.coroutines.*
 
 class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler) {
     private val context: Context
     private var lastOnChangeCall = System.currentTimeMillis()
 
     override fun onChange(selfChange: Boolean) {
-        if (LoggingManager.isDataRecordingActive == false) {
+        if (!LoggingManager.isDataRecordingActive) {
             return
         }
 
-        //don't understand what this does
         if (System.currentTimeMillis() - lastOnChangeCall < 3000) {
             Log.d(TAG, "no URI provided in onChange call")
             this.onChange(selfChange, null)
@@ -32,7 +31,7 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
     }
 
     override fun onChange(selfChange: Boolean, uri: Uri?) {
-        if (LoggingManager.isDataRecordingActive == false) {
+        if (!LoggingManager.isDataRecordingActive) {
             return
         }
         if (System.currentTimeMillis() - lastOnChangeCall < 2000) {
@@ -40,22 +39,19 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
             return
         }
         lastOnChangeCall = System.currentTimeMillis()
-        //TODO maybe to with coroutine?
 
-        val t = HandlerThread("HANDLER")
+/*        val t = HandlerThread("HANDLER")
         t.start()
         val handler = Handler(t.looper)
         handler.postDelayed({
             Log.d(TAG, "In Runnable ")
             getSMS(context)
         }, 1000)
-//        val scope = MainScope()
-//        scope.launch {  }
-
-//        CoroutineScope(Dispatchers.IO).launch {
-//            delay(1000)
-//            getSMS(context)
-//        }
+   */
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            getSMS(context)
+        }
     }
 
     /**
@@ -97,28 +93,22 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
                         val countryCode = getCountryCode(address)
                         val hashedNumber: String = PhoneNumberHelper.formatNumber(address).hashCode().toString()
 
-
-                        //check if entry wasn't saved yet: save / dont save
-                        if (!SmsHelper.wasSavedIDBased(smsID)) {
-                            Log.i(TAG, "Already Saved sms")
-                        } else {
-                            val save = true
-                            SmsHelper.saveEntry(
-                                context,
-                                save,
-                                eventType,
-                                timestamp,
-                                address,
-                                hashedNumber,
-                                countryCode,
-                                partnerName.hashCode().toString(),
-                                body.hashCode().toString(),
-                                messageLength,
-                                partnerUID,
-                                smsID
-                            )
-                            Log.i(TAG, "Checked sms was already saved, updated")
-                        }
+                        val save = true
+                        SmsHelper.saveEntry(
+                            context,
+                            save,
+                            eventType,
+                            timestamp,
+                            address,
+                            hashedNumber,
+                            countryCode,
+                            partnerName.hashCode().toString(),
+                            body.hashCode().toString(),
+                            messageLength,
+                            partnerUID,
+                            smsID
+                        )
+                        Log.i(TAG, "Checked sms was already saved, updated")
                     }
                 }
             } catch (e: Exception) {
@@ -136,11 +126,6 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
     }
 
     private fun getCountryCode(number: String): String {
-
-        //Extract Own number
-        /*AssetManager assetManager1 = getContext().getAssets();
-        String defaultcc = PhoneNumberHelper.getOwnCountryCode(context);//  CountryCodeHelper.extractCountryCodeFromNumber(assetManager1, CountryCodeHelper.getOwnPhonenumber(context), null);
-        */
         return PhoneNumberHelper.extractCountryCodeFromNumber(number)
     }
 

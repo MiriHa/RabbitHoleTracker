@@ -10,6 +10,7 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.trackingapp.R
 import com.example.trackingapp.activity.MainActivity
+import com.example.trackingapp.service.stayalive.StayAliveReceiver
 import com.example.trackingapp.util.CONST
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.MainScope
@@ -34,7 +35,8 @@ class LoggingService : Service() {
         val notificationManager = getSystemService(NotificationManager::class.java)
         val channel = NotificationChannel(CONST.CHANNEL_ID_LOGGING, CONST.CHANNEL_NAME_ESM_LOGGING, NotificationManager.IMPORTANCE_DEFAULT)
         notificationManager.createNotificationChannel(channel)
-        isRunning = true
+
+        LoggingManager._isLoggingActive.value = true
 
         val notificationIntent = Intent(this, MainActivity::class.java)
         val notificationPendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
@@ -58,15 +60,15 @@ class LoggingService : Service() {
 
     override fun onDestroy() {
         Log.d(mTAG, "onDestroy called: Datarecording active: ${LoggingManager.isDataRecordingActive}")
-        isRunning = false
+        LoggingManager._isLoggingActive.value = false
         stopForeground(true)
         stopSensors()
         stopLoggingUpdates()
 
-        if (LoggingManager.isDataRecordingActive == true) {
-            //TODO
-            //val boradcastIntent = Intent(this, StayAliveReceiver::class.java)
-            //sendBroadcast(boradcastIntent)
+        // Restart LoggingService if it is killed
+        if (LoggingManager.isDataRecordingActive) {
+            val broadcastIntent = Intent(this, StayAliveReceiver::class.java)
+            sendBroadcast(broadcastIntent)
         }
 
         super.onDestroy()
@@ -89,7 +91,7 @@ class LoggingService : Service() {
         stopLoggingUpdates()
         job = scope.launch {
             while (true) {
-                if(LoggingManager.userPresent /* TODO && LoggingManager.isDataRecordingActive */)
+                if(LoggingManager.userPresent && LoggingManager.isDataRecordingActive)
                     collectSnapShots() // the function that should be ran every second
                 delay(CONST.LOGGING_FREQUENCY)
             }
@@ -121,11 +123,5 @@ class LoggingService : Service() {
                 }
             }
         }
-    }
-
-    companion object {
-        @JvmStatic
-        var isRunning: Boolean = false
-
     }
 }

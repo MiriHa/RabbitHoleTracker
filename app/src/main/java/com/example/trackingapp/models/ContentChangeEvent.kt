@@ -1,17 +1,28 @@
 package com.example.trackingapp.models
 
-class ContentChangeEvent(var content: String?, inputMode: EventInputMode?) : Event(Type.CONTENT_CHANGE) {
+import android.view.accessibility.AccessibilityEvent
+import com.example.trackingapp.models.metadata.MetaType
 
-    var contentLength: Int? = null
-    var inputMode: String? = null
+class ContentChangeEvent() : MetaType() {
+
+    var keyboardEvents: Int = 0
+
+    var type: String? = "CONTENT_CHANGE"
+
+    var timestamp: Long = 0
+    var timestampEnd: Long = 0
+
+    var fieldHintText: String? = null
+        set(fieldHintText) {
+            if (fieldHintText != null) field = fieldHintText.toString()
+        }
+    var message: String = ""
+    var event: AccessibilityEvent? = null
+
+    var fieldPackageName: String? = null
 
 
     init {
-        if (content != null) {
-            contentLength = content?.length
-        }
-        if (inputMode != null) {
-            this.inputMode = inputMode.name
-        }
+        timestamp = System.currentTimeMillis()
     }
 }

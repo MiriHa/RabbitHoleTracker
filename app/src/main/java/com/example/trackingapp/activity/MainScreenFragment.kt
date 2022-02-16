@@ -26,8 +26,6 @@ import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.*
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class MainScreenFragment : Fragment() {
 
@@ -54,17 +52,22 @@ class MainScreenFragment : Fragment() {
         notificationManager = NotificationManagerCompat.from(mContext)
         NotificationHelper.dismissESMNotification(mContext)
 
+        LoggingManager.ensureLoggingManagerIsAlive(mContext)
+
         setAdapter()
 
         val loggingObserver = Observer<Boolean> {
-            // Update the UI, in this case, a TextView.
             Log.d("xxx", "valuechanged")
             setAdapter()
         }
-
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        LoggingManager.isLoggingActive.observe(viewLifecycleOwner, loggingObserver)
-        viewModel.isLoggingActivetest.observe(this, loggingObserver)
+        LoggingManager.isLoggingActive.observe(this, loggingObserver)
+
+        val arePermissionGranted = checkPermissionsGranted(mContext as Activity)
+        if (arePermissionGranted) {
+            LoggingManager.isDataRecordingActive = true
+            LoggingManager.userPresent = true
+        }
 
 
         binding.buttonTest.apply {
@@ -73,49 +76,32 @@ class MainScreenFragment : Fragment() {
             )
             setOnClickListener {
                 Log.d(TAG, "startLoggingButton Click: running")
-                LoggingManager.isDataRecordingActive = true
-                val isServiceRunning = LoggingManager.isServiceRunning(mContext)
-                val arePermissionGranted = checkPermissionsGranted(mContext as Activity)
-                if (arePermissionGranted) {
-                    Log.d(TAG, "startLoggingButton permissions are granted")
-                    if (!isServiceRunning) {
-                        LoggingManager.stopLoggingService(mContext)
-                        LoggingManager.userPresent = true
-                        LoggingManager.startLoggingService(mContext as Activity)
-                        viewModel._isLoggingActivetest.value = true
-                        LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToDataBase()
-                        //text = getString(R.string.logging_stop_button)
-                    }
-                } else {
-                    Log.d(TAG, "startLoggingButton Click: permissions are denied")
-                    Toast.makeText(mContext, "Not all permissions are granted", Toast.LENGTH_LONG).show()
-                    navigate(to = ScreenType.Permission, from = ScreenType.HomeScreen)
-                }
+                LoggingManager.stopLoggingService(mContext)
+                LoggingManager.startLoggingService(mContext as Activity)
+                LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToDataBase()
+                //text = getString(R.string.logging_stop_button)
             }
 
             binding.buttonTestStop.apply {
                 text = getString(R.string.mainScreen_logging_stop_button)
                 setOnClickListener {
-                    LoggingManager.isDataRecordingActive = false
-                    viewModel._isLoggingActivetest.value = false
                     LoggingManager.stopLoggingService(mContext)
                 }
             }
         }
 
         binding.signOut.setOnClickListener {
-            Firebase.auth.signOut()
+            Toast.makeText(mContext, "IsRunning: ${LoggingManager.isLoggingActive.value}", Toast.LENGTH_LONG).show()
+            /*Firebase.auth.signOut()
             LoggingManager.isDataRecordingActive = false
             LoggingManager.stopLoggingService(mContext)
-            viewModel._isLoggingActivetest.value = false
-            navigate(ScreenType.Welcome, ScreenType.HomeScreen)
+            navigate(ScreenType.Welcome, ScreenType.HomeScreen)*/
         }
 
         return view
     }
 
     private fun setAdapter() {
-        Log.d("xxx", "setAdapter")
         LoggingManager.sensorList?.let { sensors ->
             listAdapter = ListAdapter(sensors)
             binding.recyclerviewFragmentMainscreen.apply {
@@ -147,7 +133,6 @@ class MainScreenFragment : Fragment() {
         inner class ViewHolder(val binding: CustomListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            Log.d("xxx", "onCreateViewHolder: ${items.size}")
             val binding = CustomListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return ViewHolder(binding)
         }
@@ -158,8 +143,8 @@ class MainScreenFragment : Fragment() {
                     binding.textViewListItemTitle.text = this.sensorName + " Sensor"
                     Log.d("xxx", "bind: ${this.sensorName} running: ${this.isRunning}")
                     binding.textViewListItemSubtile.text =
-                       if(viewModel.isLoggingActivetest.value == true) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
-                      //  if (this.isRunning) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
+                        if (LoggingManager.isLoggingActive.value == true) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
+                    //  if (this.isRunning) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
                 }
             }
         }

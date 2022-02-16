@@ -14,9 +14,9 @@ class StartLoggingWorker(val context: Context, params: WorkerParameters) : Worke
     val TAG = "TRACKINGAPP_StartLoggingWorker"
 
     override fun doWork(): Result {
-        Log.d(TAG, "doWork ${this.id}: ServiceRunning: ${LoggingManager.isServiceRunning(context)}")
-        if (LoggingManager.isDataRecordingActive == true) {
-            if (!LoggingManager.isServiceRunning(context)) {
+        Log.d(TAG, "doWork ${this.id}: ServiceRunning: ${LoggingManager.isLoggingActive.value}")
+        if (LoggingManager.isDataRecordingActive) {
+            if (LoggingManager.isLoggingActive.value == false) {
                 Log.d(TAG, "Start LoggingService from LoggingWorker")
                 val intent = Intent(this.context, LoggingService::class.java)
                 ContextCompat.startForegroundService(context, intent)

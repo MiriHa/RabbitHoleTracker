@@ -104,10 +104,6 @@ object SmsHelper {
         contactUID: Int,
         smsID: String
     ) {
-        if (sameSMSEntryAlreadyExistsInDB(type, timestamp, smsID)) {
-            Log.i(TAG, "SMS event already exists in db...")
-            return
-        }
         if (!save) {
             val metaSms: MetaSMS = MetaSMS(
                 phoneNumber = numberHashed,
@@ -130,25 +126,6 @@ object SmsHelper {
                 event = type.name,
                 description = smsID,
             ).saveToDataBase()
-        }
-    }
-
-    /**
-     * checks if the last SMS entry in DB table has the same attributes
-     * @param eventType eventType (SENT, INBOX, ...)
-     * @param timestamp timestamp
-     * @param smsID sms identifier
-     * @return true if DB already has this entry
-     */
-    private fun sameSMSEntryAlreadyExistsInDB(eventType: SmsEventType, timestamp: Long, smsID: String): Boolean {
-        val lastSMSEntry = null
-        //if last SMS entry has same description (smsID), eventType and timestamp, return true
-        return if (lastSMSEntry == null) {
-            Log.i(TAG, "no duplicate SMS entry exists in DB")
-            false
-        } else {
-            Log.i(TAG, "duplicate SMS entry exists in DB")
-            true
         }
     }
 
@@ -180,20 +157,6 @@ object SmsHelper {
     fun generateSmsID(partnerNumber: String, timestamp: Long): String {
         Log.d(TAG, "generateSmsID()")
         return "$partnerNumber:$timestamp"
-    }
-
-    /**
-     * Uses unique SMS identifier to check if data was already saved
-     *
-     * @param smsID unique SMS identifier
-     * @return sms
-     */
-    fun wasSavedIDBased(smsID: String?): Boolean {
-        Log.d(TAG, "wasSavedIDBased()")
-        //val sms: UsageActivity = SQLite.select().from(UsageActivity::class.java).where(UsageActivity_Table.description.eq(smsID)).querySingle()
-       // return sms != null
-        return true
-        //TODO: what if SMS are deleted?
     }
 
     fun getTypeByConstant(constantValue: Int): SmsEventType {

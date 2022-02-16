@@ -59,7 +59,6 @@ class PermissionFragment() : Fragment() {
                     if(managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED){
                         viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
                     }
-                    //TODO check what happens when not?
                 }
                 PermissionView.NOTIFICATION_LISTENER -> {
                     if (Settings.Secure.getString(it.contentResolver, "enabled_notification_listeners")

@@ -45,6 +45,10 @@
     <string name="esm_lock_intention_question_intention_finished">Did you finish your intention?</string>
     <string name="esm_lock_intention_question_intention_more">Did you do more than your intention?</string>
     <string name="esm_lock_intention_question_regret">How strong was your feeling of regret?</string>
+    <string name="esm_lock_intention_question_track_of_time">Did you loose track of time while using your phone?</string>
+    <string name="esm_lock_intention_question_track_of_space">Did you loose track of your surroundings while using your phone?</string>
+    <string name="esm_lock_intention_question_agency">How strong was your feeling of agency?</string>
+    <string name="esm_lock_intention_question_emotion">Which primary emotion did you experience in this session?</string>
     <string name="esm_button_yes">Yes</string>
     <string name="esm_button_no">No</string>
     <string name="esm_button_other">Other</string>

@@ -5,12 +5,15 @@ import android.accessibilityservice.AccessibilityServiceInfo
 import android.os.Build
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityNodeInfo
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.ContentChangeEvent
-import com.example.trackingapp.models.Event
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.google.firebase.FirebaseApp
+
+
+
 
 class AccessibilityLogService : AccessibilityService() {
 
@@ -37,39 +40,15 @@ class AccessibilityLogService : AccessibilityService() {
         Log.v(TAG, "onServiceConnected")
 
 
-        // Set the type of events that this service wants to listen to.  Others
-        // won't be passed to this service.
         info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK
 
-        // If you only want this service to work with specific applications, set their
-        // package names here.  Otherwise, when the service is activated, it will listen
-        // to events from all applications.
-        //info.packageNames = new String[]{"com.example.android.myFirstApp", "com.example.android.mySecondApp"};
-
-        // Set the type of feedback your service will provide.
         info.feedbackType = AccessibilityServiceInfo.FEEDBACK_ALL_MASK
 
-        // Default services are invoked only if no package-specific ones are present
-        // for the type of AccessibilityEvent generated.  This service *is*
-        // application-specific, so the flag isn't necessary.  If this was a
-        // general-purpose service, it would be worth considering setting the
-        // DEFAULT flag.
-
-        // info.flags = AccessibilityServiceInfo.DEFAULT;
-        info.flags = AccessibilityServiceInfo.DEFAULT
+        info.flags = AccessibilityServiceInfo.DEFAULT or AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
+        //lagDefault|flagIncludeNotImportantViews|flagRequestTouchExplorationMode|flagRequestEnhancedWebAccessibility|flagReportViewIds|flagRetrieveInteractiveWindows"
         info.notificationTimeout = 100
         this.serviceInfo = info
         isRunning = true
-    }
-
-    private fun getEventText(event: AccessibilityEvent?): String {
-        val sb = StringBuilder()
-        event?.let {
-            for (s in event.text) {
-                sb.append(s)
-            }
-        }
-        return sb.toString()
     }
 
 //    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -103,17 +82,29 @@ class AccessibilityLogService : AccessibilityService() {
         isRunning = false
     }
 
-    var keyboardEvents = mutableListOf<Event>()
+    var keyboardEvents: Int = 0 //mutableListOf<String>()
     var initialContent: String? = null
     var cachedHintText: String? = null
+    var chachedContentChangeEvent: ContentChangeEvent? = null
+
+    var browserApp = ""
+    var browserUrl = ""
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         val time = System.currentTimeMillis()
         try {
+            if(keyboardEvents > 0
+                && event?.eventType != AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
+                && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_EXIT
+                && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_ENTER
+            ){
+                onFinishInput(time)
+            }
             when {
-                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> return
+                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> trackBrowserURL(event)
 
                 event?.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
+                    trackBrowserURL(event)
                     LogEvent(
                         LogEventName.ACCESSIBILITY,
                         timestamp = time,
@@ -122,67 +113,74 @@ class AccessibilityLogService : AccessibilityService() {
                     ).saveToDataBase()
                 }
                 //represents and foreground change
-                event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
+                event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
+           /*     event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
+                    val className = if(event.className != null) event.className else ""
                     LogEvent(
                         LogEventName.APPS,
                         timestamp = time,
                         event = getEventType(event),
                         description = getEventText(event),
-                        name = event?.className.toString(),
-                        packageName = event?.packageName.toString()
+                        name = className.toString(),
+                        packageName = event.packageName.toString()
                     ).saveToDataBase()
+                }*/
+                event?.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> {
+
                 }
-                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED && !event.isPassword -> {
+                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && !event.isPassword -> { //TYPE VIEW TEXT CHANGED
+                    // User starts input of text -> create new text event?
+                    // do i need this or get the text via getEvetnText?
 
                     // create ContentChangeEvents
-                    val contentChangeEvent = ContentChangeEvent(event.text[0].toString(), null)
-                    // ---- hint text ----
-                    // first: try to get hint text property
-                    if (event.source != null && event.source.hintText != null) {
-                        contentChangeEvent.fieldHintText = event.source.hintText.toString()
+                    if(chachedContentChangeEvent == null) chachedContentChangeEvent = ContentChangeEvent()
 
-                    } else if (cachedHintText != null) {
-                        // if that doesnt work, use the previous text if there is one cached
-                        // TODO using cached hint text is disabeld, as it may sometimes log user content
-                        //                    contentChangeEvent.setFieldHintText(cachedHintText);
-                        //                    LogHelper.i(TAG,"used cached hint text: "+cachedHintText);
-                    }
+                    // first: try to get hint text property
+                   /* if (event.source != null *//*&& event.source.hintText != null*//*) {
+                        chachedContentChangeEvent?.fieldHintText = event.source.hintText.toString()
+                        chachedContentChangeEvent?.message += event.source.text.toString()
+                        Log.d("xxx", "textN: ${event.source.text} ${event.source.hintText}")
+                    } else {*/
+                    chachedContentChangeEvent?.message += getEventText(event)
+                   // }
                     try {
-                        contentChangeEvent.fieldPackageName = event.packageName.toString()
+                        chachedContentChangeEvent?.fieldPackageName = event.packageName.toString()
                     } catch (e: Exception) {
-                        Log.i(
-                            TAG,
-                            "Could not fetch packageName of event source node",
-                            e
-                        )
+                        Log.i(TAG, "Could not fetch packageName of event source node", e)
                     }
-                    keyboardEvents.add(contentChangeEvent)
-                    if (keyboardEvents.size == 1) {
+                    keyboardEvents += 1
+                    /*if (keyboardEvents == 1) {
                         initialContent = if (event.beforeText != null) {
                             event.beforeText.toString()
                         } else {
                             ""
                         }
+                    }*/
+                }
+
+              /*  // entering a new node -> cache the hint text, in case this is a textfield
+                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents == 0 -> {
+                    Log.w("xxx", "ACCESSIBILITY TYPE_VIEW_FOCUSED keyevents 0: $keyboardEvents")
+                    try {
+                        cachedHintText = event.text.toString()
+                        Log.i(TAG, "caching hint text: $cachedHintText")
+                    } catch (e: Exception) {
+                        Log.w(TAG, "could not fetch hint text from event: $event", e)
                     }
                 }
-
-                // entering a new node -> cache the hint text, in case this is a textfield
-                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents.size == 0 -> {
-//                    try {
-//                        cachedHintText = event.text[0].toString()
-//                        Log.i(TAG, "caching hint text: $cachedHintText")
-//                    } catch (e: Exception) {
-//                        Log.w(TAG, "could not fetch hint text from event: $event", e)
-//                    }
-//                    CESSIBILITYLOGSERVICE: could not fetch hint text from event: EventType: TYPE_VIEW_FOCUSED; EventTime: 4569009; PackageName: com.android.systemui; MovementGranularity: 0; Action: 0; ContentChangeTypes: []; WindowChangeTypes: [] [ ClassName: android.widget.EditText; Text: []; ContentDescription: PIN area; ItemCount: 15; CurrentItemIndex: 2; Enabled: true; Password: true; Checked: false; FullScreen: false; Scrollable: false; BeforeText: null; FromIndex: -1; ToIndex: -1; ScrollX: -1; ScrollY: -1; MaxScrollX: -1; MaxScrollY: -1; AddedCount: -1; RemovedCount: -1; ParcelableData: null ]; recordCount: 0
-//                    java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
-                }
                 // leaving a textfield
-                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents.size > 0 -> {
-                    onFinishInput(event, time)
-                }
-
+                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents > 0 -> {
+                    Log.w("xxx", "ACCESSIBILITY TYPE_VIEW_FOCUSED keyevents over 0: $keyboardEvents")
+                    onFinishInput(time)
+                }*/
                 else -> {
+                    if(keyboardEvents > 0
+                        && event?.eventType != AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
+                        && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_EXIT
+                        && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_ENTER
+                    ){
+                        onFinishInput(time)
+                    }
                     LogEvent(
                         LogEventName.ACCESSIBILITY,
                         timestamp = time,
@@ -198,27 +196,39 @@ class AccessibilityLogService : AccessibilityService() {
         }
     }
 
-    private fun onFinishInput(event: AccessibilityEvent?, time: Long) { //TODO public only for testing
-        if (keyboardEvents.size < 1) {
+    private fun onFinishInput(time: Long) { //TODO public only for testing
+        if (keyboardEvents < 1) {
             return
         }
-        // take current events, and decouple this list from the actively used for collecting new events
-        val currentKeyboardEvents = keyboardEvents
-        val currentInitialContent: String? = initialContent
-        keyboardEvents = mutableListOf()
-        initialContent = null
-        cachedHintText = null
+        chachedContentChangeEvent?.keyboardEvents = keyboardEvents
+        chachedContentChangeEvent?.timestampEnd = time
+
+        Log.d("xxx","finishInput: keyboard events: ${keyboardEvents} text: ${chachedContentChangeEvent?.fieldHintText} ${chachedContentChangeEvent?.message}}")
 
         LogEvent(
             LogEventName.INPUT,
             timestamp = time,
-            event = getEventType(event),
-            description = getEventText(event),
-            name = event?.className.toString(),
-            packageName = event?.packageName.toString()
-        ).saveToDataBase(metadataList = currentKeyboardEvents)
+            event = getEventType(chachedContentChangeEvent?.event),
+//            description = chachedContentChangeEvent?.message,
+            name = chachedContentChangeEvent?.event?.className.toString(),
+            packageName = chachedContentChangeEvent?.event?.packageName.toString()
+        ).saveToDataBase(metadata = chachedContentChangeEvent)
 
+        keyboardEvents = 0
+        initialContent = null
+        cachedHintText = null
+        chachedContentChangeEvent = null
 
+    }
+
+    private fun getEventText(event: AccessibilityEvent?): String {
+        val sb = StringBuilder()
+        event?.let {
+            for (s in event.text) {
+                sb.append(s)
+            }
+        }
+        return sb.toString()
     }
 
     private fun getEventType(event: AccessibilityEvent?): String {
@@ -252,6 +262,68 @@ class AccessibilityLogService : AccessibilityService() {
         return "default"
     }
 
+    private fun trackBrowserURL(event: AccessibilityEvent){
+        try {
+            //TODO soruce is null=
+            val parentNodeInfo: AccessibilityNodeInfo = event.source
+            val packageName = event.packageName.toString()
+            var browserConfig: SupportedBrowserConfig? = null
+            getSupportedBrowsers().forEach { supportedConfig ->
+                if (supportedConfig.packageName == packageName) {
+                    browserConfig = supportedConfig
+                }
+            }
+            //this is not supported browser, so exit
+            if (browserConfig == null) {
+                return
+            }
+
+            var capturedUrl: String? = null
+            browserConfig?.let {
+                capturedUrl = captureUrl(parentNodeInfo, it)
+                parentNodeInfo.recycle();
+            }
+
+            capturedUrl?.let {
+                val eventTime = event.eventTime
+                if (packageName != browserApp) {
+                    if (android.util.Patterns.WEB_URL.matcher(it).matches()) {
+                        Log.d(TAG, "$packageName  :  $it")
+
+                        browserApp = packageName;
+                        browserUrl = it
+                        LogEvent(
+                            LogEventName.ACCESSIBILITY,
+                            timestamp = event.eventTime,
+                            event = getEventType(event),
+                            description = browserUrl,
+                            name = "BrowserURL",
+                            packageName = packageName
+                        ).saveToDataBase()
+                    }
+                } else {
+                    if (!capturedUrl.equals(browserUrl)) {
+                        if (android.util.Patterns.WEB_URL.matcher(it).matches()) {
+                            browserUrl = it
+                            Log.d(TAG, "$packageName   $it")
+                            LogEvent(
+                                LogEventName.ACCESSIBILITY,
+                                timestamp = event.eventTime,
+                                event = getEventType(event),
+                                description = browserUrl,
+                                name = "BrowserURL",
+                                packageName = packageName
+                            ).saveToDataBase()
+
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to track browser url.", e)
+        }
+    }
+
     private fun getWindowChangeType(event: AccessibilityEvent?): String {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return when (event?.windowChanges) {
@@ -271,9 +343,56 @@ class AccessibilityLogService : AccessibilityService() {
         } else return " "
     }
 
+    private class SupportedBrowserConfig(var packageName: String, var addressBarId: String)
+
+    /** @return a list of supported browser configs
+     * This list could be instead obtained from remote server to support future browser updates without updating an app
+     */
+    private fun getSupportedBrowsers(): List<SupportedBrowserConfig> {
+        val browsers: MutableList<SupportedBrowserConfig> = ArrayList()
+        browsers.add(SupportedBrowserConfig("com.android.chrome", "com.android.chrome:id/url_bar"))
+        browsers.add(SupportedBrowserConfig("org.mozilla.firefox", "org.mozilla.firefox:id/mozac_browser_toolbar_url_view"))
+        browsers.add(SupportedBrowserConfig("com.opera.browser", "com.opera.browser:id/url_field"))
+        browsers.add(SupportedBrowserConfig("com.opera.mini.native", "com.opera.mini.native:id/url_field"))
+        browsers.add(SupportedBrowserConfig("com.duckduckgo.mobile.android", "com.duckduckgo.mobile.android:id/omnibarTextInput"))
+        browsers.add(SupportedBrowserConfig("com.microsoft.emmx", "com.microsoft.emmx:id/url_bar"))
+        browsers.add(SupportedBrowserConfig("com.android.browser","com.android.browser/id/url_bar"))
+        return browsers
+    }
+
+    private fun getChild(info: AccessibilityNodeInfo) {
+        val i = info.childCount
+        for (p in 0 until i) {
+            val n = info.getChild(p)
+            if (n != null) {
+                val strres = n.viewIdResourceName
+                if (n.text != null) {
+                    val txt = n.text.toString()
+                    Log.d("Track", "$strres  :  $txt")
+                }
+                getChild(n)
+            }
+        }
+    }
+
+    private fun captureUrl(info: AccessibilityNodeInfo, config: SupportedBrowserConfig): String? {
+
+        //  getChild(info);
+        val nodes = info.findAccessibilityNodeInfosByViewId(config.addressBarId)
+        if (nodes == null || nodes.size <= 0) {
+            return null
+        }
+        val addressBarNodeInfo = nodes[0]
+        var url: String? = null
+        if (addressBarNodeInfo.text != null) {
+            url = addressBarNodeInfo.text.toString()
+        }
+        addressBarNodeInfo.recycle()
+        return url
+    }
+
     companion object {
-        val TAG: String = "ACCESSIBILITYSERVICE" // AccessibilityLogService::class.java.simpleName
-        //val classTAG = AccessibilityLogService::class.java.simpleName
+        val TAG: String = "ACCESSIBILITYSERVICE"
 
         @JvmStatic
         var isRunning: Boolean = false
