@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_rounded"
+        android:background="@color/DarkBlackishGray"
         android:padding="6dp"
         android:orientation="vertical">
 

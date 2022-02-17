@@ -1,56 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="6dp"
-    tools:background="@drawable/background_rounded"
-    android:layout_margin="6dp">
+    android:layout_margin="6dp"
+    card_view:cardCornerRadius="10dp">
 
-    <TextView
-        android:id="@+id/esm_lock_intention_question"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        tools:text="@string/esm_lock_intention_question_intention_finished"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup_esm_lock"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/fragment_horizontal_margin"
-        android:gravity="center"
-        android:orientation="horizontal"
+        android:padding="6dp"
+        android:background="@color/DarkBlackishGray">
 
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention_question"
-        app:layout_constraintVertical_bias="0.0">
-
-        <RadioButton
-            android:id="@+id/button_esm_lock_one"
-            android:theme="@style/RadioButtonESM"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/esm_lock_intention_question"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@string/esm_button_yes" 
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/esm_lock_intention_question_intention_finished" />
 
-        <RadioButton
-            android:id="@+id/button_esm_lock_two"
-            android:layout_width="wrap_content"
+        <RadioGroup
+            android:id="@+id/radioGroup_esm_lock"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/esm_button_no"
-            android:visibility="gone"
-            tools:visibility="visible"/>
+            android:layout_marginTop="@dimen/fragment_horizontal_margin"
+            android:gravity="center"
+            android:orientation="horizontal"
 
-    </RadioGroup>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention_question"
+            app:layout_constraintVertical_bias="0.0">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <RadioButton
+                android:id="@+id/button_esm_lock_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/esm_button_yes"
+                android:theme="@style/RadioButtonESM"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <RadioButton
+                android:id="@+id/button_esm_lock_two"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/esm_button_no"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
