@@ -4,7 +4,8 @@
     android:id="@+id/esm_unlock_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/BlackishGray">
+    android:background="@color/BlackishGray"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/esm_unlock_text_before_activeInput"
@@ -25,23 +26,33 @@
         android:id="@+id/linearLayout4"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:background="@color/DarkBlackishGray"
+        android:layout_marginHorizontal="16dp"
+        android:paddingStart="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/esm_unlock_text_before_activeInput"
         app:layout_constraintVertical_bias="0.060000002">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_intention_speech"
+            app:tint="@color/white" />
+
         <AutoCompleteTextView
             android:id="@+id/esm_unlock_autoCompleteTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:backgroundTint="@color/white"
+            android:backgroundTint="@color/LightBlackishGray"
             android:hint="@string/esm_unlock_intention_hint"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:textColor="@color/white"
+            android:textColorHighlight="@color/white"
             android:textColorHint="@color/LightBlackishGray" />
 
     </LinearLayout>
@@ -50,12 +61,12 @@
         android:id="@+id/esm_unlock_buttonstart"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="@string/esm_unlock_intention_button_start"
         android:layout_marginHorizontal="64dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginVertical="32dp"
+        android:text="@string/esm_unlock_intention_button_start"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
         app:layout_constraintVertical_bias="0.120000005" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

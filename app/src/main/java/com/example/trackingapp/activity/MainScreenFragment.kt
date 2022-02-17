@@ -3,14 +3,10 @@ package com.example.trackingapp.activity
 
 import android.app.Activity
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import android.util.TypedValue
+import android.view.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -26,6 +22,11 @@ import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.*
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+
+
+
 
 class MainScreenFragment : Fragment() {
 
@@ -49,10 +50,11 @@ class MainScreenFragment : Fragment() {
 
         binding = FragmentMainscreenBinding.inflate(inflater)
         val view = binding.root
+
+        setHasOptionsMenu(true)
+
         notificationManager = NotificationManagerCompat.from(mContext)
         NotificationHelper.dismissESMNotification(mContext)
-
-        LoggingManager.ensureLoggingManagerIsAlive(mContext)
 
         setAdapter()
 
@@ -62,12 +64,21 @@ class MainScreenFragment : Fragment() {
         }
         // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
         LoggingManager.isLoggingActive.observe(this, loggingObserver)
+       // LoggingManager.userPresent = true
 
+/*        //Permissions are already checked when opening the app?
         val arePermissionGranted = checkPermissionsGranted(mContext as Activity)
         if (arePermissionGranted) {
-            LoggingManager.isDataRecordingActive = true
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
             LoggingManager.userPresent = true
-        }
+        }*/
+        Log.d(TAG, "startLoggingButton Click: running")
+        //Not enough`??
+        LoggingManager.ensureLoggingManagerIsAlive(mContext)
+        //LoggingManager.stopLoggingService(mContext)
+       // LoggingManager.startLoggingService(mContext as Activity)
+
+        //LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToData
 
 
         binding.buttonTest.apply {
@@ -81,46 +92,49 @@ class MainScreenFragment : Fragment() {
                 LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToDataBase()
                 //text = getString(R.string.logging_stop_button)
             }
-
-            binding.buttonTestStop.apply {
-                text = getString(R.string.mainScreen_logging_stop_button)
-                setOnClickListener {
-                    LoggingManager.stopLoggingService(mContext)
-                }
-            }
         }
 
-        binding.signOut.setOnClickListener {
-            Toast.makeText(mContext, "IsRunning: ${LoggingManager.isLoggingActive.value}", Toast.LENGTH_LONG).show()
-            /*Firebase.auth.signOut()
-            LoggingManager.isDataRecordingActive = false
-            LoggingManager.stopLoggingService(mContext)
-            navigate(ScreenType.Welcome, ScreenType.HomeScreen)*/
+        binding.buttonTestStop.apply {
+            text = getString(R.string.mainScreen_logging_stop_button)
+            setOnClickListener {
+                LoggingManager.stopLoggingService(mContext)
+            }
         }
 
         return view
     }
 
     private fun setAdapter() {
-        LoggingManager.sensorList?.let { sensors ->
-            listAdapter = ListAdapter(sensors)
+            listAdapter = ListAdapter()
             binding.recyclerviewFragmentMainscreen.apply {
                 adapter = listAdapter
                 layoutManager = LinearLayoutManager(this@MainScreenFragment.mContext)
             }
-        }
     }
 
-    private fun checkPermissionsGranted(context: Activity): Boolean {
-        val managePermissions = PermissionManager(context, CONST.PERMISSION_REQUEST_CODE)
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.menu_setting, menu)
+    }
 
-        val permissionsGranted = managePermissions.arePermissionsGranted() == PackageManager.PERMISSION_GRANTED
-        val notificationListenerEnabled = Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
-            .contains(context.applicationContext.packageName)
-        val accessibilityServiceEnabled = PermissionManager.isAccessibilityServiceEnabled(context)
-        val usageStatsPermissionGranted = PermissionManager.isUsageInformationPermissionEnabled(context)
-
-        return permissionsGranted && notificationListenerEnabled && accessibilityServiceEnabled && usageStatsPermissionGranted
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            0 -> {
+                Log.d("XXX", "menu iconCLicked 0")
+                //  val usageLogIntent = Intent(this, UsageLogDisplayActivity::class.java)
+                //   startActivity(usageLogIntent)
+                true
+            }
+            R.id.toolbarOption_logout -> {
+                Log.d("XXX", "menu iconCLicked 0")
+                Firebase.auth.signOut()
+                SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, false)
+                LoggingManager.stopLoggingService(mContext)
+                navigate(ScreenType.Welcome, ScreenType.HomeScreen)
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onAttach(context: Context) {
@@ -128,7 +142,9 @@ class MainScreenFragment : Fragment() {
         mContext = context
     }
 
-    inner class ListAdapter(val items: List<AbstractSensor>) : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+    inner class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {
+        private val items: MutableList<AbstractSensor>
+            get() = LoggingManager.sensorList
 
         inner class ViewHolder(val binding: CustomListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
@@ -142,9 +158,14 @@ class MainScreenFragment : Fragment() {
                 with(items[position]) {
                     binding.textViewListItemTitle.text = this.sensorName + " Sensor"
                     Log.d("xxx", "bind: ${this.sensorName} running: ${this.isRunning}")
-                    binding.textViewListItemSubtile.text =
-                        if (LoggingManager.isLoggingActive.value == true) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
-                    //  if (this.isRunning) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
+                    val runningText =  if (LoggingManager.isLoggingActive.value == true) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
+                      //  if (this.isRunning) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
+                    val drawable = if (LoggingManager.isLoggingActive.value == true) R.drawable.circle_green else R.drawable.circle_red
+                    binding.textViewListItemSubtile.apply{
+                        text = runningText
+                        setCompoundDrawablesWithIntrinsicBounds(drawable, 0, 0, 0)
+                        compoundDrawablePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 3f, context.resources.displayMetrics).toInt()
+                    }
                 }
             }
         }

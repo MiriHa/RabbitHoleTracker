@@ -30,7 +30,8 @@ class SignUpFragment: Fragment() {
         binding = FragmentSignupBinding.inflate(inflater)
         viewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginSignUpViewModel::class.java]
 
-        val usernameEditText = binding.signUpUsername
+        val usernameEditText = binding.signUpNickname
+        val emailEditText = binding.signUpEmail
         val passwordEditText = binding.signUpPassword
         val passwordRepeatEditText = binding.signUpRepeatPassword
         val createAccountButton = binding.signUpButton
@@ -43,7 +44,7 @@ class SignUpFragment: Fragment() {
                 }
                 createAccountButton.isEnabled = loginFormState.isDataValid
                 loginFormState.usernameError?.let {
-                    usernameEditText.error = getString(it)
+                    emailEditText.error = getString(it)
                 }
                 loginFormState.passwordError?.let {
                     passwordEditText.error = getString(it)
@@ -74,19 +75,20 @@ class SignUpFragment: Fragment() {
 
             override fun afterTextChanged(s: Editable) {
                 viewModel.loginDataChanged(
-                    usernameEditText.text.toString(),
+                    emailEditText.text.toString(),
                     passwordEditText.text.toString(),
                     passwordRepeatEditText.text.toString()
                 )
             }
         }
-        usernameEditText.addTextChangedListener(afterTextChangedListener)
+        emailEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.addTextChangedListener(afterTextChangedListener)
         passwordRepeatEditText.addTextChangedListener(afterTextChangedListener)
         passwordRepeatEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.createEmailPasswordAccount(
                     usernameEditText.text.toString(),
+                    emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
             }
@@ -98,6 +100,7 @@ class SignUpFragment: Fragment() {
                 loadingProgressBar.visibility = View.VISIBLE
                 viewModel.createEmailPasswordAccount(
                     usernameEditText.text.toString(),
+                    emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
             } else {

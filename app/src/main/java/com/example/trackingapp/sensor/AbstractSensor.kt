@@ -15,7 +15,6 @@ abstract class AbstractSensor protected constructor(
     protected var m_isSensorAvailable = false
 
     var isRunning = false
-        protected set
 
     val settingsState: Int
         get() = 0

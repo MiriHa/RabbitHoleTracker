@@ -46,7 +46,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="16dp"
-        tools:listitem="@layout/layout_esm_lock_item_buttons"
+        tools:listitem="@layout/layout_esm_lock_item_scale"
         app:layout_constraintTop_toBottomOf="@+id/textView_esm_lock_intention" />
 
 

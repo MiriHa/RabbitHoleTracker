@@ -1,4 +1,4 @@
-package com.example.trackingapp.service
+package com.example.trackingapp.service.sensorservice
 
 import android.app.Notification
 import android.content.Context
@@ -11,6 +11,7 @@ import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaNotification
+import com.example.trackingapp.service.LoggingManager
 
 class NotificationListener: NotificationListenerService() {
     val TAG = "NotificationReceiver"

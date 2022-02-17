@@ -4,6 +4,9 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/OnBoardingFragment">
 
+    <action android:id="@+id/action_global_permissionFragment"
+            app:destination="@id/permissionHolderFragment"/>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.trackingapp.activity.login.LoginFragment"

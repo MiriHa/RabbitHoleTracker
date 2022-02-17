@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.trackingapp.DatabaseManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
-import com.example.trackingapp.service.LoggingManager
-import com.example.trackingapp.util.PermissionManager
-import com.example.trackingapp.util.ScreenType
-import com.example.trackingapp.util.navigate
+import com.example.trackingapp.util.*
 
 class OnBoardingFragment: Fragment() {
 
@@ -41,13 +38,13 @@ class OnBoardingFragment: Fragment() {
        if(DatabaseManager.isUserLoggedIn){
            //G0 to the MainScreen
            if(PermissionManager.areAllPermissionGiven(this.activity)) {
-               LoggingManager.isDataRecordingActive = true
+               SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
                navigate(to=ScreenType.HomeScreen, from=ScreenType.Welcome)
            } else {
                navigate(to=ScreenType.Permission, from=ScreenType.Welcome)
            }
        } else {
-           LoggingManager.isDataRecordingActive = false
+           SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, false)
        }
 
     }

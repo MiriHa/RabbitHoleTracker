@@ -11,4 +11,13 @@
     <style name="ButtonMain" parent="Widget.AppCompat.Button">
         <item name="android:backgroundTint">@color/milkGreen</item>
     </style>
+
+    <style name="Theme.TrackingApp.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.TrackingApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.TrackingApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

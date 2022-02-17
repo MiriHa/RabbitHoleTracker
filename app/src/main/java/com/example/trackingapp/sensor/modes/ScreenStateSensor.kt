@@ -76,15 +76,16 @@ class ScreenStateSensor : AbstractSensor(
                 val notificationManager = NotificationManagerCompat.from(context)
                 when (currentState) {
                     ScreenState.OFF_LOCKED -> {
+                        LoggingManager.userPresent = false
                         if(!screenOffAsked) {
                             screenOffAsked = true
+                            NotificationHelper.dismissESMNotification(context)
                             NotificationHelper.createESMFullScreenNotification(
                                 context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
                                 context.getString(R.string.esm_lock_notification_title)
                             )
                         }
                         saveEntry(currentState, time)
-                        LoggingManager.userPresent = false
                     }
                     ScreenState.OFF_UNLOCKED -> {
                         saveEntry(currentState, time)
@@ -98,6 +99,7 @@ class ScreenStateSensor : AbstractSensor(
                     ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
                         LoggingManager.userPresent = true
+                        NotificationHelper.dismissESMNotification(context)
                         NotificationHelper.createESMFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
                         saveEntry(currentState, time)

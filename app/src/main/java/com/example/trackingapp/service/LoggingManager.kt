@@ -36,17 +36,39 @@ object LoggingManager {
 
     var userPresent = false
 
-    var sensorList: MutableList<AbstractSensor>? = null
+    var sensorList: MutableList<AbstractSensor> = arrayListOf(
+        AccelerometerSensor(),
+        AccessibilitySensor(),
+        ActivityRecognitionSensor(),
+        AirplaneModeSensor(),
+        AppInstallsSensor(),
+        BluetoothSensor(),
+        CallSensor(),
+        DataTrafficSensor(),
+        GyroscopeSensor(),
+        LightSensor(),
+        NotificationSensor(),
+        OrientationSensor(),
+        PowerSensor(),
+        ProximitySensor(),
+        RingerModeSensor(),
+        ScreenOrientationSensor(),
+        ScreenStateSensor(),
+        SmsSensor(),
+        UsageStatsSensor(),
+        WifiSensor()
+    )
 
     init {
         Log.d("TAG", "init LoggingManager/sensorlist $sensorList")
-        if (sensorList == null) sensorList = createSensorList()
+        //if (sensorList == null) sensorList = createSensorList()
     }
 
     val _isLoggingActive = MutableLiveData(false)
     val isLoggingActive: LiveData<Boolean> = _isLoggingActive
 
-    var isDataRecordingActive: Boolean = false
+    val isDataRecordingActive: Boolean
+        get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE)
 
     private fun firstStartLoggingService(context: Context) {
         PhoneState.logCurrentPhoneState(context)

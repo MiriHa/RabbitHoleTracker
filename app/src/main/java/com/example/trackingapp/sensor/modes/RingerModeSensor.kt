@@ -15,7 +15,7 @@ import com.example.trackingapp.util.CONST
 
 class RingerModeSensor: AbstractSensor(
     "RINGER_MODE_SENSOR",
-    "RingerMode"
+    "Ringer Mode"
 ) {
 
     private var mContext: Context? = null

@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
-import android.widget.Toast
 import com.example.trackingapp.BuildConfig
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.ActivityTransitionType
@@ -46,41 +45,14 @@ class ActivityRecognitionSensor : AbstractSensor(
         //val task2 = client.requestActivityUpdates(1000, getPendingIntent(context))
 
         task.addOnSuccessListener {
-            Log.d("xxx", "Successfully requested activity updates  ${task.result}")
-            Toast.makeText(
-                context,
-                "Successfully requested activity updates",
-                Toast.LENGTH_SHORT
-            ).show()
+            Log.d(TAG, "Successfully requested activity updates  ${task.result}")
+            isRunning = true
         }
         task.addOnFailureListener {
-            Log.d("xxx", "Requesting activity updates failed to start ${task.result} ${it.message} ${it.cause?.message}")
-            Toast.makeText(
-                context,
-                "Requesting activity updates failed to start",
-                Toast.LENGTH_SHORT
-            ).show()
+            Log.d(TAG, "Requesting activity updates failed to start ${task.result} ${it.message} ${it.cause?.message}")
+            isRunning = false
         }
 
-//        task2.addOnSuccessListener {
-//            Log.d("xxx", "2 Successfully requested activity updates")
-//            Toast.makeText(
-//                context,
-//                " 2 Successfully requested activity updates",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//        }
-//        task2.addOnFailureListener   {
-//            Log.d("xxx", " 2 Requesting activity updates failed to start")
-//                Toast.makeText(
-//                    context,
-//                    " 2 Requesting activity updates failed to start",
-//                    Toast.LENGTH_SHORT
-//                ).show()
-//            }
-
-
-            isRunning = true
         }
 
     override fun stop() {
@@ -92,19 +64,9 @@ class ActivityRecognitionSensor : AbstractSensor(
                 val task = ActivityRecognition.getClient(it).removeActivityTransitionUpdates(pendingIntent)
                 task.addOnSuccessListener {
                     pendingIntent.cancel()
-                    Toast.makeText(
-                        mContext,
-                        "Succesfully deregisterd from Activity Recognition.",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
                 task.addOnFailureListener { e ->
                     Log.d(TAG, "Failed to remove ActivityTransitionUpdates. ${e.message}")
-                    Toast.makeText(
-                        mContext,
-                        "Failed to deregister from activityRecognition.",
-                        Toast.LENGTH_SHORT
-                    ).show()
                 }
             }
 
@@ -116,11 +78,11 @@ class ActivityRecognitionSensor : AbstractSensor(
         val intentFilter = IntentFilter(filter)
         try {
             context.unregisterReceiver(mReceiver)
+            if (mReceiver == null) mReceiver = ActivityRecognitionReceiver()
+            context.registerReceiver(mReceiver, intentFilter)
         } catch (e: Exception) {
             //Not Registered
         }
-        if (mReceiver == null) mReceiver = ActivityRecognitionReceiver()
-        context.registerReceiver(mReceiver, intentFilter)
         return PendingIntent.getBroadcast(context, REQUEST_CODE_INTENT_ACTIVITY_TRANSITION, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
     }

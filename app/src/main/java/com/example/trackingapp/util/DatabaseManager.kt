@@ -39,9 +39,9 @@ object DatabaseManager {
         intentionList.addAll(arrayOf("Browsing", "Passing Time", "Search for Information"))
     }
 
-    fun saveUserToFirebase(email: String) {
+    fun saveUserToFirebase(userName: String, email: String) {
         val userId = Firebase.auth.currentUser?.uid
-        val user = User(email, userId)
+        val user = User(userName, email, userId)
         if (userId != null) {
             database.child(CONST.firebaseReferenceUsers)
                 .child(userId)

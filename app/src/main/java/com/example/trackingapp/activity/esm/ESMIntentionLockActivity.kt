@@ -15,7 +15,9 @@ import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemButtonsBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemScaleBinding
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
+import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.turnScreenOffAndKeyguardOn
 import com.example.trackingapp.util.turnScreenOnAndKeyguardOff
 
@@ -31,6 +33,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         binding = ActivityLockscreenEsmBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
+        SharedPrefManager.init(this.applicationContext)
 
         binding.textViewEsmLockIntention.text = viewModel.savedIntention
         val listAdapter = ListAdapter(viewModel.questionList)
@@ -53,6 +56,15 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             this.finish()
             dismissESMNotification(this)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("xxx"," presenT: ${LoggingManager.userPresent}")
+  /*      if(LoggingManager.userPresent){
+            this.finish()
+            dismissESMNotification(this)
+        }*/
     }
 
     override fun onBackPressed() {

@@ -18,6 +18,7 @@ object CONST {
     const val PREFERENCES_ONBOARDING_FINISHED: String = "ONBOARDING_FINISHED"
     const val PREFERENCES_LAST_ESM_FULL_TIMESTAMP: String = "PREFERENCES_LAST_ESM_FULL_TIMESTAMP"
     const val PREFERENCES_LOGGING_FIRST_STARTED: String = "PREFERENCES_LOGGING_FIRST_STARTED"
+    const val PREFERENCES_DATA_RECORDING_ACTIVE: String = "PREFERENCES_DATA_RECORDING_ACTIVE"
 
     const val firebaseReferenceUsers = "users"
     const val firebaseReferenceLogs = "logs"

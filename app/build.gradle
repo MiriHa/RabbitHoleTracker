@@ -113,5 +113,7 @@ dependencies {
     //Permissions
     implementation 'com.vmadalin:easypermissions-ktx:1.0.0'
 
+    //Cardview
+    implementation "androidx.cardview:cardview:1.0.0"
 
 }

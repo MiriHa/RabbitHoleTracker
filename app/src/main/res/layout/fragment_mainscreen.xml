@@ -39,23 +39,22 @@
             app:layout_constraintVertical_bias="0.0"
             tools:text="Stop Lock Notifications" />
 
-        <Button
-            android:id="@+id/signOut"
+        <TextView
+            android:id="@+id/textView_sensorList_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="16dp"
-            android:text="signout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonTestStop" />
-
+            android:paddingHorizontal="10dp"
+            android:textColor="@color/cardview_light_background"
+            android:textSize="18sp"
+            android:layout_margin="6dp"
+            android:text="@string/sensorlist_title"
+            app:layout_constraintTop_toBottomOf="@+id/buttonTestStop"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_fragment_mainscreen"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toBottomOf="@+id/signOut"
+            app:layout_constraintTop_toBottomOf="@+id/textView_sensorList_title"
             tools:layout_editor_absoluteX="16dp"
             tools:listitem="@layout/custom_list_item" />
 

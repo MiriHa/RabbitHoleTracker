@@ -37,7 +37,8 @@ class BootUpReceiver : BroadcastReceiver() {
     }
 
     private fun startLoggingManager(context: Context) {
-        if (LoggingManager.isLoggingActive.value == false) {
+        Log.d("StartLogging", "Start Logging after Bootup: ${LoggingManager.isDataRecordingActive}")
+        if (LoggingManager.isDataRecordingActive) {
             LoggingManager.startLoggingService(context)
         }
     }

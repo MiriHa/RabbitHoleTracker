@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingHorizontal="16dp"
-    tools:background="@color/BlackishGray">
+    android:padding="6dp"
+    tools:background="@drawable/background_rounded"
+    android:layout_margin="6dp">
 
     <TextView
         android:id="@+id/esm_lock_intention_question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:gravity="center"
         tools:text="@string/esm_lock_intention_question_intention_finished"
         android:textColor="@color/white"
@@ -27,7 +27,7 @@
         android:layout_marginTop="@dimen/fragment_horizontal_margin"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="8dp"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

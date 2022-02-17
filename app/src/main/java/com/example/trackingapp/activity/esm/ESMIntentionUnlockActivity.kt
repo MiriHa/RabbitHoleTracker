@@ -13,6 +13,7 @@ import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
+import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
 
@@ -29,6 +30,7 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
         setContentView(binding.root)
 
         //DatabaseManager.getSavedIntentions()
+        SharedPrefManager.init(this.applicationContext)
 
         val adapter = ArrayAdapter(
             this@ESMIntentionUnlockActivity,

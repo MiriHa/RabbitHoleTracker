@@ -3,6 +3,7 @@ package com.example.trackingapp.models
 enum class LogEventName {
 
     ACCESSIBILITY,
+    ACCESIBILIITY_BROWSER_URL,
     APPS,
     APPS_INSTALL,
     AIRPLANEMODE,

@@ -60,6 +60,8 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
+                        sliderMaxLabel = "very strong",
+                        sliderMinLabel = "non existent"
                     ),
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_track_of_time,
@@ -67,6 +69,8 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
+                        sliderMaxLabel = "very much",
+                        sliderMinLabel = "not at all"
                     ),
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_track_of_space,
@@ -74,6 +78,8 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
+                        sliderMaxLabel = "very much",
+                        sliderMinLabel = "not at all"
                     ),
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_regret,
@@ -81,6 +87,8 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
+                        sliderMaxLabel = "very strong",
+                        sliderMinLabel = "non existent"
                     ),
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
@@ -99,7 +107,9 @@ class ESMIntentionViewModel : ViewModel() {
                         ESMQuestionType.ESM_LOCK_Q_REGRET,
                         sliderStepSize = 1F,
                         sliderMin = 0F,
-                        sliderMax = 7F
+                        sliderMax = 7F,
+                        sliderMaxLabel = "very strong",
+                        sliderMinLabel = "non existent"
                     ),
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,

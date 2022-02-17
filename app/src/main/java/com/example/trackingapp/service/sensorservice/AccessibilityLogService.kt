@@ -1,9 +1,10 @@
-package com.example.trackingapp.service
+package com.example.trackingapp.service.sensorservice
 
 import android.accessibilityservice.AccessibilityService
 import android.accessibilityservice.AccessibilityServiceInfo
 import android.os.Build
 import android.util.Log
+import android.util.Patterns
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.example.trackingapp.DatabaseManager.saveToDataBase
@@ -11,6 +12,9 @@ import com.example.trackingapp.models.ContentChangeEvent
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.google.firebase.FirebaseApp
+
+
+
 
 
 
@@ -35,6 +39,7 @@ class AccessibilityLogService : AccessibilityService() {
         Log.v(TAG, "onInterrupt")
     }
 
+/* NOt needed as it is declared via xml
     override fun onServiceConnected() {
         super.onServiceConnected()
         Log.v(TAG, "onServiceConnected")
@@ -50,6 +55,7 @@ class AccessibilityLogService : AccessibilityService() {
         this.serviceInfo = info
         isRunning = true
     }
+*/
 
 //    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 //        super.onStartCommand(intent, flags, startId)
@@ -79,7 +85,6 @@ class AccessibilityLogService : AccessibilityService() {
 //        }
         stopForeground(true)
         super.onDestroy()
-        isRunning = false
     }
 
     var keyboardEvents: Int = 0 //mutableListOf<String>()
@@ -101,7 +106,8 @@ class AccessibilityLogService : AccessibilityService() {
                 onFinishInput(time)
             }
             when {
-                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> trackBrowserURL(event)
+                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||  event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ->
+                    trackBrowserURL(event)
 
                 event?.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
                     trackBrowserURL(event)
@@ -264,11 +270,11 @@ class AccessibilityLogService : AccessibilityService() {
 
     private fun trackBrowserURL(event: AccessibilityEvent){
         try {
-            //TODO soruce is null=
-            val parentNodeInfo: AccessibilityNodeInfo = event.source
+            val parentNodeInfo = event.source ?: return
             val packageName = event.packageName.toString()
             var browserConfig: SupportedBrowserConfig? = null
-            getSupportedBrowsers().forEach { supportedConfig ->
+            Log.d("Browser", "$packageName")
+            for (supportedConfig in getSupportedBrowsers()) {
                 if (supportedConfig.packageName == packageName) {
                     browserConfig = supportedConfig
                 }
@@ -277,23 +283,32 @@ class AccessibilityLogService : AccessibilityService() {
             if (browserConfig == null) {
                 return
             }
-
-            var capturedUrl: String? = null
-            browserConfig?.let {
-                capturedUrl = captureUrl(parentNodeInfo, it)
-                parentNodeInfo.recycle();
+            val capturedUrl = captureUrl(parentNodeInfo, browserConfig)
+            parentNodeInfo.recycle()
+            if (capturedUrl == null) {
+                return
             }
-
-            capturedUrl?.let {
-                val eventTime = event.eventTime
-                if (packageName != browserApp) {
-                    if (android.util.Patterns.WEB_URL.matcher(it).matches()) {
-                        Log.d(TAG, "$packageName  :  $it")
-
-                        browserApp = packageName;
-                        browserUrl = it
+            if (packageName != browserApp) {
+                if (Patterns.WEB_URL.matcher(capturedUrl).matches()) {
+                    Log.d("Browser", "$packageName  :  $capturedUrl")
+                    browserApp = packageName
+                    browserUrl = capturedUrl
+                    LogEvent(
+                        LogEventName.ACCESIBILIITY_BROWSER_URL,
+                        timestamp = event.eventTime,
+                        event = getEventType(event),
+                        description = browserUrl,
+                        name = "BrowserURL",
+                        packageName = packageName
+                    ).saveToDataBase()
+                }
+            } else {
+                if (capturedUrl != browserUrl) {
+                    if (Patterns.WEB_URL.matcher(capturedUrl).matches()) {
+                        browserUrl = capturedUrl
+                        Log.d("Browser", "$packageName   $capturedUrl")
                         LogEvent(
-                            LogEventName.ACCESSIBILITY,
+                            LogEventName.ACCESIBILIITY_BROWSER_URL,
                             timestamp = event.eventTime,
                             event = getEventType(event),
                             description = browserUrl,
@@ -301,26 +316,10 @@ class AccessibilityLogService : AccessibilityService() {
                             packageName = packageName
                         ).saveToDataBase()
                     }
-                } else {
-                    if (!capturedUrl.equals(browserUrl)) {
-                        if (android.util.Patterns.WEB_URL.matcher(it).matches()) {
-                            browserUrl = it
-                            Log.d(TAG, "$packageName   $it")
-                            LogEvent(
-                                LogEventName.ACCESSIBILITY,
-                                timestamp = event.eventTime,
-                                event = getEventType(event),
-                                description = browserUrl,
-                                name = "BrowserURL",
-                                packageName = packageName
-                            ).saveToDataBase()
-
-                        }
-                    }
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to track browser url.", e)
+            Log.e(TAG, "Failed to track browser url. event: ${event.eventType}", e)
         }
     }
 
@@ -356,7 +355,7 @@ class AccessibilityLogService : AccessibilityService() {
         browsers.add(SupportedBrowserConfig("com.opera.mini.native", "com.opera.mini.native:id/url_field"))
         browsers.add(SupportedBrowserConfig("com.duckduckgo.mobile.android", "com.duckduckgo.mobile.android:id/omnibarTextInput"))
         browsers.add(SupportedBrowserConfig("com.microsoft.emmx", "com.microsoft.emmx:id/url_bar"))
-        browsers.add(SupportedBrowserConfig("com.android.browser","com.android.browser/id/url_bar"))
+        browsers.add(SupportedBrowserConfig("com.android.browser","com.android.browser:id/url_bar"))
         return browsers
     }
 
@@ -391,12 +390,4 @@ class AccessibilityLogService : AccessibilityService() {
         return url
     }
 
-    companion object {
-        val TAG: String = "ACCESSIBILITYSERVICE"
-
-        @JvmStatic
-        var isRunning: Boolean = false
-
-
-    }
 }

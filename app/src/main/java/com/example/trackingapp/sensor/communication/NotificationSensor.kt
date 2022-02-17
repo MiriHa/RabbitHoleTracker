@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.util.Log
 import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.service.NotificationListener
+import com.example.trackingapp.service.sensorservice.NotificationListener
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.PermissionManager
 

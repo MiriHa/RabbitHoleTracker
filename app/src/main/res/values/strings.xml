@@ -19,8 +19,10 @@
     <string name="login_signup">Sign up</string>
     <string name="login_signUp_CreateAccount">Create Account</string>
     <string name="login_button">Log in</string>
+    <string name="logout_menu_title">Log out</string>
 
     <!-- Strings related to login -->
+    <string name="prompt_username">Username</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="login_prompt_password_repeat">Repeat Password</string>
@@ -32,8 +34,10 @@
     <string name="invalid_password_no_match">Both passwords need to match</string>
     <string name="invalid_data_error">Entered data is not valid!</string>
     <string name="login_failed">"Login failed"</string>
-
     <string name="home_titleText">Hello!</string>
+    
+    <!-- MainScreenFragment -->
+    <string name="sensorlist_title">Tracking Sensors</string>
 
 
     <!-- ESM -->
@@ -45,8 +49,8 @@
     <string name="esm_lock_intention_question_intention_finished">Did you finish your intention?</string>
     <string name="esm_lock_intention_question_intention_more">Did you do more than your intention?</string>
     <string name="esm_lock_intention_question_regret">How strong was your feeling of regret?</string>
-    <string name="esm_lock_intention_question_track_of_time">Did you loose track of time while using your phone?</string>
-    <string name="esm_lock_intention_question_track_of_space">Did you loose track of your surroundings while using your phone?</string>
+    <string name="esm_lock_intention_question_track_of_time">How much did you loose track of time while using your phone?</string>
+    <string name="esm_lock_intention_question_track_of_space">How much did you loose track of your surroundings while using your phone?</string>
     <string name="esm_lock_intention_question_agency">How strong was your feeling of agency?</string>
     <string name="esm_lock_intention_question_emotion">Which primary emotion did you experience in this session?</string>
     <string name="esm_button_yes">Yes</string>
@@ -62,6 +66,7 @@
     <string name="permission_title">Allow Permissions</string>
     <string name="permission_explanation_description">Please provide us access to following permissions, as this applications needs these to collect your usage data.</string>
     <string name="permission_request_accessibility_service_title">Enable Accessibility Service</string>
+    <string name="permission_request_accessibility_service_notification_title">Please enable the accessibility service for Rabbit Hole Tracker!</string>
     <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your usage events. \n\nPlease scroll in the settings to the section Downloaded Services and enable the accessibility service for this application Rabbit Hole Tracker.</string>
     <string name="permission_request_notification_listener_title">Enable Notifications</string>
     <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect information about your received notifications. \n\nPlease select this application Rabbit Hole Tracker and enable the notification listener</string>
