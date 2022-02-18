@@ -23,10 +23,10 @@ class ESMIntentionViewModel : ViewModel() {
         answeredQuestions.add(questionType)
         LogEvent(
             LogEventName.ESM,
-            time,
-            questionType.name,
-            answer,
-            savedIntention
+            timestamp = time,
+            event = questionType.name,
+            name = answer,
+            description = savedIntention
         ).saveToDataBase()
     }
 

@@ -45,25 +45,25 @@ enum class PermissionView(
     PERMISSIONS(
         R.string.permission_title,
         R.string.permission_explanation_description,
-        R.drawable.ic_logolight,
+        R.drawable.ic_settings,
         R.string.permission_button_text,
     ),
     NOTIFICATION_LISTENER(
         R.string.permission_request_notification_listener_title,
         R.string.permission_request_notification_listener_description,
-        R.drawable.ic_logolight,
+        R.drawable.ic_notifications,
         R.string.permission_settings_button_text,
     ),
     ACCESSIBILITY_SERVICE(
         R.string.permission_request_accessibility_service_title,
         R.string.permission_request_accessibility_service_description,
-        R.drawable.ic_logolight,
+        R.drawable.ic_accessibility,
         R.string.permission_settings_button_text,
     ),
     USAGE_STATS(
         R.string.permission_request_usage_stats_title,
         R.string.permission_request_usage_stats_description,
-        R.drawable.ic_logolight,
+        R.drawable.ic_query_stats,
         R.string.permission_settings_button_text,
     ),
 }

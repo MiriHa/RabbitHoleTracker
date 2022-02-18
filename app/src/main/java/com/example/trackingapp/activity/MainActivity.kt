@@ -26,7 +26,11 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
-        Firebase.database.setPersistenceEnabled(true)
+        try {
+            Firebase.database.setPersistenceEnabled(true)
+        }catch (e: Exception){
+
+        }
         SharedPrefManager.init(this.applicationContext)
         DatabaseManager.initIntentionList()
 

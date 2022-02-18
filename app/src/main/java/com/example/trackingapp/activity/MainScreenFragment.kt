@@ -75,11 +75,13 @@ class MainScreenFragment : Fragment() {
         Log.d(TAG, "startLoggingButton Click: running")
         //Not enough`??
         LoggingManager.ensureLoggingManagerIsAlive(mContext)
+        if (!SharedPrefManager.getBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED)) {
+            LoggingManager.startLoggingService(mContext as Activity)
+        }
         //LoggingManager.stopLoggingService(mContext)
        // LoggingManager.startLoggingService(mContext as Activity)
 
         //LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToData
-
 
         binding.buttonTest.apply {
             text = getString(

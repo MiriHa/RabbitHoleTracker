@@ -91,7 +91,7 @@ class LoggingService : Service() {
         stopLoggingUpdates()
         job = scope.launch {
             while (true) {
-                if(LoggingManager.userPresent && LoggingManager.isDataRecordingActive)
+                if(LoggingManager.userPresent/* && LoggingManager.isDataRecordingActive*/)
                     collectSnapShots() // the function that should be ran every second
                 delay(CONST.LOGGING_FREQUENCY)
             }

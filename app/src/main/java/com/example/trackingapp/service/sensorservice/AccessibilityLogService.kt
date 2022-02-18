@@ -273,7 +273,6 @@ class AccessibilityLogService : AccessibilityService() {
             val parentNodeInfo = event.source ?: return
             val packageName = event.packageName.toString()
             var browserConfig: SupportedBrowserConfig? = null
-            Log.d("Browser", "$packageName")
             for (supportedConfig in getSupportedBrowsers()) {
                 if (supportedConfig.packageName == packageName) {
                     browserConfig = supportedConfig

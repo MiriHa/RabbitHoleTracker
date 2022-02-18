@@ -34,8 +34,6 @@ object LoggingManager {
 
     private const val TAG = "LOGGING_MANAGER"
 
-    var userPresent = false
-
     var sensorList: MutableList<AbstractSensor> = arrayListOf(
         AccelerometerSensor(),
         AccessibilitySensor(),
@@ -59,10 +57,9 @@ object LoggingManager {
         WifiSensor()
     )
 
-    init {
-        Log.d("TAG", "init LoggingManager/sensorlist $sensorList")
-        //if (sensorList == null) sensorList = createSensorList()
-    }
+    val userPresent: Boolean
+        get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_PRESENT)
+
 
     val _isLoggingActive = MutableLiveData(false)
     val isLoggingActive: LiveData<Boolean> = _isLoggingActive
@@ -99,6 +96,7 @@ object LoggingManager {
     }
 
     fun ensureLoggingManagerIsAlive(context: Context) {
+        Log.d(TAG,"ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value == false && isDataRecordingActive}")
         if (isLoggingActive.value == false && isDataRecordingActive) {
             startLoggingService(context)
         }

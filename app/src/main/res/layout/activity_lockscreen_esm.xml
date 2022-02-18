@@ -36,7 +36,7 @@
         android:textColor="@color/white"
         android:textSize="28sp"
         android:textStyle="bold"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="4dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention_prompt" />
@@ -45,6 +45,7 @@
         android:id="@+id/recyclerview_fragment_mainscreen"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         tools:layout_editor_absoluteX="16dp"
         tools:listitem="@layout/layout_esm_lock_item_scale"
         app:layout_constraintTop_toBottomOf="@+id/textView_esm_lock_intention" />

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,8 +61,8 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Log.d("xxx"," presenT: ${LoggingManager.userPresent}")
-  /*      if(LoggingManager.userPresent){
+        Log.d("xxx","on resume lock presenT: ${LoggingManager.userPresent}")
+        /*if(LoggingManager.userPresent){
             this.finish()
             dismissESMNotification(this)
         }*/
@@ -71,9 +72,14 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         //Do nothing
     }
 
+    override fun onStop() {
+        super.onStop()
+        this.finish()
+        dismissESMNotification(this)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
-
         this.turnScreenOffAndKeyguardOn()
     }
 
@@ -118,7 +124,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         inner class ESMButtonItemViewHolder(private val itemBinding: LayoutEsmLockItemButtonsBinding) : ListViewHolder<ESMRadioGroupItem>(itemBinding.root) {
 
             override fun bindData(item: ESMRadioGroupItem) {
-                itemBinding.esmLockIntentionQuestion.text = getString(item.question)
+                itemBinding.esmLockIntentionQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
 
                 item.buttonList.forEach { label ->
                     addButton(item, label)
@@ -149,9 +155,9 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                 item: ESMSliderItem,
             ) {
                 //already add the question as it can be left on the lowest value
-                viewModel.answeredQuestions.add(item.questionType)
+                setValue(item, itemBinding.sliderEsmLockItemSlider.value.toString())
 
-                itemBinding.esmLockItemSliderQuestion.text = getString(item.question)
+                itemBinding.esmLockItemSliderQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
                 itemBinding.textviewEsmLockItemSliderMin.text = item.sliderMinLabel
                 itemBinding.textviewEsmLockItemSliderMax.text = item.sliderMaxLabel
                 itemBinding.sliderEsmLockItemSlider.apply {

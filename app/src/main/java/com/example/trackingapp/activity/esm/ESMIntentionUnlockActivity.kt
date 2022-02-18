@@ -1,6 +1,7 @@
 package com.example.trackingapp.activity.esm
 
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -12,9 +13,13 @@ import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
+
+
+
 
 
 class ESMIntentionUnlockActivity: AppCompatActivity(){
@@ -47,15 +52,19 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
             }
             setOnEditorActionListener{ _, actionID, _ ->
                 if(actionID == EditorInfo.IME_ACTION_DONE){
-                    actionDone()
+                    actionDone(binding.esmUnlockAutoCompleteTextView.text.toString())
                     return@setOnEditorActionListener true
                 }
                 false
             }
+            setOnItemClickListener { adapterView, _, position, _ ->
+                val item: String = adapterView.getItemAtPosition(position).toString()
+                actionDone(item)
+            }
         }
 
         binding.esmUnlockButtonstart.setOnClickListener {
-            actionDone()
+            actionDone(binding.esmUnlockAutoCompleteTextView.text.toString())
         }
 
     }
@@ -64,8 +73,12 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
         // Do Nothing
     }
 
-   private fun actionDone(){
-       val intention = binding.esmUnlockAutoCompleteTextView.text.toString()
+    override fun onResume() {
+        super.onResume()
+        Log.d("xxx"," on resume: unlock presenT: ${LoggingManager.userPresent}")
+    }
+
+   private fun actionDone(intention: String){
        if(intention.isNotBlank()){
         viewModel.checkDuplicateIntentionAnSave(intention)
         dismissFullScreenNotification()

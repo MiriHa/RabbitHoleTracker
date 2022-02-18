@@ -17,6 +17,7 @@ import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ESMType
 import com.example.trackingapp.util.NotificationHelper
+import com.example.trackingapp.util.SharedPrefManager
 
 class ScreenStateSensor : AbstractSensor(
     "SCREEN_STATE_SENSOR",
@@ -76,7 +77,7 @@ class ScreenStateSensor : AbstractSensor(
                 val notificationManager = NotificationManagerCompat.from(context)
                 when (currentState) {
                     ScreenState.OFF_LOCKED -> {
-                        LoggingManager.userPresent = false
+                        SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
                         if(!screenOffAsked) {
                             screenOffAsked = true
                             NotificationHelper.dismissESMNotification(context)
@@ -98,7 +99,9 @@ class ScreenStateSensor : AbstractSensor(
                     }
                     ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
-                        LoggingManager.userPresent = true
+                        Log.d("xxx","userpresent1: ${LoggingManager.userPresent}")
+                        SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
+                        Log.d("xxx","userpresent2: ${LoggingManager.userPresent}")
                         NotificationHelper.dismissESMNotification(context)
                         NotificationHelper.createESMFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
                             context.getString(R.string.esm_unlock_intention_question))
