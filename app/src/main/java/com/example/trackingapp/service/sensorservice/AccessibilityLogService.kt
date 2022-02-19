@@ -58,21 +58,20 @@ class AccessibilityLogService : AccessibilityService() {
                 }
                 //represents and foreground change
                 event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
-                event?.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> {
-                }
-                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && !event.isPassword -> { //TYPE VIEW TEXT CHANGED
+                event?.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return
+                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && !event.isPassword -> { return //TYPE VIEW TEXT CHANGED
                     // User starts input of text -> create new text event?
                     // do i need this or get the text via getEvetnText?
-
+/*
                     // create ContentChangeEvents
                     if(chachedContentChangeEvent == null) chachedContentChangeEvent = ContentChangeEvent()
 
                     // first: try to get hint text property
-                   /* if (event.source != null *//*&& event.source.hintText != null*//*) {
+                   *//* if (event.source != null *//**//*&& event.source.hintText != null*//**//*) {
                         chachedContentChangeEvent?.fieldHintText = event.source.hintText.toString()
                         chachedContentChangeEvent?.message += event.source.text.toString()
                         Log.d("xxx", "textN: ${event.source.text} ${event.source.hintText}")
-                    } else {*/
+                    } else {*//*
                     chachedContentChangeEvent?.message += getEventText(event)
                    // }
                     try {
@@ -81,7 +80,7 @@ class AccessibilityLogService : AccessibilityService() {
                         Log.i(TAG, "Could not fetch packageName of event source node", e)
                     }
                     keyboardEvents += 1
-                    /*if (keyboardEvents == 1) {
+                    *//*if (keyboardEvents == 1) {
                         initialContent = if (event.beforeText != null) {
                             event.beforeText.toString()
                         } else {
@@ -106,13 +105,13 @@ class AccessibilityLogService : AccessibilityService() {
                     onFinishInput(time)
                 }*/
                 else -> {
-                    if(keyboardEvents > 0
+                   /* if(keyboardEvents > 0
                         && event?.eventType != AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
                         && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_EXIT
                         && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_ENTER
                     ){
                         onFinishInput(time)
-                    }
+                    }*/
                     LogEvent(
                         LogEventName.ACCESSIBILITY,
                         timestamp = time,
@@ -134,8 +133,6 @@ class AccessibilityLogService : AccessibilityService() {
         }
         chachedContentChangeEvent?.keyboardEvents = keyboardEvents
         chachedContentChangeEvent?.timestampEnd = time
-
-        Log.d("xxx","finishInput: keyboard events: ${keyboardEvents} text: ${chachedContentChangeEvent?.fieldHintText} ${chachedContentChangeEvent?.message}}")
 
         LogEvent(
             LogEventName.INPUT,

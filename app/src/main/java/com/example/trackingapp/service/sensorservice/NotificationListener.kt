@@ -117,7 +117,7 @@ class NotificationListener: NotificationListenerService() {
     }
 
     private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
-        Log.d(TAG, "checkIfNotificationExistsAndSave()")
+        Log.d(TAG, "checkIfNotificationExistsAndSave() $packageName ${packageName != "com.example.trackingapp"}")
         if(packageName != "com.example.trackingapp" ||
             category != Notification.CATEGORY_CALL ||
             category != Notification.CATEGORY_PROGRESS ||

@@ -103,14 +103,7 @@ class MainScreenFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            0 -> {
-                Log.d("XXX", "menu iconCLicked 0")
-                //  val usageLogIntent = Intent(this, UsageLogDisplayActivity::class.java)
-                //   startActivity(usageLogIntent)
-                true
-            }
             R.id.toolbarOption_logout -> {
-                Log.d("XXX", "menu iconCLicked 0")
                 Firebase.auth.signOut()
                 SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, false)
                 LoggingManager.stopLoggingService(mContext)
@@ -141,7 +134,6 @@ class MainScreenFragment : Fragment() {
             with(holder) {
                 with(items[position]) {
                     binding.textViewListItemTitle.text = this.sensorName + " Sensor"
-                    Log.d("xxx", "bind: ${this.sensorName} running: ${this.isRunning}")
                     val runningText =  if (LoggingManager.isLoggingActive.value == true) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
                       //  if (this.isRunning) getString(R.string.mainScreen_sensorList_is_running) else getString(R.string.mainScreen_sensorList_not_running)
                     val drawable = if (LoggingManager.isLoggingActive.value == true) R.drawable.circle_green else R.drawable.circle_red
