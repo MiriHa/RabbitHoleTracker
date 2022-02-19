@@ -1,7 +1,6 @@
 package com.example.trackingapp.activity.esm
 
 import android.os.Bundle
-import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,6 @@ import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemButtonsBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemScaleBinding
-import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.turnScreenOffAndKeyguardOn
@@ -48,8 +46,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     }
 
-    private fun checkOrdismissFullScreenNotification() {
-        Log.d("ESM", "${viewModel.questionList.size} ${viewModel.answeredQuestions.size}")
+    private fun checkOrDismissFullScreenNotification() {
         if (viewModel.questionList.size == viewModel.answeredQuestions.size) {
             viewModel.questionList.forEach { item ->
                 viewModel.makeLogQuestion(item.value, item.questionType, System.currentTimeMillis())
@@ -57,15 +54,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             this.finish()
             dismissESMNotification(this)
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("xxx","on resume lock presenT: ${LoggingManager.userPresent}")
-        /*if(LoggingManager.userPresent){
-            this.finish()
-            dismissESMNotification(this)
-        }*/
     }
 
     override fun onBackPressed() {
@@ -84,7 +72,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
     }
 
     inner class ListAdapter(private val items: List<ESMItem>) : RecyclerView.Adapter<ListAdapter.ListViewHolder<ESMItem>>() {
-
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListViewHolder<ESMItem> {
             val inflater = LayoutInflater.from(parent.context)
@@ -105,7 +92,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ListViewHolder<ESMItem>, position: Int) {
-
             holder.bindData(items[position])
         }
 
@@ -131,7 +117,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                 }
             }
 
-            private fun addButton(item: ESMRadioGroupItem, label: Int){
+            private fun addButton(item: ESMRadioGroupItem, label: Int) {
                 val radioButton = RadioButton(ContextThemeWrapper(this@ESMIntentionLockActivity, R.style.RadioButtonESM))
                 radioButton.apply {
                     val buttonText = getString(label)
@@ -140,12 +126,11 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                     setOnCheckedChangeListener { _, isChecked ->
                         if (isChecked) {
                             setValue(item, buttonText)
-                            checkOrdismissFullScreenNotification()
+                            checkOrDismissFullScreenNotification()
                         }
                     }
                 }
                 itemBinding.radioGroupEsmLock.addView(radioButton)
-
             }
 
         }
@@ -168,12 +153,9 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                     addOnChangeListener { _, value, _ ->
                         this.setLabelFormatter { value.toInt().toString() }
                         setValue(item, value.toString())
-                        checkOrdismissFullScreenNotification()
+                        checkOrDismissFullScreenNotification()
                     }
-
                 }
-
-
             }
         }
     }
@@ -183,5 +165,3 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         ESM_SLIDER_ITEM
     }
 }
-
-

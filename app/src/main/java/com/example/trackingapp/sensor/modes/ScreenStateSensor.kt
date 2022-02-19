@@ -9,11 +9,11 @@ import android.util.Log
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
+import com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.ScreenState
 import com.example.trackingapp.sensor.AbstractSensor
-import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ESMType
 import com.example.trackingapp.util.NotificationHelper
@@ -34,7 +34,7 @@ class ScreenStateSensor : AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         mContext = context
@@ -99,12 +99,13 @@ class ScreenStateSensor : AbstractSensor(
                     }
                     ScreenState.ON_USERPRESENT -> {
                         screenOffAsked = false
-                        Log.d("xxx","userpresent1: ${LoggingManager.userPresent}")
                         SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
-                        Log.d("xxx","userpresent2: ${LoggingManager.userPresent}")
-                        NotificationHelper.dismissESMNotification(context)
-                        NotificationHelper.createESMFullScreenNotification(context, notificationManager, ESMType.ESMINTENTION,
-                            context.getString(R.string.esm_unlock_intention_question))
+                        val unlockESMintent = Intent(context, ESMIntentionUnlockActivity::class.java)
+                        unlockESMintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        unlockESMintent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                        unlockESMintent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(unlockESMintent)
+
                         saveEntry(currentState, time)
                     }
                     else -> {

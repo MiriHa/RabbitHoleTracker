@@ -11,17 +11,6 @@ import com.example.trackingapp.R
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-/**
- * User details post authentication that is exposed to the UI
- */
-data class LoggedInUserView(
-    val displayName: String?
-    //... other data fields that may be accessible to the UI
-)
-
-/**
- * Data validation state of the login form.
- */
 data class LoginFormState(
     val usernameError: Int? = null,
     val passwordError: Int? = null,
@@ -29,14 +18,10 @@ data class LoginFormState(
     val isDataValid: Boolean = false
 )
 
-/**
- * Authentication result : success (user details) or error message.
- */
 data class LoginResult(
-    val success: LoggedInUserView? = null,
+    val success: Boolean? = null,
     val error: Int? = null
 )
-
 
 class LoginSignUpViewModel : ViewModel() {
 
@@ -48,12 +33,12 @@ class LoginSignUpViewModel : ViewModel() {
 
     var isButtonEnabled = false
 
-    fun loginInWithEmailandPassword(email: String, password: String){
+    fun loginInWithEmailAndPassword(email: String, password: String){
         Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 Log.d("LoginSignUpViewModel:","Login successful")
                 _loginResult.value =
-                    LoginResult(success = LoggedInUserView(displayName = DatabaseManager.user?.uid))
+                    LoginResult(success = true)
             } else{
                 Log.d("LoginSignUpViewModel:","Login failed")
                 _loginResult.value = LoginResult(error = R.string.login_failed)
@@ -67,7 +52,7 @@ class LoginSignUpViewModel : ViewModel() {
                 Log.d("LoginSignUpViewModel:","Create Account successful")
                 DatabaseManager.saveUserToFirebase(username, email)
                 _loginResult.value =
-                    LoginResult(success = LoggedInUserView(displayName = DatabaseManager.user?.uid))
+                    LoginResult(success = true)
             } else{
                 Log.d("LoginSignUpViewModel:","Create Account failed")
                 _loginResult.value = LoginResult(error = R.string.login_failed)
@@ -76,7 +61,7 @@ class LoginSignUpViewModel : ViewModel() {
     }
 
     fun loginDataChanged(username: String, password: String, passwordRepeat: String? = null) {
-        if (!isUserNameValid(username)) {
+        if (!isEmalValid(username)) {
             _loginForm.value = LoginFormState(usernameError = R.string.invalid_username)
         } else if (!isPasswordValid(password)) {
             _loginForm.value = LoginFormState(passwordError = R.string.invalid_password)
@@ -92,16 +77,14 @@ class LoginSignUpViewModel : ViewModel() {
         return password == passwordRepeat
     }
 
-    // A placeholder username validation check
-    private fun isUserNameValid(username: String): Boolean {
-        return if (username.contains("@")) {
-            Patterns.EMAIL_ADDRESS.matcher(username).matches()
+    private fun isEmalValid(email: String): Boolean {
+        return if (email.contains("@")) {
+            Patterns.EMAIL_ADDRESS.matcher(email).matches()
         } else {
-            username.isNotBlank()
+            email.isNotBlank()
         }
     }
 
-    // A placeholder password validation check
     private fun isPasswordValid(password: String): Boolean {
         return password.length > 5
     }
@@ -109,7 +92,6 @@ class LoginSignUpViewModel : ViewModel() {
 }
 
 class LoginViewModelFactory : ViewModelProvider.Factory {
-
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginSignUpViewModel::class.java)) {

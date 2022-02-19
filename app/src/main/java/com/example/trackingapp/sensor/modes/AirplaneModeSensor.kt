@@ -19,7 +19,7 @@ class AirplaneModeSensor: AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         isRunning = true
         val timestamp = System.currentTimeMillis()
         if(isAirplaneModeOn(context)){

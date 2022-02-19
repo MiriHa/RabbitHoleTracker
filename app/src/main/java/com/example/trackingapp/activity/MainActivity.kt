@@ -28,9 +28,8 @@ class MainActivity : AppCompatActivity() {
 
         try {
             Firebase.database.setPersistenceEnabled(true)
-        }catch (e: Exception){
+        } catch (e: Exception){ }
 
-        }
         SharedPrefManager.init(this.applicationContext)
         DatabaseManager.initIntentionList()
 

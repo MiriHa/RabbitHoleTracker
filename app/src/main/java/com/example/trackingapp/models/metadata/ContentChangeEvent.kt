@@ -1,9 +1,8 @@
-package com.example.trackingapp.models
+package com.example.trackingapp.models.metadata
 
 import android.view.accessibility.AccessibilityEvent
-import com.example.trackingapp.models.metadata.MetaType
 
-class ContentChangeEvent() : MetaType() {
+class ContentChangeEvent: MetaType() {
 
     var keyboardEvents: Int = 0
 

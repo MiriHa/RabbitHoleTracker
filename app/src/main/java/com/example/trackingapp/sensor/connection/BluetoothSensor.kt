@@ -31,7 +31,7 @@ class BluetoothSensor : AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         val filter = IntentFilter()
@@ -147,13 +147,6 @@ class BluetoothSensor : AbstractSensor(
             return deviceName
         }
 
-
-        /**
-         * Resolves remote device type.
-         *
-         * @param intent    Intent from onReceiver
-         * @return          Device type
-         */
         private fun resolveRemoteDeviceType(intent: Intent)
                 : String {
             Log.d(TAG, "resolveRemoteDeviceType()")
@@ -171,12 +164,6 @@ class BluetoothSensor : AbstractSensor(
             return deviceType
         }
 
-        /**
-         * Resolves connection state.
-         *
-         * @param extras    Intent's extras from onReceiver
-         * @return          State integer
-         */
         private fun resolveConnectionState(extras: Bundle)
                 : Int {
             Log.d(TAG, "resolveConnectionState()")
@@ -214,7 +201,6 @@ class BluetoothSensor : AbstractSensor(
             return state
         }
 
-
         private fun getReadableBondState(stateId: Int): String {
             Log.d(TAG, "getReadableBondState()")
             var state = ""
@@ -227,13 +213,10 @@ class BluetoothSensor : AbstractSensor(
             }
             return state
         }
-
-
     }
 
     companion object {
         const val DISCONNECTED = 0
         const val CONNECTED = 2
-
     }
 }

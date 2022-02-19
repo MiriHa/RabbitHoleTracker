@@ -33,7 +33,7 @@ class WifiSensor : AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         m_context = context
 
         val filter = IntentFilter()
@@ -62,9 +62,9 @@ class WifiSensor : AbstractSensor(
         val netWorkType = getCurrentNetworkType(context)
         val wifiName = getWifiName(context)
         if (isWifiEnabled(context)) {
-            saveEntry(WifiConnectionState.ENABLED, netWorkType, wifiName, timestamp)
+            saveEntry(connectionState = WifiConnectionState.ENABLED, connectionType = netWorkType, wifiName = wifiName, timestamp = timestamp)
         } else {
-            saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)
+            saveEntry(connectionState = WifiConnectionState.DISABLED, connectionType = netWorkType, timestamp)
         }
     }
 
@@ -93,8 +93,7 @@ class WifiSensor : AbstractSensor(
         return wifiManager.isWifiEnabled
     }
 
-    fun getWifiName(context: Context): String {
-        //TODO
+    private fun getWifiName(context: Context): String {
         val manager =
             context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
@@ -121,21 +120,21 @@ class WifiSensor : AbstractSensor(
 
 
     private fun saveEntry(
-        connection: WifiConnectionState,
-        wifiState: ConnectionType,
+        connectionState: WifiConnectionState,
+        connectionType: ConnectionType,
         timestamp: Long
     ) {
-        LogEvent(LogEventName.INTERNET, timestamp, connection.name, wifiState.name).saveToDataBase()
+        LogEvent(LogEventName.INTERNET, timestamp, connectionState.name, connectionType.name).saveToDataBase()
 
     }
 
     private fun saveEntry(
-        connection: WifiConnectionState,
-        wifiState: ConnectionType,
+        connectionState: WifiConnectionState,
+        connectionType: ConnectionType,
         wifiName: String,
         timestamp: Long
     ) {
-        LogEvent(LogEventName.INTERNET, timestamp, connection.name, wifiState.name, wifiName).saveToDataBase()
+        LogEvent(LogEventName.INTERNET, timestamp, connectionState.name, connectionType.name, wifiName).saveToDataBase()
     }
 
 

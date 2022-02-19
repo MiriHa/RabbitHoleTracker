@@ -87,19 +87,16 @@ class PermissionFragment() : Fragment() {
 
             when (viewModel.permission) {
                 PermissionView.PERMISSIONS -> {
-                  //  managePermissions.checkPermissions()
                     if(managePermissions.checkPermissions()){
                         checkPermissionsOrProceed()
                     }
                 }
                 PermissionView.NOTIFICATION_LISTENER -> {
-                    //managePermissions.checkForNotificationListenerPermissionEnabled()
                     if(managePermissions.checkForNotificationListenerPermissionEnabled()) {
                         checkPermissionsOrProceed()
                     }
                 }
                 PermissionView.ACCESSIBILITY_SERVICE -> {
-                    //managePermissions.checkAccessibilityPermission()
                    if(managePermissions.checkAccessibilityPermission()){
                        checkPermissionsOrProceed()
                    }

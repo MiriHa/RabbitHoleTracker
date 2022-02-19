@@ -20,7 +20,6 @@ class NotificationListener: NotificationListenerService() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
-
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
@@ -42,10 +41,6 @@ class NotificationListener: NotificationListenerService() {
 
         //get priority
         val priority = notification.priority
-        var tickerText = ""
-        if (notification.tickerText != null) {
-            tickerText = notification.tickerText.toString()
-        }
         Log.d(TAG, "Notification extras: " + notification.extras.toString())
 
         //get title and text
@@ -78,8 +73,6 @@ class NotificationListener: NotificationListenerService() {
             }
         }
 
-        //LogHelper.d(TAG, "Notification toString: "+notification.toString());
-        //LogHelper.d(TAG, "SBN toString: "+sbn.toString());
         /*if(notification.actions != null){
             LogHelper.d(TAG, "Notification actions: "+getString(notification.actions));
         }*/
@@ -107,8 +100,6 @@ class NotificationListener: NotificationListenerService() {
         Log.i(TAG, "Notification Removed")
     }
 
-    // bind and unbind seems to make it work with Android 6...
-    // but is never called with Android 4.4...
     override fun onBind(mIntent: Intent): IBinder? {
         val mIBinder = super.onBind(mIntent)
         Log.d(TAG, "onBind()")
@@ -127,11 +118,12 @@ class NotificationListener: NotificationListenerService() {
 
     private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
         Log.d(TAG, "checkIfNotificationExistsAndSave()")
-//        if (packageName != "com.example.trackingapp" &&
-//            //why not whatsapp?
-//            !(/*packageName == "com.whatsapp" &&*/ category != null && category == Notification.CATEGORY_CALL && priority == 2)
-//        ) {
-        if(packageName != "com.example.trackingapp"){
+        if(packageName != "com.example.trackingapp" ||
+            category != Notification.CATEGORY_CALL ||
+            category != Notification.CATEGORY_PROGRESS ||
+            category != Notification.CATEGORY_STOPWATCH ||
+            category != Notification.CATEGORY_LOCATION_SHARING ||
+            category != Notification.CATEGORY_ALARM){
             saveEntry(title, timestamp, text, priority, packageName, category)
         }
     }

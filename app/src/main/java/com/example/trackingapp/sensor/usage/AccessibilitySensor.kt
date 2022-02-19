@@ -19,7 +19,7 @@ class AccessibilitySensor : AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
 
         val time = System.currentTimeMillis()
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
@@ -29,9 +29,7 @@ class AccessibilitySensor : AbstractSensor(
         /* TODO Service gets started via settings???
         val startIntent = Intent(context, AccessibilityLogService::class.java)
         context.startService(startIntent)
-
          */
-
         isRunning = true
     }
 

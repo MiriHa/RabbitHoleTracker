@@ -29,7 +29,7 @@ class PowerSensor : AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         val filter = IntentFilter()
@@ -62,11 +62,6 @@ class PowerSensor : AbstractSensor(
         saveEntry(connectionState, chargeState.toString(), timestamp)
     }
 
-    /**
-     * Method to retrieve current battery charge level ratio.
-     * @param context the application context
-     * @return charge level at the ratio of current level : fully charged level
-     */
     private fun getBatteryLevel(context: Context): Float {
         //Retrieve Info from sticky Intent
         val batteryIntent = context.applicationContext.registerReceiver(
@@ -102,11 +97,6 @@ class PowerSensor : AbstractSensor(
         return if (plugged == BatteryManager.BATTERY_PLUGGED_AC || plugged == BatteryManager.BATTERY_PLUGGED_USB) PowerState.CONNECTED else PowerState.DISCONNECTED
     }
 
-    /**
-     * Method to save entry to DB.
-     * @param type a BootEventType
-     * @param charge the charge level
-     */
     private fun saveEntry(type: PowerState?, charge: String, timestamp: Long) {
         LogEvent(
             LogEventName.POWER,
@@ -144,6 +134,5 @@ class PowerSensor : AbstractSensor(
             //save entry containing state and current charge level
             saveEntry(state, charge, timestamp)
         }
-
     }
 }

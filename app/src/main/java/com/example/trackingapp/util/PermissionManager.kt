@@ -3,16 +3,13 @@ package com.example.trackingapp.util
 import android.Manifest
 import android.app.Activity
 import android.app.AppOpsManager
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
-import android.text.TextUtils
 import android.util.Log
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.activity.permissions.PermissionView
@@ -32,8 +29,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.READ_PHONE_NUMBERS)
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.RECEIVE_SMS)
-            // ?? l.add(Manifest.permission.WRITE_SMS)
-            // l.add(Manifest.permission.WAKE_LOCK)
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
             l.add(Manifest.permission.BLUETOOTH)
@@ -105,22 +100,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         }
     }
 
-    fun isAccessibilityServiceEnabled2(context: Context, accessibilityService: Class<*>?): Boolean {
-        accessibilityService?.let {
-            val expectedComponentName = ComponentName(context, it)
-            val enabledServicesSetting: String =
-                Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
-            val colonSplitter = TextUtils.SimpleStringSplitter(':')
-            colonSplitter.setString(enabledServicesSetting)
-            while (colonSplitter.hasNext()) {
-                val componentNameString = colonSplitter.next()
-                val enabledService = ComponentName.unflattenFromString(componentNameString)
-                if (enabledService != null && enabledService == expectedComponentName) return true
-            }
-        }
-        return false
-    }
-
     // Check permissions status
     fun arePermissionsGranted(): Int {
         // PERMISSION_GRANTED : Constant Value: 0
@@ -145,19 +124,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         return ""
     }
 
-
-    // Show alert dialog to request permissions
-    private fun showAlert() {
-        val builder = AlertDialog.Builder(activity)
-        builder.setTitle("Need permission(s)")
-        builder.setMessage("Some permissions are required to do the task.")
-        builder.setPositiveButton("OK") { _, _ -> requestPermissions() }
-        builder.setNeutralButton("Cancel", null)
-        val dialog = builder.create()
-        dialog.show()
-    }
-
-
     // Request the permissions at run time
     private fun requestPermissions() {
         val permission = deniedPermission()
@@ -170,7 +136,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     }
 
     companion object {
-
         fun isPermissionGranted(context: Context, permission: String): Boolean {
             return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
         }
@@ -213,7 +178,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                     )
                 }
                 if (mode == AppOpsManager.MODE_DEFAULT) {
-                    //ContextCompat.checkSelfPermission(context, Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
                     context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS) == PackageManager.PERMISSION_GRANTED
                 } else {
                     mode == AppOpsManager.MODE_ALLOWED

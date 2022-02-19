@@ -25,8 +25,7 @@ class ScreenOrientationSensor : AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        val t = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         mContext = context
 
         val filter = IntentFilter()
@@ -39,6 +38,10 @@ class ScreenOrientationSensor : AbstractSensor(
             //Not Registered
         }
         mContext?.registerReceiver(m_Receiver, filter)
+
+        val orientationType = getScreenOrientation(context)
+        saveEntry(orientationType, System.currentTimeMillis())
+
         isRunning = true
     }
 
@@ -48,13 +51,6 @@ class ScreenOrientationSensor : AbstractSensor(
             mContext?.unregisterReceiver(m_Receiver)
 
         }
-    }
-
-    override fun saveSnapshot(context: Context) {
-        super.saveSnapshot(context)
-       //val time = System.currentTimeMillis()
-       // val orientationType = getScreenOrientation(context)
-       // saveEntry(orientationType, time)
     }
 
     fun saveEntry(orientation: ScreenOrientationType, timestamp: Long) {

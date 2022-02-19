@@ -28,7 +28,7 @@ class LightSensor: AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         val time = System.currentTimeMillis()
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 

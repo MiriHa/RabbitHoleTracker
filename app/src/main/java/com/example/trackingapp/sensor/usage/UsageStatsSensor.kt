@@ -34,12 +34,12 @@ class UsageStatsSensor : AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
         mContext = context
         usageStatsManager = context.getSystemService(USAGE_STATS_SERVICE) as UsageStatsManager
 
-        lastTimeStamp = time - 500
+        lastTimeStamp = time - CONST.LOGGING_FREQUENCY
         isRunning = true
     }
 
@@ -51,11 +51,6 @@ class UsageStatsSensor : AbstractSensor(
 
     override fun saveSnapshot(context: Context) {
         super.saveSnapshot(context)
-//        val timestamp = System.currentTimeMillis()
-        /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            val eventStats =
-                usageStatsManager.queryEventStats(UsageStatsManager.INTERVAL_DAILY, System.currentTimeMillis() - 1000 * 3600 * 24, System.currentTimeMillis())
-        }*/
         CoroutineScope(Dispatchers.IO).launch {
             getEvents()
         }
@@ -64,7 +59,7 @@ class UsageStatsSensor : AbstractSensor(
     private fun getEvents() {
         val timestamp = System.currentTimeMillis()
         Log.d(TAG, "Savesnapshot: between  ${CONST.dateTimeFormat.format(lastTimeStamp)} ${CONST.dateTimeFormat.format(timestamp)}")
-        if (lastTimeStamp == 0L) lastTimeStamp = System.currentTimeMillis() - 500
+        if (lastTimeStamp == 0L) lastTimeStamp = System.currentTimeMillis() - CONST.LOGGING_FREQUENCY
         val events = usageStatsManager.queryEvents(lastTimeStamp, timestamp)
         val event = UsageEvents.Event()
         while (events.hasNextEvent()) {
@@ -78,7 +73,7 @@ class UsageStatsSensor : AbstractSensor(
 
     private fun saveEntry(event: UsageEvents.Event) {
         val pm = mContext?.packageManager
-        var appInfo: ApplicationInfo? = try {
+        val appInfo: ApplicationInfo? = try {
             pm?.getApplicationInfo(event.packageName, 0)
         } catch (e: PackageManager.NameNotFoundException) {
             null

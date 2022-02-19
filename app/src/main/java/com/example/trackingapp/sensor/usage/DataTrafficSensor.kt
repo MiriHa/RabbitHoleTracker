@@ -13,6 +13,7 @@ import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaDataTraffic
 import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharedPrefManager
 
 
@@ -25,14 +26,6 @@ class DataTrafficSensor : AbstractSensor(
     private lateinit var telephonyManager: TelephonyManager
 
     private var lastTimeStamp : Long = 0
-   // var mStartRX : Long = 0L
-   // var mStartTX : Long = 0L
-/*
-    private var cachedWifiRX: Long = 0L
-    private var cachedWifiTX: Long = 0L
-    private var cachedMobileRX: Long = 0L
-    private var cachedMobileTX: Long = 0L
-*/
 
    override fun isAvailable(context: Context): Boolean {
         return true
@@ -41,14 +34,13 @@ class DataTrafficSensor : AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         SharedPrefManager.init(context)
-        lastTimeStamp = System.currentTimeMillis() - 500
+        lastTimeStamp = System.currentTimeMillis() - CONST.LOGGING_FREQUENCY
+
         networkManager = context.getSystemService(Context.NETWORK_STATS_SERVICE) as NetworkStatsManager
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         }
-      //  mStartRX = TrafficStats.getTotalRxBytes()
-      //  mStartTX = TrafficStats.getTotalTxBytes()
         isRunning = true
 
     }
@@ -56,21 +48,9 @@ class DataTrafficSensor : AbstractSensor(
     override fun saveSnapshot(context: Context) {
         super.saveSnapshot(context)
         val timestamp = System.currentTimeMillis()
-      //  if(mStartRX == TrafficStats.UNSUPPORTED.toLong() || mStartTX == TrafficStats.UNSUPPORTED.toLong()) return
 
         try {
-            //var lastTimestamp = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_DATA_TRAFFIC_TIMESTAMP)
-            //SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_DATA_TRAFFIC_TIMESTAMP, timestamp)
-
-            /* if(lastTimestamp == 0L) */
-            // 60* 1000 = 1 second?
-
-            val subsriberId = getSubscriberId()
-
-/*            val rxBytes = TrafficStats.getTotalRxBytes() - mStartRX
-            val txBytes = TrafficStats.getTotalTxBytes() - mStartTX
-            mStartRX = TrafficStats.getTotalRxBytes()
-            mStartTX = TrafficStats.getTotalTxBytes()*/
+           val subsriberId = getSubscriberId()
 
             val wifiBucket = networkManager.querySummaryForDevice(NetworkCapabilities.TRANSPORT_WIFI, null, lastTimeStamp, timestamp)
             val mobileBucket = networkManager.querySummaryForDevice(NetworkCapabilities.TRANSPORT_CELLULAR, subsriberId, lastTimeStamp, timestamp)
@@ -90,22 +70,6 @@ class DataTrafficSensor : AbstractSensor(
                 mobileRX = mobileBucket.rxBytes
                 mobileTX = mobileBucket.txBytes
             }
-
-         /*TODO PREPROCESSING?   if (wifiBucket != null) {
-                wifiRX = wifiBucket.rxBytes - cachedWifiRX
-                wifiTX = wifiBucket.txBytes - cachedWifiTX
-                cachedWifiRX = wifiBucket.rxBytes
-                cachedWifiTX = wifiBucket.txBytes
-                Log.d(TAG, "Savesnapshot wifibucket: ${wifiBucket.rxBytes} ${wifiBucket.txBytes} $wifiRX $wifiTX")
-            }
-            if (mobileBucket != null) {
-                mobileRX = mobileBucket.rxBytes - cachedMobileRX
-                mobileTX = mobileBucket.txBytes - cachedMobileTX
-                cachedMobileRX = mobileBucket.rxBytes
-                cachedMobileTX = mobileBucket.txBytes
-                Log.d(TAG, "Savesnapshot mobileBucket: ${mobileBucket.rxBytes} ${mobileBucket.txBytes} $mobileRX $mobileTX")
-            }*/
-
 
             saveEntry(timestamp, mobileRX = mobileRX, mobileTX = mobileTX, wifiRX = wifiRX, wifiTX = wifiTX)
             lastTimeStamp = timestamp

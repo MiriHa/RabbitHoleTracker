@@ -27,7 +27,7 @@ class AccelerometerSensor : AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         val time = System.currentTimeMillis()
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
@@ -63,7 +63,6 @@ class AccelerometerSensor : AbstractSensor(
                                 "${CONST.numberFormat.format(event.values[1])}, ${CONST.numberFormat.format(event.values[2])}"
                         saveEntry(time, sensorData, SensorAccuracy.ACCURACY_UNRELAIABLE.name)
                     }
-                    //TOOD SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM
                     else -> {
                         val sensorData = "${CONST.numberFormat.format(event?.values?.get(0))}, " +
                                 "${CONST.numberFormat.format(event?.values?.get(1))}, ${CONST.numberFormat.format(event?.values?.get(2))}"

@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import com.example.trackingapp.R
 
 class PermissionViewModel(
-    val permissionsViewModel: PermissionHolderViewModel,
     val permission: PermissionView,
     private val userResponseHandler: (UserResponse) -> Unit
 ) : ViewModel() {

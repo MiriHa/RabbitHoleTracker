@@ -43,10 +43,6 @@ class BootUpReceiver : BroadcastReceiver() {
         }
     }
 
-    /**
-     * Method to save entry to DB.
-     * @param type a BootEventType
-     */
     private fun saveEntry(type: BootEventType, timestamp: Long) {
         LogEvent(
             LogEventName.BOOT,

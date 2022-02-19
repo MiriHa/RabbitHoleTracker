@@ -20,7 +20,6 @@ class PermissionHolderFragment : Fragment() {
 
     private val TAG = "PermissionHolderFragment"
 
-    private lateinit var binding: FragmentPermissionHolderBinding
     private lateinit var viewModel: PermissionHolderViewModel
     private lateinit var mContext: Context
 
@@ -41,7 +40,6 @@ class PermissionHolderFragment : Fragment() {
         }
 
         if (viewModel.currentPermission == null) {
-            Log.d(TAG, "showNextPermissionFragment()")
             showNextPermissionFragment()
         }
 
@@ -55,7 +53,6 @@ class PermissionHolderFragment : Fragment() {
             PermissionView.NOTIFICATION_LISTENER.takeIf { !PermissionManager.checkPermission(PermissionView.NOTIFICATION_LISTENER, this.activity) },
             PermissionView.USAGE_STATS.takeIf { !PermissionManager.checkPermission(PermissionView.USAGE_STATS, this.activity) }
         ).filterNotNull()
-        Log.d(TAG, "PermissionListsize: ${viewModel.permissions.size}")
     }
 
     private fun showNextPermissionFragment() {
@@ -71,20 +68,16 @@ class PermissionHolderFragment : Fragment() {
     }
 
     private fun swapContent(nextPermissionFragment: PermissionFragment) {
-        Log.d(TAG, "swap Content")
-
-        childFragmentManager.commit(allowStateLoss = true) {
+      childFragmentManager.commit(allowStateLoss = true) {
             replace(R.id.frameLayout_permission_container, nextPermissionFragment)
         }
     }
 
     private fun nextPermissionFragment(): Fragment? {
         val permission = viewModel.nextPermissionToAsk()
-        Log.d(TAG, "nextPermissionFragment ${permission?.name}")
-
         return permission?.let {
             PermissionFragment.newInstance(
-                PermissionViewModel(viewModel, it) { showNextPermissionFragment() }
+                PermissionViewModel(it) { showNextPermissionFragment() }
             )
         }
     }

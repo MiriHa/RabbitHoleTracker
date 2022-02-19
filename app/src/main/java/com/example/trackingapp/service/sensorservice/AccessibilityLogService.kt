@@ -1,88 +1,33 @@
 package com.example.trackingapp.service.sensorservice
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityServiceInfo
 import android.os.Build
 import android.util.Log
 import android.util.Patterns
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import com.example.trackingapp.DatabaseManager.saveToDataBase
-import com.example.trackingapp.models.ContentChangeEvent
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
+import com.example.trackingapp.models.metadata.ContentChangeEvent
 import com.google.firebase.FirebaseApp
-
-
-
-
-
-
 
 class AccessibilityLogService : AccessibilityService() {
 
     val TAG = "ACCESSIBILITYLOGSERVICE"
 
-    // private var mWakeLock: PowerManager.WakeLock? = null
-    private val info = AccessibilityServiceInfo()
-
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
         FirebaseApp.initializeApp(this)
-        // val powerManager = getSystemService(POWER_SERVICE) as PowerManager
-        //mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG)
-        // mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, classTAG)
     }
 
     override fun onInterrupt() {
         Log.v(TAG, "onInterrupt")
     }
 
-/* NOt needed as it is declared via xml
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-        Log.v(TAG, "onServiceConnected")
-
-
-        info.eventTypes = AccessibilityEvent.TYPES_ALL_MASK
-
-        info.feedbackType = AccessibilityServiceInfo.FEEDBACK_ALL_MASK
-
-        info.flags = AccessibilityServiceInfo.DEFAULT or AccessibilityServiceInfo.FLAG_INCLUDE_NOT_IMPORTANT_VIEWS
-        //lagDefault|flagIncludeNotImportantViews|flagRequestTouchExplorationMode|flagRequestEnhancedWebAccessibility|flagReportViewIds|flagRetrieveInteractiveWindows"
-        info.notificationTimeout = 100
-        this.serviceInfo = info
-        isRunning = true
-    }
-*/
-
-//    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-//        super.onStartCommand(intent, flags, startId)
-//        Log.d(TAG, "onStartCommand() was called")
-////        mWakeLock?.let { wakeLock ->
-////            if (!wakeLock.isHeld) {
-////                wakeLock.acquire(10*60*1000L /*10 minutes*/)
-////            }
-////            Handler(Looper.getMainLooper()).postDelayed(
-////                {
-////                    if (wakeLock.isHeld) {
-////                        wakeLock.release()
-////                    }
-////                },
-////                10000
-////            )
-////        }
-//        return START_STICKY
-//    }
-
     override fun onDestroy() {
         Log.d(TAG, "service stopped")
-//        mWakeLock?.let { wakeLock ->
-//            if (wakeLock.isHeld) {
-//                wakeLock.release()
-//            }
-//        }
         stopForeground(true)
         super.onDestroy()
     }
@@ -98,13 +43,6 @@ class AccessibilityLogService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         val time = System.currentTimeMillis()
         try {
-            if(keyboardEvents > 0
-                && event?.eventType != AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
-                && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_EXIT
-                && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_ENTER
-            ){
-                onFinishInput(time)
-            }
             when {
                 event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||  event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ->
                     trackBrowserURL(event)
@@ -120,19 +58,7 @@ class AccessibilityLogService : AccessibilityService() {
                 }
                 //represents and foreground change
                 event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
-           /*     event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> {
-                    val className = if(event.className != null) event.className else ""
-                    LogEvent(
-                        LogEventName.APPS,
-                        timestamp = time,
-                        event = getEventType(event),
-                        description = getEventText(event),
-                        name = className.toString(),
-                        packageName = event.packageName.toString()
-                    ).saveToDataBase()
-                }*/
                 event?.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> {
-
                 }
                 event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && !event.isPassword -> { //TYPE VIEW TEXT CHANGED
                     // User starts input of text -> create new text event?
@@ -343,9 +269,6 @@ class AccessibilityLogService : AccessibilityService() {
 
     private class SupportedBrowserConfig(var packageName: String, var addressBarId: String)
 
-    /** @return a list of supported browser configs
-     * This list could be instead obtained from remote server to support future browser updates without updating an app
-     */
     private fun getSupportedBrowsers(): List<SupportedBrowserConfig> {
         val browsers: MutableList<SupportedBrowserConfig> = ArrayList()
         browsers.add(SupportedBrowserConfig("com.android.chrome", "com.android.chrome:id/url_bar"))

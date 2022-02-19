@@ -22,7 +22,7 @@ class SmsSensor: AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         try{

@@ -26,7 +26,6 @@ class StartLoggingWorker(val context: Context, params: WorkerParameters) : Worke
                 val intent = Intent(this.context, LoggingService::class.java)
                 ContextCompat.startForegroundService(context, intent)
                 if(!PermissionManager.isAccessibilityServiceEnabled(this.context)){
-                    //Navigation.findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_permissionFragment)
                     Toast.makeText(this.context, R.string.permission_request_accessibility_service_notification_title, Toast.LENGTH_LONG).show()
                     val permissionIntent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
                     permissionIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK

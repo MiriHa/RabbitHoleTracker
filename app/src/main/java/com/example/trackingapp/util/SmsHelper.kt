@@ -14,13 +14,11 @@ import com.example.trackingapp.models.metadata.MetaSMS
 object SmsHelper {
     private const val TAG = "SmsHelper"
 
-    // Replaced Telephony constants that the SmsObserver also works on devices prior Android 19
     const val CONTENT_URI = "content://sms/"
-    const val ADDRESS = "address" //Telephony.TextBasedSmsColumns.ADDRESS
-    const val BODY = "body" //Telephony.TextBasedSmsColumns.BODY
-    const val DATE = "date" //Telephony.TextBasedSmsColumns.DATE
-    const val TYPE = "type" //Telephony.TextBasedSmsColumns.TYPE
-    const val _ID = "_id" //Telephony.BaseMmsColumns._ID
+    const val ADDRESS = "address"
+    const val BODY = "body"
+    const val DATE = "date"
+    const val TYPE = "type"
 
     /**
      * Gets contact uid by number - changed to return CONTACT_ID, previously got baseColumns _ID
@@ -51,12 +49,6 @@ object SmsHelper {
         }
     }
 
-    /**
-     * Gets contact name by number
-     * @param context ApplicationContext
-     * @param number telephone number / address of contact
-     * @return contact display name
-     */
     fun getContactNameByNumber(context: Context, number: String?): String? {
         Log.d(TAG, "getContactNameByNumber()")
         var name: String? = null
@@ -77,25 +69,10 @@ object SmsHelper {
         }
     }
 
-    /**
-     * Method to save an SMS LogEvent to the database.
-     *
-     * @param save indicates wether dataset should be inserted or saved. Meaning of save: checks if exists, if true update, else insert.) see: https://agrosner.gitbooks.io/dbflow/content/StoringData.html
-     * @param type SmsEventType
-     * @param timestamp timestamp (sent or received or last edited)
-     * @param numberHashed number of messaging partner
-     * @param countryCode countryCode of the number
-     * @param contactName name of messaging partner
-     * @param messageLength length of message
-     * @param contactUID internal UID of messaging partner
-     * @param smsID ID of sms generated via SmsHelper
-     */
     fun saveEntry(
-        context: Context?,
         save: Boolean,
         type: SmsEventType,
         timestamp: Long,
-        number: String?,
         numberHashed: String?,
         countryCode: String?,
         contactName: String?,
@@ -105,7 +82,7 @@ object SmsHelper {
         smsID: String
     ) {
         if (!save) {
-            val metaSms: MetaSMS = MetaSMS(
+            val metaSms = MetaSMS(
                 phoneNumber = numberHashed,
                 countryCode = countryCode,
                 partner = contactName,
@@ -127,24 +104,6 @@ object SmsHelper {
                 description = smsID,
             ).saveToDataBase()
         }
-    }
-
-    // Method overload to make it work without save parameter. false indicates, that dataset should be inserted.
-    fun saveEntry(
-        context: Context?,
-        type: SmsEventType,
-        timestamp: Long,
-        number: String?,
-        numberHashed: String?,
-        countryCode: String?,
-        contactName: String?,
-        messageHash: String?,
-        messageLength: Int,
-        contactUID: Int,
-        smsID: String
-    ) {
-        Log.d(TAG, "saveEntry() overload")
-        saveEntry(context, false, type, timestamp, number, numberHashed, countryCode, contactName, messageHash, messageLength, contactUID, smsID)
     }
 
     /**

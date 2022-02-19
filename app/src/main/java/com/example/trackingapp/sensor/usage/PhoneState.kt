@@ -1,6 +1,7 @@
 package com.example.trackingapp.sensor.usage
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -28,6 +29,7 @@ object PhoneState {
         }
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private fun doInBackgroundApps(context: Context): String? {
         val pm = context.packageManager
         var applicationName = ""
@@ -72,17 +74,6 @@ object PhoneState {
         sdkVersion: Int,
         releaseVersion: String
     ) {
-
-        //create MetaDeviceInfo
-//        val meta = MetaDeviceInfo()
-//        meta
-//            .studyBegin(startDate)
-//            .studyEnd(endDate)
-//            .manufacturer(manufacturer)
-//            .model(model)
-//            .sdkVersion(sdkVersion)
-//            .releaseVersion(releaseVersion)
-
         LogEvent(LogEventName.DEVICE_INFO, timestamp, event= model, description = releaseVersion, name = sdkVersion.toString(), packageName = manufacturer ).saveToDataBase()
     }
 

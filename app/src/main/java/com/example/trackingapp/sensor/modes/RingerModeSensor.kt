@@ -28,7 +28,7 @@ class RingerModeSensor: AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
         mContext = context
 
@@ -43,6 +43,8 @@ class RingerModeSensor: AbstractSensor(
             //Not Registered
         }
         mContext?.registerReceiver(mReceiver, filter)
+        val ringerMode = getCurrentRingerMode(context)
+        saveEntry(ringerMode, time)
 
         isRunning = true
     }
@@ -52,13 +54,6 @@ class RingerModeSensor: AbstractSensor(
             isRunning = false
             mContext?.unregisterReceiver(mReceiver)
         }
-    }
-
-    override fun saveSnapshot(context: Context) {
-        super.saveSnapshot(context)
-        val timestamp = System.currentTimeMillis()
-        val ringerMode = getCurrentRingerMode(context)
-        saveEntry(ringerMode, timestamp)
     }
 
     private fun saveEntry(ringerMode: RingerMode, timestamp: Long){
@@ -74,8 +69,6 @@ class RingerModeSensor: AbstractSensor(
             else -> RingerMode.UNKNOWN
         }
     }
-
-
 
     inner class RingerModeReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {

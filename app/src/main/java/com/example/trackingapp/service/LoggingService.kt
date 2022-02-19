@@ -91,8 +91,8 @@ class LoggingService : Service() {
         stopLoggingUpdates()
         job = scope.launch {
             while (true) {
-                if(LoggingManager.userPresent/* && LoggingManager.isDataRecordingActive*/)
-                    collectSnapShots() // the function that should be ran every second
+                if(LoggingManager.userPresent)
+                    collectSnapShots() // run every interval
                 delay(CONST.LOGGING_FREQUENCY)
             }
         }
@@ -104,7 +104,7 @@ class LoggingService : Service() {
     }
 
     private fun startSensors() {
-        LoggingManager.sensorList?.let { list ->
+        LoggingManager.sensorList.let { list ->
             Log.d(mTAG, "size: " + list.size)
             for (sensor in list) {
                 if (sensor.isEnabled && sensor.isAvailable(this)) {
@@ -116,7 +116,7 @@ class LoggingService : Service() {
     }
 
     private fun stopSensors() {
-        LoggingManager.sensorList?.let { list ->
+        LoggingManager.sensorList.let { list ->
             for (sensor in list) {
                 if (sensor.isRunning) {
                     sensor.stop()

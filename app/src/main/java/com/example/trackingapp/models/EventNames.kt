@@ -70,12 +70,6 @@ enum class ConnectionType {
     UNKNOWN
 }
 
-enum class Connection {
-    TYPE_WIFI,
-    TYPE_MOBIL,
-    TYPE_ALL
-}
-
 enum class SmsEventType {
     UNKNOWN,
     INBOX,
@@ -117,17 +111,6 @@ enum class ActivityTransitionType {
     ACTIVITY_TRANSITION_ENTER,
     ACTIVITY_TRANSITION_EXIT,
     ACTIVITY_TRANSITION_UNKNOWN
-}
-
-enum class DataTrafficType {
-    BYTES_TRANSMITTED,
-    BYTES_RECEIVED
-}
-
-enum class EventInputMode {
-    DEFAULT,
-    GESTURE_DETECTING,
-    GESTURE
 }
 
 enum class InstallEventType {

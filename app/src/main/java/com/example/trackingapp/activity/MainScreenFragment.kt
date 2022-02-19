@@ -25,9 +25,6 @@ import com.example.trackingapp.util.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-
-
-
 class MainScreenFragment : Fragment() {
 
     private val TAG = "TRACKINGAPP_Main_Screen_Fragment"
@@ -45,8 +42,7 @@ class MainScreenFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel =
-            ViewModelProvider(this, MainScreenViewModelFactory())[MainScreenViewModel::class.java]
+        viewModel = ViewModelProvider(this, MainScreenViewModelFactory())[MainScreenViewModel::class.java]
 
         binding = FragmentMainscreenBinding.inflate(inflater)
         val view = binding.root
@@ -59,29 +55,15 @@ class MainScreenFragment : Fragment() {
         setAdapter()
 
         val loggingObserver = Observer<Boolean> {
-            Log.d("xxx", "valuechanged")
             setAdapter()
         }
-        // Observe the LiveData, passing in this activity as the LifecycleOwner and the observer.
-        LoggingManager.isLoggingActive.observe(this, loggingObserver)
-       // LoggingManager.userPresent = true
 
-/*        //Permissions are already checked when opening the app?
-        val arePermissionGranted = checkPermissionsGranted(mContext as Activity)
-        if (arePermissionGranted) {
-            SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
-            LoggingManager.userPresent = true
-        }*/
-        Log.d(TAG, "startLoggingButton Click: running")
-        //Not enough`??
+        LoggingManager.isLoggingActive.observe(this, loggingObserver)
+
         LoggingManager.ensureLoggingManagerIsAlive(mContext)
         if (!SharedPrefManager.getBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED)) {
             LoggingManager.startLoggingService(mContext as Activity)
         }
-        //LoggingManager.stopLoggingService(mContext)
-       // LoggingManager.startLoggingService(mContext as Activity)
-
-        //LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToData
 
         binding.buttonTest.apply {
             text = getString(

@@ -12,11 +12,19 @@ import androidx.core.content.ContextCompat
 import com.example.trackingapp.models.SmsEventType
 import com.example.trackingapp.util.PhoneNumberHelper
 import com.example.trackingapp.util.SmsHelper
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler) {
     private val context: Context
     private var lastOnChangeCall = System.currentTimeMillis()
+
+    init {
+        Log.d(TAG, "constructor")
+        this.context = context
+    }
 
     override fun onChange(selfChange: Boolean) {
         if (!LoggingManager.isDataRecordingActive) {
@@ -40,33 +48,18 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
         }
         lastOnChangeCall = System.currentTimeMillis()
 
-/*        val t = HandlerThread("HANDLER")
-        t.start()
-        val handler = Handler(t.looper)
-        handler.postDelayed({
-            Log.d(TAG, "In Runnable ")
-            getSMS(context)
-        }, 1000)
-   */
         CoroutineScope(Dispatchers.IO).launch {
             delay(1000)
             getSMS(context)
         }
     }
 
-    /**
-     * Queries the sms content provider using the internal sms id
-     *
-     * @param context context
-     */
     private fun getSMS(context: Context) {
         Log.d(TAG, "getSMS()")
         var c: Cursor? = null
         val projection: Array<String>? = null
         val sortOrder: String = SmsHelper.DATE.toString() + " desc"
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
-            == PackageManager.PERMISSION_GRANTED
-        ) {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
             try {
                 c = context.contentResolver.query(
                     Uri.parse(SmsHelper.CONTENT_URI),
@@ -95,18 +88,16 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
 
                         val save = true
                         SmsHelper.saveEntry(
-                            context,
-                            save,
-                            eventType,
-                            timestamp,
-                            address,
-                            hashedNumber,
-                            countryCode,
-                            partnerName.hashCode().toString(),
-                            body.hashCode().toString(),
-                            messageLength,
-                            partnerUID,
-                            smsID
+                            save = save,
+                            type = eventType,
+                            timestamp= timestamp,
+                            numberHashed= hashedNumber,
+                            countryCode= countryCode,
+                            contactName = partnerName.hashCode().toString(),
+                            messageHash= body.hashCode().toString(),
+                            messageLength= messageLength,
+                            contactUID= partnerUID,
+                            smsID= smsID
                         )
                         Log.i(TAG, "Checked sms was already saved, updated")
                     }
@@ -131,16 +122,5 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
 
     companion object {
         var TAG = "SmsObserver"
-    }
-
-    /**
-     * Constructor.
-     *
-     * @param handler
-     * @param context
-     */
-    init {
-        Log.d(TAG, "constructor")
-        this.context = context
     }
 }

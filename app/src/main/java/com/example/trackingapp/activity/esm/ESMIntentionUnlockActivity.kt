@@ -1,7 +1,6 @@
 package com.example.trackingapp.activity.esm
 
 import android.os.Bundle
-import android.util.Log
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.Toast
@@ -13,14 +12,9 @@ import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmIntentionOverlayBinding
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
-import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
-
-
-
-
 
 class ESMIntentionUnlockActivity: AppCompatActivity(){
     private lateinit var viewModel: ESMIntentionViewModel
@@ -34,7 +28,6 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
         binding = LayoutEsmIntentionOverlayBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //DatabaseManager.getSavedIntentions()
         SharedPrefManager.init(this.applicationContext)
 
         val adapter = ArrayAdapter(
@@ -46,6 +39,7 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
         binding.esmUnlockAutoCompleteTextView.apply {
             setAdapter(adapter)
             threshold = 1
+            //Show DropdownList when EditText gets selected
             setOnFocusChangeListener { _, hasFocus ->
                 if(hasFocus)
                     this.showDropDown()
@@ -57,6 +51,7 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
                 }
                 false
             }
+            //When user selected item, close ESM
             setOnItemClickListener { adapterView, _, position, _ ->
                 val item: String = adapterView.getItemAtPosition(position).toString()
                 actionDone(item)
@@ -71,11 +66,6 @@ class ESMIntentionUnlockActivity: AppCompatActivity(){
 
     override fun onBackPressed() {
         // Do Nothing
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("xxx"," on resume: unlock presenT: ${LoggingManager.userPresent}")
     }
 
    private fun actionDone(intention: String){

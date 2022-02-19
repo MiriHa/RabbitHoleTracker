@@ -6,9 +6,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 object CONST {
-    private const val TAG = "TRACKINGAPP_CONST"
-    @JvmField
-	//val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
     var currentLocale: Locale = Locale.GERMAN
     var dateTimeFormat: DateFormat = SimpleDateFormat("dd-MM-yyyy HH:mm:ss,SSS", currentLocale)
 
@@ -25,20 +22,19 @@ object CONST {
     const val firebaseReferenceLogs = "logs"
     const val firebaseReferenceIntentions = "intentionList"
 
-    const val CHANNEL_ID_LOGGING = "LOGGINGMANAGER_NOTIFICATION_CHANNEL"
+    const val CHANNEL_ID_LOGGING = "LOGGING_MANAGER_NOTIFICATION_CHANNEL"
     const val CHANNEL_NAME_ESM_LOGGING = "Logging Manager"
     const val NOTIFICATION_ID_LOGGING = 24755
 
-    const val CHANNEL_ID_ESM = "rabbitholeAlert"
+    const val CHANNEL_ID_ESM = "RabbitHoleAlert"
     const val CHANNEL_NAME_ESM = "RabbitHole Alert"
     const val NOTIFICATION_ID_ESM = 24756
 
-    const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 20
-
     const val PERMISSION_REQUEST_CODE = 123
 
-    const val LOGGING_INTERVAL = 60 * 0.1; // 60 * 1 = 1 minutes
     const val LOGGING_FREQUENCY: Long = 500 //milliseconds
+    const val ESM_FREQUENCY: Long = 30 * 60 * 1000 //30 min
+    const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 16 //minutes
 
     const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 

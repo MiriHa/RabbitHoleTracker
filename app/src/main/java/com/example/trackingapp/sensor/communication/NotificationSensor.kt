@@ -22,7 +22,7 @@ class NotificationSensor: AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
 
         mContext = context
         context.startService(Intent(context, NotificationListener::class.java))

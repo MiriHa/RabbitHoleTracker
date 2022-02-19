@@ -11,19 +11,15 @@ abstract class AbstractSensor protected constructor(
 ) : Serializable {
 
     var isEnabled = true
-
-    protected var m_isSensorAvailable = false
-
     var isRunning = false
 
-    val settingsState: Int
-        get() = 0
+    protected var isSensorAvailable = false
 
     abstract fun isAvailable(context: Context): Boolean
 
     open fun start(context: Context) {
-        m_isSensorAvailable = isAvailable(context)
-        if (!m_isSensorAvailable) Log.i(TAG, "Sensor not available")
+        isSensorAvailable = isAvailable(context)
+        if (!isSensorAvailable) Log.i(TAG, "Sensor not available")
         FirebaseApp.initializeApp(context)
     }
     abstract fun stop()

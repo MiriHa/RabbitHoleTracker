@@ -58,20 +58,14 @@ class SignUpFragment: Fragment() {
             Observer { loginResult ->
                 loginResult ?: return@Observer
                 loadingProgressBar.visibility = View.GONE
-                loginResult.error?.let {
-                    showSignUpFailed(it)
-                }
-                loginResult.success?.let {
-                    goToMainScreen(it)
-                }
+                loginResult.error?.let { showSignUpFailed(it) }
+                loginResult.success?.let { goToMainScreen() }
             })
 
         val afterTextChangedListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
                 viewModel.loginDataChanged(
@@ -107,11 +101,10 @@ class SignUpFragment: Fragment() {
                 showSignUpFailed(R.string.invalid_data_error)
             }
         }
-
         return binding.root
     }
 
-    private fun goToMainScreen(model: LoggedInUserView) {
+    private fun goToMainScreen() {
         if(PermissionManager.areAllPermissionGiven(this.activity)) {
             navigate(ScreenType.HomeScreen, ScreenType.SignUp)
         } else {

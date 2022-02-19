@@ -42,7 +42,7 @@ class ESMIntentionViewModel : ViewModel() {
         val lastFullESM = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, 0L)
         return when {
             //Was Last full ESM over half an over ago?
-            System.currentTimeMillis() - lastFullESM > 30 * 60 * 1000 -> {
+            System.currentTimeMillis() - lastFullESM > CONST.ESM_FREQUENCY-> {
                 SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
                 arrayListOf(
                     ESMSliderItem(
@@ -123,7 +123,6 @@ class ESMIntentionViewModel : ViewModel() {
             }
         }
     }
-
 }
 
 class ESMIntentionViewModelFactory : ViewModelProvider.Factory {

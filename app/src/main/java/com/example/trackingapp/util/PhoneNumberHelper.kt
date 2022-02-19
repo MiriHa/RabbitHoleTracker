@@ -15,7 +15,6 @@ object PhoneNumberHelper {
     private const val TAG = "PhoneNumberHelper"
     private const val DEFAULT_CC = "DE"
 
-    //E: CHECKED! WORKS ->
     fun formatNumber(number: String?): String {
         val phoneNumber: PhoneNumber
         val phoneUtil = PhoneNumberUtil.getInstance()
@@ -28,7 +27,7 @@ object PhoneNumberHelper {
         }
     }
 
-    fun getOwnPhonenumber(context: Context): String? {
+    private fun getOwnPhonenumber(context: Context): String? {
         var number = ""
         val phoneMgr = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_SMS) != PackageManager.PERMISSION_GRANTED

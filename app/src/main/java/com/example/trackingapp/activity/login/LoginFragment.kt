@@ -21,11 +21,7 @@ import com.example.trackingapp.util.navigate
 class LoginFragment : Fragment() {
 
     private lateinit var viewModel: LoginSignUpViewModel
-    private var _binding: FragmentLoginBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var binding: FragmentLoginBinding
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +29,7 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        _binding = FragmentLoginBinding.inflate(inflater, container, false)
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -49,9 +45,7 @@ class LoginFragment : Fragment() {
 
         viewModel.loginFormState.observe(viewLifecycleOwner,
             Observer { loginFormState ->
-                if (loginFormState == null) {
-                    return@Observer
-                }
+                if (loginFormState == null) { return@Observer }
                 loginButton.isEnabled = loginFormState.isDataValid
                 loginFormState.usernameError?.let {
                     usernameEditText.error = getString(it)
@@ -65,20 +59,14 @@ class LoginFragment : Fragment() {
             Observer { loginResult ->
                 loginResult ?: return@Observer
                 loadingProgressBar.visibility = View.GONE
-                loginResult.error?.let {
-                    showLoginFailed(it)
-                }
-                loginResult.success?.let {
-                    goToMainScreen(it)
-                }
+                loginResult.error?.let { showLoginFailed(it) }
+                loginResult.success?.let { goToMainScreen() }
             })
 
         val afterTextChangedListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-            }
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
 
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-            }
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable) {
                 viewModel.loginDataChanged(
@@ -91,7 +79,7 @@ class LoginFragment : Fragment() {
         passwordEditText.addTextChangedListener(afterTextChangedListener)
         passwordEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.loginInWithEmailandPassword(
+                viewModel.loginInWithEmailAndPassword(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -102,7 +90,7 @@ class LoginFragment : Fragment() {
         loginButton.setOnClickListener {
             if(viewModel.isButtonEnabled) {
                 loadingProgressBar.visibility = View.VISIBLE
-                viewModel.loginInWithEmailandPassword(
+                viewModel.loginInWithEmailAndPassword(
                     usernameEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -112,7 +100,7 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun goToMainScreen(model: LoggedInUserView) {
+    private fun goToMainScreen() {
         if(PermissionManager.areAllPermissionGiven(this.activity)) {
             navigate(to = ScreenType.HomeScreen, from = ScreenType.Login)
         } else {
@@ -123,10 +111,5 @@ class LoginFragment : Fragment() {
     private fun showLoginFailed(@StringRes errorString: Int) {
         val appContext = context?.applicationContext ?: return
         Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

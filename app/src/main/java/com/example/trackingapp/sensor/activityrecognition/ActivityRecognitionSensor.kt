@@ -32,7 +32,7 @@ class ActivityRecognitionSensor : AbstractSensor(
     override fun start(context: Context) {
         super.start(context)
         val time = System.currentTimeMillis()
-        if (!m_isSensorAvailable) return
+        if (!isSensorAvailable) return
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         mContext = context
@@ -57,19 +57,22 @@ class ActivityRecognitionSensor : AbstractSensor(
 
     override fun stop() {
         if (isRunning) {
-            isRunning = false
-            mContext?.let {
-                it.unregisterReceiver(mReceiver)
-                val pendingIntent = getPendingIntent(it)
-                val task = ActivityRecognition.getClient(it).removeActivityTransitionUpdates(pendingIntent)
-                task.addOnSuccessListener {
-                    pendingIntent.cancel()
+            try {
+                isRunning = false
+                mContext?.let {
+                    it.unregisterReceiver(mReceiver)
+                    val pendingIntent = getPendingIntent(it)
+                    val task = ActivityRecognition.getClient(it).removeActivityTransitionUpdates(pendingIntent)
+                    task.addOnSuccessListener {
+                        pendingIntent.cancel()
+                    }
+                    task.addOnFailureListener { e ->
+                        Log.d(TAG, "Failed to remove ActivityTransitionUpdates. ${e.message}")
+                    }
                 }
-                task.addOnFailureListener { e ->
-                    Log.d(TAG, "Failed to remove ActivityTransitionUpdates. ${e.message}")
-                }
+            }catch (e: Exception){
+                Log.e(TAG, "Failed to remove ActivityTransitionUpdates. ${e.message}")
             }
-
         }
     }
 

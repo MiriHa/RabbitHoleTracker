@@ -3,12 +3,10 @@ package com.example.trackingapp.activity.permissions
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.provider.Settings
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.PermissionManager
-import com.example.trackingapp.util.SharedPrefManager
 
 class PermissionHolderViewModel : ViewModel() {
 
@@ -27,15 +25,9 @@ class PermissionHolderViewModel : ViewModel() {
         return currentPermission
     }
 
-    fun userFinishedOnboarding() {
-        SharedPrefManager.saveBoolean(CONST.PREFERENCES_ONBOARDING_FINISHED, true)
-    }
-
     fun reset() {
         permissionIterator?.reset()
     }
-
-
 }
 
 private class PermissionIterator(val activity: Activity, val permissions: List<PermissionView>) {
@@ -57,13 +49,11 @@ private class PermissionIterator(val activity: Activity, val permissions: List<P
     }
 
     private fun nextPermission(): PermissionView? {
-        val p = permissions.firstOrNull { permission ->
-            val permissionGranted =  isPermissionGranted(permission)
+        return permissions.firstOrNull { permission ->
+            val permissionGranted = isPermissionGranted(permission)
             val permissionAsked = askedPermission.contains(permission)
-             !permissionGranted && !permissionAsked
+            !permissionGranted && !permissionAsked
         }
-        Log.d("PERMISSIONITERATOR", "nextPermission: ${p?.name} ")
-        return p
     }
 
     private fun isPermissionGranted(permissionView: PermissionView): Boolean {

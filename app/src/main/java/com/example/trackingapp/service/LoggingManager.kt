@@ -96,7 +96,7 @@ object LoggingManager {
     }
 
     fun ensureLoggingManagerIsAlive(context: Context) {
-        Log.d(TAG,"ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value == false && isDataRecordingActive}")
+        Log.d(TAG,"ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}")
         if (isLoggingActive.value == false && isDataRecordingActive) {
             startLoggingService(context)
         }
@@ -106,8 +106,7 @@ object LoggingManager {
         Log.d(TAG, "startServiceViaWorker called")
         val workManager: WorkManager = WorkManager.getInstance(context)
 
-        // As per Documentation: The minimum repeat interval that can be defined is 15 minutes
-        // (same as the JobScheduler API), but in practice 15 doesn't work. Using 16 here
+        // As per Documentation: The minimum repeat interval that can be defined is 15 minutes, but in practice 15 doesn't work. Using 16 here
         val request: PeriodicWorkRequest = PeriodicWorkRequest.Builder(
             StartLoggingWorker::class.java,
             CONST.LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL,
@@ -115,7 +114,6 @@ object LoggingManager {
         ).build()
 
         // to schedule a unique work, no matter how many times app is opened i.e. startServiceViaWorker gets called
-        // do check for AutoStart permission
         workManager.enqueueUniquePeriodicWork(
             CONST.UNIQUE_WORK_NAME,
             ExistingPeriodicWorkPolicy.KEEP,
@@ -125,31 +123,5 @@ object LoggingManager {
 
     private fun cancleServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
-    }
-
-    private fun createSensorList(): MutableList<AbstractSensor> {
-        Log.d(TAG, "createSensorList")
-        val list = arrayListOf<AbstractSensor>()
-        list.add(AccelerometerSensor())
-        list.add(AccessibilitySensor())
-        list.add(ActivityRecognitionSensor())
-        list.add(AirplaneModeSensor())
-        list.add(AppInstallsSensor())
-        list.add(BluetoothSensor())
-        list.add(CallSensor())
-        list.add(DataTrafficSensor())
-        list.add(GyroscopeSensor())
-        list.add(LightSensor())
-        list.add(NotificationSensor())
-        list.add(OrientationSensor())
-        list.add(PowerSensor())
-        list.add(ProximitySensor())
-        list.add(RingerModeSensor())
-        list.add(ScreenOrientationSensor())
-        list.add(ScreenStateSensor())
-        list.add(SmsSensor())
-        list.add(UsageStatsSensor())
-        list.add(WifiSensor())
-        return list
     }
 }
