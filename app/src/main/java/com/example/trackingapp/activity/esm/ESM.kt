@@ -1,5 +1,6 @@
 package com.example.trackingapp.activity.esm
 
+import androidx.annotation.ArrayRes
 import com.example.trackingapp.R
 
 sealed interface ESMItem {
@@ -19,6 +20,14 @@ class ESMSliderItem(
     val sliderMin: Float,
     val sliderMinLabel: String = sliderMin.toInt().toString(),
     val sliderMaxLabel: String = sliderMax.toInt().toString()
+) : ESMItem
+
+class ESMDropDownItem(
+    override val question: Int,
+    override val questionType: ESMQuestionType,
+    override val visible: Boolean  = true,
+    override var value: String = "",
+    @ArrayRes val dropdownList: Int
 ) : ESMItem
 
 class ESMRadioGroupItem(

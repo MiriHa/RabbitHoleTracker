@@ -5,6 +5,8 @@ import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemButtonsBinding
+import com.example.trackingapp.databinding.LayoutEsmLockItemDropdownBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemScaleBinding
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
@@ -26,6 +29,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLockscreenEsmBinding
     private lateinit var viewModel: ESMIntentionViewModel
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -33,6 +37,8 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
         SharedPrefManager.init(this.applicationContext)
+
+        var descriptions: Array<String> = resources.getStringArray(R.array.esm_emotionList)
 
         binding.textViewEsmLockIntention.text = viewModel.savedIntention
         val listAdapter = ListAdapter(viewModel.questionList)
@@ -78,6 +84,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             val viewHolder = when (viewType) {
                 ItemViewType.ESM_BUTTON_ITEM.ordinal -> ESMButtonItemViewHolder(LayoutEsmLockItemButtonsBinding.inflate(inflater, parent, false))
                 ItemViewType.ESM_SLIDER_ITEM.ordinal -> ESMSliderItemViewHolder(LayoutEsmLockItemScaleBinding.inflate(inflater, parent, false))
+                ItemViewType.ESM_DROPDOWN_ITEM.ordinal -> ESMSpinnerItemViewHolder(LayoutEsmLockItemDropdownBinding.inflate(inflater, parent, false))
                 else -> throw IllegalArgumentException("Unknown ViewType")
             }
             @Suppress("UNCHECKED_CAST")
@@ -88,6 +95,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             return when (items[position]) {
                 is ESMRadioGroupItem -> ItemViewType.ESM_BUTTON_ITEM.ordinal
                 is ESMSliderItem -> ItemViewType.ESM_SLIDER_ITEM.ordinal
+                is ESMDropDownItem -> ItemViewType.ESM_DROPDOWN_ITEM.ordinal
             }
         }
 
@@ -158,10 +166,40 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                 }
             }
         }
+
+        inner class ESMSpinnerItemViewHolder(private val itemBinding: LayoutEsmLockItemDropdownBinding) : ListViewHolder<ESMDropDownItem>(itemBinding.root),
+            AdapterView.OnItemSelectedListener {
+
+            lateinit var esmItem: ESMDropDownItem
+
+            override fun bindData(
+                item: ESMDropDownItem,
+            ) {
+                esmItem = item
+                val arrayAdapter = ArrayAdapter.createFromResource(applicationContext, item.dropdownList, R.layout.layout_spinner_item)
+                arrayAdapter.setDropDownViewResource(R.layout.layout_spinner_dropdown_item)
+
+                itemBinding.esmLockItemSpinnerQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                itemBinding.spinnerEsmLockItemSpinner.apply {
+                    adapter = arrayAdapter
+                    onItemSelectedListener = this@ESMSpinnerItemViewHolder
+                }
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val value = parent?.getItemAtPosition(position).toString()
+                setValue(esmItem, value)
+                checkOrDismissFullScreenNotification()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
     }
 
     private enum class ItemViewType {
         ESM_BUTTON_ITEM,
-        ESM_SLIDER_ITEM
+        ESM_SLIDER_ITEM,
+        ESM_DROPDOWN_ITEM
     }
 }

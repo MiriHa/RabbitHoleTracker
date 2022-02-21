@@ -52,11 +52,28 @@
     <string name="esm_lock_intention_question_track_of_time">How much did you <b>loose track of time</b> while using your phone?</string>
     <string name="esm_lock_intention_question_track_of_space">How much did you <b>loose track of your surroundings</b> while using your phone?</string>
     <string name="esm_lock_intention_question_agency">How strong was your feeling of <b>agency?</b></string>
-    <string name="esm_lock_intention_question_emotion">Which primary <b>emotion</b> did you experience in this session?</string>
+    <string name="esm_lock_intention_question_emotion">Which primary part of <b>emotion</b> corresponds best to how you felt this usage session?</string>
     <string name="esm_button_yes">Yes</string>
     <string name="esm_button_no">No</string>
     <string name="esm_button_other">Other</string>
     <string name="esm_button_newIntention">New Intention</string>
+
+    <string-array name="esm_emotionList">
+        <item>happiness-elation</item>
+        <item>sadness-melancholy</item>
+        <item>calm-contentment</item>
+        <item>anger-irritation</item>
+        <item>nostalgia-longing</item>
+        <item>anxiety-fear</item>
+        <item>love-tenderness</item>
+        <item>surprise-astonishment</item>
+        <item>shame-guilt</item>
+        <item>disgust-contempt</item>
+        <item>pleasure-enjoyment</item>
+        <item>boredom-indifference</item>
+        <item>interest-expectancy</item>
+        <item>other</item>
+    </string-array>
 
     <!-- LOGGING -->
     <string name="logging_notification_service_title">Logging is Running</string>

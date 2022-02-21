@@ -20,4 +20,14 @@
     <style name="Theme.TrackingApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.TrackingApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="Spinner" parent="Widget.AppCompat.Light.DropDownItem.Spinner">
+        <item name="android:paddingStart">0dp</item>
+        <item name="android:paddingEnd">0dp</item>
+        <item name="android:textColor">@color/background_gray</item>
+        <item name="android:backgroundTint">@color/LightBlackishGray</item>
+        <item name="android:dropDownSelector">@drawable/ic_arrow_drop_down</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
 </resources>

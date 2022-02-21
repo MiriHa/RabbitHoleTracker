@@ -11,6 +11,9 @@ import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
+
+
+
 class ESMIntentionViewModel : ViewModel() {
 
     val questionList = createQuestionList()
@@ -38,6 +41,8 @@ class ESMIntentionViewModel : ViewModel() {
         }
     }
 
+
+
     private fun createQuestionList(): List<ESMItem> {
         val lastFullESM = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, 0L)
         return when {
@@ -45,14 +50,10 @@ class ESMIntentionViewModel : ViewModel() {
             System.currentTimeMillis() - lastFullESM > CONST.ESM_FREQUENCY-> {
                 SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
                 arrayListOf(
-                    ESMSliderItem(
+                    ESMDropDownItem(
                         R.string.esm_lock_intention_question_emotion,
                         ESMQuestionType.ESM_LOCK_Q_EMOTION,
-                        sliderStepSize = 1F,
-                        sliderMin = 0F,
-                        sliderMax = 12F,
-                        sliderMaxLabel = "angry",
-                        sliderMinLabel = "relaxed"
+                        dropdownList = R.array.esm_emotionList
                     ),
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_agency,
@@ -110,6 +111,11 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderMax = 7F,
                         sliderMaxLabel = "very strong",
                         sliderMinLabel = "non existent"
+                    ),
+                    ESMDropDownItem(
+                        R.string.esm_lock_intention_question_emotion,
+                        ESMQuestionType.ESM_LOCK_Q_EMOTION,
+                        dropdownList = R.array.esm_emotionList
                     ),
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
