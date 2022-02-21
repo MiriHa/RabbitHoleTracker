@@ -52,7 +52,7 @@
     <string name="esm_lock_intention_question_track_of_time">How much did you <b>loose track of time</b> while using your phone?</string>
     <string name="esm_lock_intention_question_track_of_space">How much did you <b>loose track of your surroundings</b> while using your phone?</string>
     <string name="esm_lock_intention_question_agency">How strong was your feeling of <b>agency?</b></string>
-    <string name="esm_lock_intention_question_emotion">Which primary part of <b>emotion</b> corresponds best to how you felt this usage session?</string>
+    <string name="esm_lock_intention_question_emotion">Which pair of <b>emotion</b> corresponds best to how you felt this usage session?</string>
     <string name="esm_button_yes">Yes</string>
     <string name="esm_button_no">No</string>
     <string name="esm_button_other">Other</string>
