@@ -37,12 +37,19 @@ class MainScreenFragment : Fragment() {
 
     private lateinit var listAdapter: ListAdapter
 
+    private val loggingObserver = Observer<Boolean> { setAdapter() }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         viewModel = ViewModelProvider(this, MainScreenViewModelFactory())[MainScreenViewModel::class.java]
+
+
+        if(PermissionManager.areAllPermissionGiven(this.activity)) {
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
+        }
 
         binding = FragmentMainscreenBinding.inflate(inflater)
         val view = binding.root
@@ -53,10 +60,6 @@ class MainScreenFragment : Fragment() {
         NotificationHelper.dismissESMNotification(mContext)
 
         setAdapter()
-
-        val loggingObserver = Observer<Boolean> {
-            setAdapter()
-        }
 
         LoggingManager.isLoggingActive.observe(this, loggingObserver)
 
@@ -71,21 +74,33 @@ class MainScreenFragment : Fragment() {
             )
             setOnClickListener {
                 Log.d(TAG, "startLoggingButton Click: running")
+                SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
                 LoggingManager.stopLoggingService(mContext)
                 LoggingManager.startLoggingService(mContext as Activity)
                 LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToDataBase()
-                //text = getString(R.string.logging_stop_button)
             }
         }
 
         binding.buttonTestStop.apply {
             text = getString(R.string.mainScreen_logging_stop_button)
             setOnClickListener {
+                SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, false)
                 LoggingManager.stopLoggingService(mContext)
             }
         }
 
         return view
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
+    override fun onResume() {
+        Log.d("xxx", "onResume")
+        LoggingManager.ensureLoggingManagerIsAlive(mContext)
+        super.onResume()
     }
 
     private fun setAdapter() {
@@ -112,11 +127,6 @@ class MainScreenFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        mContext = context
     }
 
     inner class ListAdapter : RecyclerView.Adapter<ListAdapter.ViewHolder>() {

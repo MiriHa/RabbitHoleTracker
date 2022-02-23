@@ -27,11 +27,11 @@ import com.example.trackingapp.sensor.usage.*
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharedPrefManager
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 object LoggingManager {
-
     private const val TAG = "LOGGING_MANAGER"
 
     var sensorList: MutableList<AbstractSensor> = arrayListOf(
@@ -60,7 +60,6 @@ object LoggingManager {
     val userPresent: Boolean
         get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_PRESENT)
 
-
     val _isLoggingActive = MutableLiveData(false)
     val isLoggingActive: LiveData<Boolean> = _isLoggingActive
 
@@ -76,14 +75,12 @@ object LoggingManager {
             firstStartLoggingService(context)
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED, true)
         }
-        if (isLoggingActive.value == false) {
-            Log.d(TAG, "startService called")
-            Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
-            val serviceIntent = Intent(context, LoggingService::class.java)
-            ContextCompat.startForegroundService(context, serviceIntent)
-            startServiceViaWorker(context)
-            _isLoggingActive.value = true
-        }
+        Log.d(TAG, "startService called")
+        Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
+        val serviceIntent = Intent(context, LoggingService::class.java)
+        ContextCompat.startForegroundService(context, serviceIntent)
+        startServiceViaWorker(context)
+        _isLoggingActive.value = true
     }
 
     fun stopLoggingService(context: Context) {
@@ -96,13 +93,14 @@ object LoggingManager {
     }
 
     fun ensureLoggingManagerIsAlive(context: Context) {
-        Log.d(TAG,"ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}")
+        Log.d(TAG, "ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}")
+        Toast.makeText(context, "ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}", Toast.LENGTH_LONG).show()
         if (isLoggingActive.value == false && isDataRecordingActive) {
             startLoggingService(context)
         }
     }
 
-    private fun startServiceViaWorker(context: Context) {
+    fun startServiceViaWorker(context: Context) {
         Log.d(TAG, "startServiceViaWorker called")
         val workManager: WorkManager = WorkManager.getInstance(context)
 
@@ -123,5 +121,9 @@ object LoggingManager {
 
     private fun cancleServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
+    }
+
+    fun generateSessionID(timestamp: Long): String {
+        return timestamp.toString() + UUID.randomUUID().toString()
     }
 }

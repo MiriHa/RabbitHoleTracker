@@ -9,6 +9,7 @@ open class LogEvent(
     val description: String? = null,
     val name: String? = null,
     val packageName: String? = null,
+    val id: String? = null,
     var timezoneOffset: Int? = null
 ) {
     init {

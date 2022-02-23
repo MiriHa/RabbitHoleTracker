@@ -3,6 +3,7 @@ package com.example.trackingapp.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_IMMUTABLE
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
@@ -39,7 +40,7 @@ class LoggingService : Service() {
         LoggingManager._isLoggingActive.value = true
 
         val notificationIntent = Intent(this, MainActivity::class.java)
-        val notificationPendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+        val notificationPendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, FLAG_IMMUTABLE)
 
         val notification = NotificationCompat.Builder(this, CONST.CHANNEL_ID_LOGGING)
             .setSmallIcon(R.drawable.ic_logo)
@@ -123,5 +124,10 @@ class LoggingService : Service() {
                 }
             }
         }
+    }
+
+    companion object{
+        @JvmStatic
+        val isRunning = false
     }
 }

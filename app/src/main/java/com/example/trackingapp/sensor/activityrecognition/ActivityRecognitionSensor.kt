@@ -86,7 +86,7 @@ class ActivityRecognitionSensor : AbstractSensor(
         } catch (e: Exception) {
             //Not Registered
         }
-        return PendingIntent.getBroadcast(context, REQUEST_CODE_INTENT_ACTIVITY_TRANSITION, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        return PendingIntent.getBroadcast(context, REQUEST_CODE_INTENT_ACTIVITY_TRANSITION, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
 
     }
 

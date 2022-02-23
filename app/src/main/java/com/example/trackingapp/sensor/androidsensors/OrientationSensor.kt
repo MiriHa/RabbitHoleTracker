@@ -55,31 +55,20 @@ class OrientationSensor : AbstractSensor(
 
     override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {}
 
-   // private var cachedOrientation: FloatArray = floatArrayOf(0f,0f,0f)
-
     override fun onSensorChanged(event: SensorEvent?) {
         val time = System.currentTimeMillis()
         if (isRunning && LoggingManager.userPresent && event != null) {
             try {
-           //     Log.d("xxx","sensor orienteion: ${cachedOrientation.contentEquals(event.values)}")
-          //      Log.d("xxx"," sensoreven7: ${CONST.numberFormat.format(event.values[0])}, ${CONST.numberFormat.format(event.values[1])},${CONST.numberFormat.format(event.values[2])}")
-         //       Log.d("xxx"," sensorchached: ${CONST.numberFormat.format(cachedOrientation[0])}, ${CONST.numberFormat.format(cachedOrientation[1])},${CONST.numberFormat.format(cachedOrientation[2])}")
-               // if (!cachedOrientation.contentEquals(event.values)){
-                    when (event.accuracy) {
-                        SensorManager.SENSOR_STATUS_UNRELIABLE -> {
-                          //  cachedOrientation = event.values
-                            val sensorData = "${CONST.numberFormat.format(event.values[0])}, " +
-                                    "${CONST.numberFormat.format(event.values[1])},${CONST.numberFormat.format(event.values[2])}"
-                            saveEntry(time, sensorData, SensorAccuracy.ACCURACY_UNRELAIABLE.name)
-                        }
-                        else -> {
-                           // cachedOrientation = event.values
-                            val sensorData = "${CONST.numberFormat.format(event.values?.get(0))}, " +
-                                    "${CONST.numberFormat.format(event.values?.get(1))}, ${CONST.numberFormat.format(event.values?.get(2))}"
-                            saveEntry(time, sensorData, SensorAccuracy.ACCURACY_ELSE.name)
-                        }
+                when (event.accuracy) {
+                    SensorManager.SENSOR_STATUS_UNRELIABLE -> {
+                        val sensorData = "${event.values[0]}, ${event.values[1]}, ${event.values[2]}"
+                        saveEntry(time, sensorData, SensorAccuracy.ACCURACY_UNRELAIABLE.name)
                     }
-             //   }
+                    else -> {
+                        val sensorData = "${event.values[0]}, ${event.values[1]}, ${event.values[2]}"
+                        saveEntry(time, sensorData, SensorAccuracy.ACCURACY_ELSE.name)
+                    }
+                }
             } catch (e: Exception) {
                 Log.e(TAG, e.toString())
             }

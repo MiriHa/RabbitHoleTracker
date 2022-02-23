@@ -16,32 +16,23 @@ class BootUpReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.i(TAG, "OnRecvice. ${LoggingManager.isDataRecordingActive}")
-        //if (!LoggingManager.isDataRecordingActive) {
-       //     return
-       // } else {
-            val timestamp = System.currentTimeMillis()
-
-            when (intent.action) {
-                Intent.ACTION_SHUTDOWN -> {
-                    saveEntry(BootEventType.SHUTDOWM, timestamp)
+        val timestamp = System.currentTimeMillis()
+            when {
+                Intent.ACTION_SHUTDOWN.equals(intent.action, ignoreCase = true) -> {
+                    saveEntry(BootEventType.SHUTDOWN, timestamp)
                 }
-                Intent.ACTION_BOOT_COMPLETED -> {
+                Intent.ACTION_REBOOT.equals(intent.action, ignoreCase = true) ->  saveEntry(BootEventType.REBOOT, timestamp)
+                Intent.ACTION_LOCKED_BOOT_COMPLETED.equals(intent.action, ignoreCase = true) ||
+                        Intent.ACTION_BOOT_COMPLETED.equals(intent.action, ignoreCase = true) -> {
                     saveEntry(BootEventType.BOOTED, timestamp)
                     Log.d("StartLogging", "Start Logging after Bootup: ${LoggingManager.isDataRecordingActive}")
-                    startLoggingManager(context)
+                   // LoggingManager.startServiceViaWorker(context)
+                    LoggingManager.startLoggingService(context)
                 }
                 else -> {
                     Log.i(TAG, "Unexpected intent type received")
                 }
             }
-       // }
-    }
-
-    private fun startLoggingManager(context: Context) {
-        Log.d("StartLogging", "Start Logging after Bootup: ${LoggingManager.isDataRecordingActive}")
-        //if (LoggingManager.isDataRecordingActive) {
-            LoggingManager.startLoggingService(context)
-       // }
     }
 
     private fun saveEntry(type: BootEventType, timestamp: Long) {

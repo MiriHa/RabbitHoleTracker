@@ -25,6 +25,7 @@ object DatabaseManager {
     val database = Firebase.database.reference
 
     var intentionList: MutableSet<String?> = HashSet()
+    var intentionExampleList: List<String> = listOf()
 
     val isUserLoggedIn: Boolean
         get() = user != null
@@ -32,9 +33,15 @@ object DatabaseManager {
     fun initIntentionList() {
         Log.d(TAG, "initDatabaseManager")
         intentionList = SharedPrefManager.getIntentionList()
-        if(!intentionList.contains("Browsing")) intentionList.add("Browsing")
-        if(!intentionList.contains("Passing Time")) intentionList.add("Passing Time")
-        if(!intentionList.contains("Search for Information")) intentionList.add("Search for Information")
+        intentionExampleList = listOf(
+            "No concrete intention",
+            "Messaging",
+            "Search for information"
+            //TODO
+            /*Resources.getSystem().getString(R.string.esm_intention_example_noIntention),
+            Resources.getSystem().getString(R.string.esm_intention_example_messaging),
+            Resources.getSystem().getString(R.string.esm_intention_example_searchInformation)*/
+        )
     }
 
     fun saveUserToFirebase(userName: String, email: String) {
@@ -49,7 +56,7 @@ object DatabaseManager {
     }
 
     fun LogEvent.saveToDataBase(metadata: MetaType? = null) {
-        Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
+       // Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
         if (metadata != null) {
             user?.let {
                 val logChild = Firebase.database.reference.child(CONST.firebaseReferenceUsers)

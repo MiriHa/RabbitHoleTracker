@@ -43,7 +43,7 @@ object NotificationHelper {
         }
         val fullScreenIntent = Intent(context, destination)
         fullScreenIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, 0)
+        val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val builder = NotificationCompat.Builder(context, CONST.CHANNEL_ID_ESM)
             .setSmallIcon(R.drawable.ic_logo)

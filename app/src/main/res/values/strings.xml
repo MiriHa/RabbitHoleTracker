@@ -2,14 +2,6 @@
     <string name="app_name">Rabbit Hole Tracker</string>
     <string name="app_name_display">Rabbit Hole Tracker</string>
 
-    <string name="util_dismiss">Dismiss</string>
-    <string name="util_next">next</string>
-    <string name="util_previous">previous</string>
-    <string name="util_done">done</string>
-    <string name="util_back">back</string>
-    <string name="util_close">close</string>
-    <string name="util_continue">Continue</string>
-
     <string name="util_email">Email</string>
     <string name="util_password">Password</string>
 
@@ -35,10 +27,6 @@
     <string name="invalid_data_error">Entered data is not valid!</string>
     <string name="login_failed">"Login failed"</string>
     <string name="home_titleText">Hello!</string>
-    
-    <!-- MainScreenFragment -->
-    <string name="sensorlist_title">Tracking Sensors</string>
-
 
     <!-- ESM -->
     <string name="esm_unlock_intention_question">What do you want to use your phone for?</string>
@@ -53,10 +41,17 @@
     <string name="esm_lock_intention_question_track_of_space">How much did you <b>loose track of your surroundings</b> while using your phone?</string>
     <string name="esm_lock_intention_question_agency">How strong was your feeling of <b>agency?</b></string>
     <string name="esm_lock_intention_question_emotion">Which pair of <b>emotion</b> corresponds best to how you felt this usage session?</string>
+    <string name="esm_lock_label_stronglyAgree">strongly agree</string>
+    <string name="esm_lock_label_stronglyDisagree">strongly disagree</string>
     <string name="esm_button_yes">Yes</string>
     <string name="esm_button_no">No</string>
     <string name="esm_button_other">Other</string>
+    <string name="esm_unlock_intention_error">Please enter a intention!</string>
     <string name="esm_button_newIntention">New Intention</string>
+    <string name="esm_button_lastIntention">Last Intention</string>
+    <string name="esm_intention_example_searchInformation">Search for information</string>
+    <string name="esm_intention_example_messaging">Messaging</string>
+    <string name="esm_intention_example_noIntention">No concrete intention</string>
 
     <string-array name="esm_emotionList">
         <item>happiness-elation</item>
@@ -75,10 +70,6 @@
         <item>other</item>
     </string-array>
 
-    <!-- LOGGING -->
-    <string name="logging_notification_service_title">Logging is Running</string>
-    <string name="logging_notification_service_description">TrackingApp is collecting your usage data.</string>
-
     <!-- Permissions -->
     <string name="permission_title">Allow Permissions</string>
     <string name="permission_explanation_description">Please provide us access to following permissions, as this applications needs these to collect your usage data.</string>
@@ -92,39 +83,22 @@
     <string name="permission_settings_button_text">Go to Settings</string>
     <string name="permission_button_text">Allow Permissions</string>
 
-    <!-- LogEverything -->
+    <!-- Logging -->
+    <string name="logging_notification_service_title">Logging is Running</string>
+    <string name="logging_notification_service_description">TrackingApp is collecting your usage data.</string>
+
+    <string name="mainScreen_sensorlist_title">Tracking Sensors</string>
     <string name="mainScreen_logging_start_button">Start Logging</string>
     <string name="mainScreen_logging_stop_button">Stop Logging</string>
-
     <string name="mainScreen_sensorList_is_running">is running</string>
     <string name="mainScreen_sensorList_not_running">not running</string>
 
-    <string name="sensor_settings_save">Save</string>
-    <string name="sensor_settings_cancel">Cancel</string>
-    <string name="sensor_settings_none">No settings available for this sensor</string>
-
-    <string name="notif_ticker">Log Everything enabled</string>
-    <string name="notif_title">Log Everything enabled</string>
-    <string name="notif_text">Touch to disable logging</string>
-
-    <string name="saving_to">Saving logs to</string>
-    <string name="accessibility_service_description">TEST</string>
+    <string name="accessibility_service_description">Accessibility service description</string>
     <string name="accessibility_button">Accessibility</string>
     <string name="accessibility_button_On">Enabled Accessibility</string>
     <string name="accessibility_button_Off">Disabled Accessibility</string>
     <string name="settings">Settings</string>
 
-    <string name="dbname">LogEverything</string>
-    <string name="dbversion">2</string>
-    <string name="dbTableSenorList">SensorList</string>
-    <string name="dbColumnId">_id</string>
-    <string name="dbColumnName">name</string>
-
-    <string name="dbColumnIsAvailable">isavailable</string>
-
-    <string name="dbColumnSettingsState">settingsstate</string>
-    <string name="dbColumnSettings">settings</string>
-    <string name="esm_unlock_intention_error">Please enter a intention!</string>
 
 
 </resources>

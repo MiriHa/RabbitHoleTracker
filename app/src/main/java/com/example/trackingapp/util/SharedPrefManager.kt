@@ -23,6 +23,16 @@ object SharedPrefManager {
         return sharedPrefs.getString(CONST.PREFERENCES_INTENTION_NAME, "last intention")
     }
 
+    fun saveCurrentSesionID(id: String){
+        val editor = sharedPrefs.edit()
+        editor.putString(CONST.PREFERENCES_SESSION_ID, id)
+        editor.apply()
+    }
+
+    fun getCurrentSessionID(): String? {
+        return sharedPrefs.getString(CONST.PREFERENCES_SESSION_ID, "")
+    }
+
     fun saveIntentionList(intentionMap: MutableSet<String?>?) {
         val json: String = Gson().toJson(intentionMap)
 

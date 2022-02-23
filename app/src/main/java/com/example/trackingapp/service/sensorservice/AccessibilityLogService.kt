@@ -138,7 +138,6 @@ class AccessibilityLogService : AccessibilityService() {
             LogEventName.INPUT,
             timestamp = time,
             event = getEventType(chachedContentChangeEvent?.event),
-//            description = chachedContentChangeEvent?.message,
             name = chachedContentChangeEvent?.event?.className.toString(),
             packageName = chachedContentChangeEvent?.event?.packageName.toString()
         ).saveToDataBase(metadata = chachedContentChangeEvent)
@@ -274,7 +273,6 @@ class AccessibilityLogService : AccessibilityService() {
         browsers.add(SupportedBrowserConfig("com.opera.mini.native", "com.opera.mini.native:id/url_field"))
         browsers.add(SupportedBrowserConfig("com.duckduckgo.mobile.android", "com.duckduckgo.mobile.android:id/omnibarTextInput"))
         browsers.add(SupportedBrowserConfig("com.microsoft.emmx", "com.microsoft.emmx:id/url_bar"))
-        browsers.add(SupportedBrowserConfig("com.android.browser","com.android.browser:id/url_bar"))
         return browsers
     }
 

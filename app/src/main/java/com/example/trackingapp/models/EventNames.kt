@@ -34,7 +34,8 @@ enum class LogEventName {
 
 enum class BootEventType {
     BOOTED,
-    SHUTDOWM
+    SHUTDOWN,
+    REBOOT
 }
 
 enum class ONOFFSTATE {

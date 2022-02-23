@@ -1,5 +1,6 @@
 package com.example.trackingapp.activity.esm
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemButtonsBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemDropdownBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemScaleBinding
+import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.turnScreenOffAndKeyguardOn
@@ -36,9 +38,8 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         binding = ActivityLockscreenEsmBinding.inflate(layoutInflater)
         setContentView(binding.root)
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
-        SharedPrefManager.init(this.applicationContext)
 
-        var descriptions: Array<String> = resources.getStringArray(R.array.esm_emotionList)
+        SharedPrefManager.init(this.applicationContext)
 
         binding.textViewEsmLockIntention.text = viewModel.savedIntention
         val listAdapter = ListAdapter(viewModel.questionList)
@@ -57,6 +58,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             viewModel.questionList.forEach { item ->
                 viewModel.makeLogQuestion(item.value, item.questionType, System.currentTimeMillis())
             }
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
             this.finish()
             dismissESMNotification(this)
         }
@@ -116,7 +118,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         }
 
         inner class ESMButtonItemViewHolder(private val itemBinding: LayoutEsmLockItemButtonsBinding) : ListViewHolder<ESMRadioGroupItem>(itemBinding.root) {
-
             override fun bindData(item: ESMRadioGroupItem) {
                 itemBinding.esmLockIntentionQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
 
@@ -146,19 +147,22 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         inner class ESMSliderItemViewHolder(private val itemBinding: LayoutEsmLockItemScaleBinding) : ListViewHolder<ESMSliderItem>(itemBinding.root) {
             override fun bindData(
                 item: ESMSliderItem,
-            ) {
-                //already add the question as it can be left on the lowest value
-                setValue(item, itemBinding.sliderEsmLockItemSlider.value.toString())
-
-                itemBinding.esmLockItemSliderQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
-                itemBinding.textviewEsmLockItemSliderMin.text = item.sliderMinLabel
-                itemBinding.textviewEsmLockItemSliderMax.text = item.sliderMaxLabel
+            ) { itemBinding.esmLockItemSliderQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
+                itemBinding.textviewEsmLockItemSliderMin.text = getString(item.sliderMinLabel)
+                itemBinding.textviewEsmLockItemSliderMax.text = getString(item.sliderMaxLabel)
                 itemBinding.sliderEsmLockItemSlider.apply {
                     stepSize = item.sliderStepSize
                     valueFrom = item.sliderMin
                     valueTo = item.sliderMax
-                    setLabelFormatter { this.value.toString() }
+                    //Set the color to represent a not activated state
+                    thumbTintList = ColorStateList.valueOf(context.resources.getColor(R.color.greenGray, null))
+                    trackInactiveTintList = ColorStateList.valueOf(context.resources.getColor(R.color.LightBlackishGray, null))
+                    trackActiveTintList = ColorStateList.valueOf(context.resources.getColor(R.color.LightBlackishGray, null))
                     addOnChangeListener { _, value, _ ->
+                        //Set the Color to represent an active state
+                        thumbTintList = ColorStateList.valueOf(context.resources.getColor(R.color.milkGreen, null))
+                        trackInactiveTintList = ColorStateList.valueOf(context.resources.getColor(R.color.milkGreenDark, null))
+                        trackActiveTintList = ColorStateList.valueOf(context.resources.getColor(R.color.milkGreen, null))
                         this.setLabelFormatter { value.toInt().toString() }
                         setValue(item, value.toString())
                         checkOrDismissFullScreenNotification()

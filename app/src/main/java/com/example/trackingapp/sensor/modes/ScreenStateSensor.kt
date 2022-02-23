@@ -14,6 +14,7 @@ import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.ScreenState
 import com.example.trackingapp.sensor.AbstractSensor
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.ESMType
 import com.example.trackingapp.util.NotificationHelper
@@ -25,7 +26,7 @@ class ScreenStateSensor : AbstractSensor(
 ) {
     private var mReceiver: BroadcastReceiver? = null
     private var mContext: Context? = null
-    private var screenOffAsked = false
+    private var screenOffAskedCounter = 0
 
     override fun isAvailable(context: Context): Boolean {
         return true
@@ -78,8 +79,8 @@ class ScreenStateSensor : AbstractSensor(
                 when (currentState) {
                     ScreenState.OFF_LOCKED -> {
                         SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
-                        if(!screenOffAsked) {
-                            screenOffAsked = true
+                        if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT && !SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)) {
+                            screenOffAskedCounter += 1
                             NotificationHelper.dismissESMNotification(context)
                             NotificationHelper.createESMFullScreenNotification(
                                 context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
@@ -98,8 +99,12 @@ class ScreenStateSensor : AbstractSensor(
                         saveEntry(currentState, time)
                     }
                     ScreenState.ON_USERPRESENT -> {
-                        screenOffAsked = false
-                        SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
+                        screenOffAskedCounter = 0
+                        with(SharedPrefManager){
+                            saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
+                            saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, false)
+                            saveCurrentSesionID(LoggingManager.generateSessionID(time))
+                        }
                         val unlockESMintent = Intent(context, ESMIntentionUnlockActivity::class.java)
                         unlockESMintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         unlockESMintent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)

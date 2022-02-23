@@ -1,6 +1,7 @@
 package com.example.trackingapp.activity.esm
 
 import androidx.annotation.ArrayRes
+import androidx.annotation.StringRes
 import com.example.trackingapp.R
 
 sealed interface ESMItem {
@@ -18,8 +19,8 @@ class ESMSliderItem(
     val sliderStepSize: Float,
     val sliderMax: Float,
     val sliderMin: Float,
-    val sliderMinLabel: String = sliderMin.toInt().toString(),
-    val sliderMaxLabel: String = sliderMax.toInt().toString()
+    @StringRes val sliderMinLabel: Int,
+    @StringRes val sliderMaxLabel: Int
 ) : ESMItem
 
 class ESMDropDownItem(

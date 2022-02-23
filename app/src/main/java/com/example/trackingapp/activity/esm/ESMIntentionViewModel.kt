@@ -12,8 +12,6 @@ import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
 
-
-
 class ESMIntentionViewModel : ViewModel() {
 
     val questionList = createQuestionList()
@@ -29,27 +27,37 @@ class ESMIntentionViewModel : ViewModel() {
             timestamp = time,
             event = questionType.name,
             name = answer,
-            description = savedIntention
+            description = savedIntention,
+            id = SharedPrefManager.getCurrentSessionID()
         ).saveToDataBase()
     }
 
     fun checkDuplicateIntentionAnSave(newIntention: String) {
         SharedPrefManager.saveLastIntention(newIntention)
-        if (!DatabaseManager.intentionList.contains(newIntention)) {
+        if (!DatabaseManager.intentionList.contains(newIntention) && !DatabaseManager.intentionExampleList.contains(newIntention)) {
             //save new Intention to Firebase
             DatabaseManager.saveNewIntention(Date(), newIntention)
         }
     }
 
 
-
     private fun createQuestionList(): List<ESMItem> {
         val lastFullESM = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, 0L)
+        val sessionHadNoIntention = SharedPrefManager.getBoolean(CONST.PREFERENCES_IS_NO_CONCRETE_INTENTION)
         return when {
-            //Was Last full ESM over half an over ago?
-            System.currentTimeMillis() - lastFullESM > CONST.ESM_FREQUENCY-> {
+            //Was Last full ESM over xxx min ago?
+            System.currentTimeMillis() - lastFullESM > CONST.ESM_FREQUENCY -> {
                 SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
-                arrayListOf(
+                listOfNotNull(
+                    ESMSliderItem(
+                        R.string.esm_lock_intention_question_regret,
+                        ESMQuestionType.ESM_LOCK_Q_REGRET,
+                        sliderStepSize = 1F,
+                        sliderMin = 0F,
+                        sliderMax = 7F,
+                        sliderMaxLabel = R.string.esm_lock_label_stronglyAgree,
+                        sliderMinLabel = R.string.esm_lock_label_stronglyDisagree
+                    ),
                     ESMDropDownItem(
                         R.string.esm_lock_intention_question_emotion,
                         ESMQuestionType.ESM_LOCK_Q_EMOTION,
@@ -61,8 +69,8 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
-                        sliderMaxLabel = "very strong",
-                        sliderMinLabel = "non existent"
+                        sliderMaxLabel = R.string.esm_lock_label_stronglyAgree,
+                        sliderMinLabel = R.string.esm_lock_label_stronglyDisagree
                     ),
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_track_of_time,
@@ -70,8 +78,8 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
-                        sliderMaxLabel = "very much",
-                        sliderMinLabel = "not at all"
+                        sliderMaxLabel = R.string.esm_lock_label_stronglyAgree,
+                        sliderMinLabel = R.string.esm_lock_label_stronglyDisagree
                     ),
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_track_of_space,
@@ -79,52 +87,38 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
-                        sliderMaxLabel = "very much",
-                        sliderMinLabel = "not at all"
-                    ),
-                    ESMSliderItem(
-                        R.string.esm_lock_intention_question_regret,
-                        ESMQuestionType.ESM_LOCK_Q_REGRET,
-                        sliderStepSize = 1F,
-                        sliderMin = 0F,
-                        sliderMax = 7F,
-                        sliderMaxLabel = "very strong",
-                        sliderMinLabel = "non existent"
+                        sliderMaxLabel = R.string.esm_lock_label_stronglyAgree,
+                        sliderMinLabel = R.string.esm_lock_label_stronglyDisagree
                     ),
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
                         ESMQuestionType.ESM_LOCK_Q_FINISH,
-                    ),
+                    ).takeIf { sessionHadNoIntention },
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_more,
                         ESMQuestionType.ESM_LOCK_Q_MORE,
-                    )
+                    ).takeIf { sessionHadNoIntention },
                 )
             }
             else -> {
-                arrayListOf(
+                listOfNotNull(
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_finished,
+                        ESMQuestionType.ESM_LOCK_Q_FINISH,
+                    ).takeIf {sessionHadNoIntention },
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_more,
+                        ESMQuestionType.ESM_LOCK_Q_MORE,
+                    ).takeIf { sessionHadNoIntention},
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_regret,
                         ESMQuestionType.ESM_LOCK_Q_REGRET,
                         sliderStepSize = 1F,
                         sliderMin = 0F,
                         sliderMax = 7F,
-                        sliderMaxLabel = "very strong",
-                        sliderMinLabel = "non existent"
+                        sliderMaxLabel = R.string.esm_lock_label_stronglyAgree,
+                        sliderMinLabel = R.string.esm_lock_label_stronglyDisagree
                     ),
-                    ESMDropDownItem(
-                        R.string.esm_lock_intention_question_emotion,
-                        ESMQuestionType.ESM_LOCK_Q_EMOTION,
-                        dropdownList = R.array.esm_emotionList
-                    ),
-                    ESMRadioGroupItem(
-                        R.string.esm_lock_intention_question_intention_finished,
-                        ESMQuestionType.ESM_LOCK_Q_FINISH,
-                    ),
-                    ESMRadioGroupItem(
-                        R.string.esm_lock_intention_question_intention_more,
-                        ESMQuestionType.ESM_LOCK_Q_MORE,
-                    )
                 )
             }
         }
