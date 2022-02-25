@@ -57,7 +57,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
             //When user selected item, close ESM
             setOnItemClickListener { adapterView, _, position, _ ->
                 val item: String = adapterView.getItemAtPosition(position).toString()
-                actionDone(item)
+                actionDone(item, System.currentTimeMillis())
             }
         }
 
@@ -79,7 +79,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
     private fun RadioButton.configureRadioButton() {
         this.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                actionDone(this.text.toString())
+                actionDone(this.text.toString(), System.currentTimeMillis())
             }
         }
     }
@@ -90,13 +90,13 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
 
     private fun actionManualInputDone(intention: String) {
         if (intention.isNotBlank()) {
-            actionDone(intention)
+            actionDone(intention, System.currentTimeMillis())
         } else {
             Toast.makeText(this, R.string.esm_unlock_intention_error, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun actionDone(intention: String) {
+    private fun actionDone(intention: String, time: Long) {
         if(intention == getString(R.string.esm_intention_example_noIntention)){
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_IS_NO_CONCRETE_INTENTION, true)
         } else {
@@ -107,9 +107,9 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         dismissFullScreenNotification()
         LogEvent(
             LogEventName.ESM,
-            System.currentTimeMillis(),
-            ESMQuestionType.ESM_UNLOCK_INTENTION.name,
-            intention
+            timestamp = time,
+            event = ESMQuestionType.ESM_UNLOCK_INTENTION.name,
+            description = intention,
         ).saveToDataBase()
     }
 

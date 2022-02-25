@@ -42,13 +42,29 @@
         app:layout_constraintTop_toBottomOf="@+id/esm_lock_intention_prompt" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_fragment_mainscreen"
+        android:id="@+id/recyclerview_fragment_esm_lock"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         tools:layout_editor_absoluteX="16dp"
         tools:listitem="@layout/layout_esm_lock_item_scale"
         app:layout_constraintTop_toBottomOf="@+id/textView_esm_lock_intention" />
+
+    <Button
+        android:id="@+id/button_finish"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="start"
+        android:layout_marginHorizontal="64dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/milkGreen"
+        android:text="@string/esm_lock_intention_button_done"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerview_fragment_esm_lock" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

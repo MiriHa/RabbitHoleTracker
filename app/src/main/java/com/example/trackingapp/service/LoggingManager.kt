@@ -60,6 +60,9 @@ object LoggingManager {
     val userPresent: Boolean
         get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_PRESENT)
 
+    val currentSessionID: String?
+        get() = SharedPrefManager.getCurrentSessionID()
+
     val _isLoggingActive = MutableLiveData(false)
     val isLoggingActive: LiveData<Boolean> = _isLoggingActive
 
@@ -88,7 +91,7 @@ object LoggingManager {
         Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
         val stopIntent = Intent(context, LoggingService::class.java)
         context.applicationContext.stopService(stopIntent)
-        cancleServiceViaWorker(context)
+        cancelServiceViaWorker(context)
         _isLoggingActive.value = false
     }
 
@@ -100,7 +103,7 @@ object LoggingManager {
         }
     }
 
-    fun startServiceViaWorker(context: Context) {
+    private fun startServiceViaWorker(context: Context) {
         Log.d(TAG, "startServiceViaWorker called")
         val workManager: WorkManager = WorkManager.getInstance(context)
 
@@ -119,11 +122,11 @@ object LoggingManager {
         )
     }
 
-    private fun cancleServiceViaWorker(context: Context) {
+    private fun cancelServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
     }
 
     fun generateSessionID(timestamp: Long): String {
-        return timestamp.toString() + UUID.randomUUID().toString()
+        return timestamp.toString() + "_" + UUID.randomUUID().toString()
     }
 }

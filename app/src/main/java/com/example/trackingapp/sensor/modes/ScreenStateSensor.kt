@@ -79,6 +79,7 @@ class ScreenStateSensor : AbstractSensor(
                 when (currentState) {
                     ScreenState.OFF_LOCKED -> {
                         SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
+                        Log.d("xxx","screen off: $screenOffAskedCounter ${SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED) }")
                         if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT && !SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)) {
                             screenOffAskedCounter += 1
                             NotificationHelper.dismissESMNotification(context)
@@ -102,8 +103,10 @@ class ScreenStateSensor : AbstractSensor(
                         screenOffAskedCounter = 0
                         with(SharedPrefManager){
                             saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
+                            Log.d("xxx","look at pref besfore screen: ${getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
                             saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, false)
-                            saveCurrentSesionID(LoggingManager.generateSessionID(time))
+                            Log.d("xxx","look at pref after  screen: ${getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
+                            saveCurrentSessionID(LoggingManager.generateSessionID(time))
                         }
                         val unlockESMintent = Intent(context, ESMIntentionUnlockActivity::class.java)
                         unlockESMintent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

@@ -14,7 +14,6 @@ import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaDataTraffic
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.SharedPrefManager
 
 
 class DataTrafficSensor : AbstractSensor(
@@ -33,7 +32,6 @@ class DataTrafficSensor : AbstractSensor(
 
     override fun start(context: Context) {
         super.start(context)
-        SharedPrefManager.init(context)
         lastTimeStamp = System.currentTimeMillis() - CONST.LOGGING_FREQUENCY
 
         networkManager = context.getSystemService(Context.NETWORK_STATS_SERVICE) as NetworkStatsManager

@@ -15,7 +15,7 @@ class ESMSliderItem(
     override val question: Int,
     override val questionType: ESMQuestionType,
     override val visible: Boolean  = true,
-    override var value: String = "",
+    override var value: String = "unanswered",
     val sliderStepSize: Float,
     val sliderMax: Float,
     val sliderMin: Float,
@@ -27,7 +27,7 @@ class ESMDropDownItem(
     override val question: Int,
     override val questionType: ESMQuestionType,
     override val visible: Boolean  = true,
-    override var value: String = "",
+    override var value: String = "unanswered",
     @ArrayRes val dropdownList: Int
 ) : ESMItem
 
@@ -35,7 +35,7 @@ class ESMRadioGroupItem(
     override val question: Int,
     override val questionType: ESMQuestionType,
     override val visible: Boolean = true,
-    override var value: String = "",
+    override var value: String = "unanswered",
     val buttonList: List<Int> = arrayListOf(R.string.esm_button_yes, R.string.esm_button_no)
 ) : ESMItem
 

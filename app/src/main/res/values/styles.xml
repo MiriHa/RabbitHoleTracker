@@ -8,10 +8,6 @@
         <item name="android:buttonTint">@color/milkGreen</item>
     </style>
 
-    <style name="ButtonMain" parent="Widget.AppCompat.Button">
-        <item name="android:backgroundTint">@color/milkGreen</item>
-    </style>
-
     <style name="Theme.TrackingApp.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

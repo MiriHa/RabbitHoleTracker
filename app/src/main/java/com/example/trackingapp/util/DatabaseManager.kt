@@ -56,7 +56,6 @@ object DatabaseManager {
     }
 
     fun LogEvent.saveToDataBase(metadata: MetaType? = null) {
-       // Log.d(TAG, "SaveEntryToDataBase: ${this.eventName} ${this.event} ${CONST.dateTimeFormat.format(this.timestamp)}")
         if (metadata != null) {
             user?.let {
                 val logChild = Firebase.database.reference.child(CONST.firebaseReferenceUsers)

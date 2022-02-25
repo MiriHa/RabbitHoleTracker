@@ -59,59 +59,17 @@ class AccessibilityLogService : AccessibilityService() {
                 //represents and foreground change
                 event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
                 event?.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return
-                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED && !event.isPassword -> { return //TYPE VIEW TEXT CHANGED
-                    // User starts input of text -> create new text event?
-                    // do i need this or get the text via getEvetnText?
-/*
-                    // create ContentChangeEvents
-                    if(chachedContentChangeEvent == null) chachedContentChangeEvent = ContentChangeEvent()
-
-                    // first: try to get hint text property
-                   *//* if (event.source != null *//**//*&& event.source.hintText != null*//**//*) {
-                        chachedContentChangeEvent?.fieldHintText = event.source.hintText.toString()
-                        chachedContentChangeEvent?.message += event.source.text.toString()
-                        Log.d("xxx", "textN: ${event.source.text} ${event.source.hintText}")
-                    } else {*//*
-                    chachedContentChangeEvent?.message += getEventText(event)
-                   // }
-                    try {
-                        chachedContentChangeEvent?.fieldPackageName = event.packageName.toString()
-                    } catch (e: Exception) {
-                        Log.i(TAG, "Could not fetch packageName of event source node", e)
-                    }
-                    keyboardEvents += 1
-                    *//*if (keyboardEvents == 1) {
-                        initialContent = if (event.beforeText != null) {
-                            event.beforeText.toString()
-                        } else {
-                            ""
-                        }
-                    }*/
+                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED -> {
+                    LogEvent(
+                        LogEventName.ACCESSIBILITY_KEYBOARD_INPUT,
+                        timestamp = time,
+                        event = getEventType(event),
+                        description = getEventText(event),
+                        name = event.className.toString(),
+                        packageName = event.packageName.toString()
+                    ).saveToDataBase()
                 }
-
-              /*  // entering a new node -> cache the hint text, in case this is a textfield
-                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents == 0 -> {
-                    Log.w("xxx", "ACCESSIBILITY TYPE_VIEW_FOCUSED keyevents 0: $keyboardEvents")
-                    try {
-                        cachedHintText = event.text.toString()
-                        Log.i(TAG, "caching hint text: $cachedHintText")
-                    } catch (e: Exception) {
-                        Log.w(TAG, "could not fetch hint text from event: $event", e)
-                    }
-                }
-                // leaving a textfield
-                AccessibilityEvent.TYPE_VIEW_FOCUSED == event?.eventType && keyboardEvents > 0 -> {
-                    Log.w("xxx", "ACCESSIBILITY TYPE_VIEW_FOCUSED keyevents over 0: $keyboardEvents")
-                    onFinishInput(time)
-                }*/
                 else -> {
-                   /* if(keyboardEvents > 0
-                        && event?.eventType != AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
-                        && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_EXIT
-                        && event?.eventType != AccessibilityEvent.TYPE_VIEW_HOVER_ENTER
-                    ){
-                        onFinishInput(time)
-                    }*/
                     LogEvent(
                         LogEventName.ACCESSIBILITY,
                         timestamp = time,
@@ -125,28 +83,6 @@ class AccessibilityLogService : AccessibilityService() {
         } catch (e: Exception) {
             Log.w(TAG, "exception in onAccessibilityEvent() for event " + (event?.toString() ?: ""), e)
         }
-    }
-
-    private fun onFinishInput(time: Long) { //TODO public only for testing
-        if (keyboardEvents < 1) {
-            return
-        }
-        chachedContentChangeEvent?.keyboardEvents = keyboardEvents
-        chachedContentChangeEvent?.timestampEnd = time
-
-        LogEvent(
-            LogEventName.INPUT,
-            timestamp = time,
-            event = getEventType(chachedContentChangeEvent?.event),
-            name = chachedContentChangeEvent?.event?.className.toString(),
-            packageName = chachedContentChangeEvent?.event?.packageName.toString()
-        ).saveToDataBase(metadata = chachedContentChangeEvent)
-
-        keyboardEvents = 0
-        initialContent = null
-        cachedHintText = null
-        chachedContentChangeEvent = null
-
     }
 
     private fun getEventText(event: AccessibilityEvent?): String {
@@ -215,7 +151,7 @@ class AccessibilityLogService : AccessibilityService() {
                     browserApp = packageName
                     browserUrl = capturedUrl
                     LogEvent(
-                        LogEventName.ACCESIBILIITY_BROWSER_URL,
+                        LogEventName.ACCESSIBILITY_BROWSER_URL,
                         timestamp = event.eventTime,
                         event = getEventType(event),
                         description = browserUrl,
@@ -229,7 +165,7 @@ class AccessibilityLogService : AccessibilityService() {
                         browserUrl = capturedUrl
                         Log.d("Browser", "$packageName   $capturedUrl")
                         LogEvent(
-                            LogEventName.ACCESIBILIITY_BROWSER_URL,
+                            LogEventName.ACCESSIBILITY_BROWSER_URL,
                             timestamp = event.eventTime,
                             event = getEventType(event),
                             description = browserUrl,

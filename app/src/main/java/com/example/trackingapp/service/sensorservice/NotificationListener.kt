@@ -61,24 +61,23 @@ class NotificationListener: NotificationListenerService() {
             subText = notification.extras["android.subText"].toString()
         }
         Log.d(TAG, "Title: $title Text: $text InfoText: $infoText")
-        var titleHashed = ""
-        var textHashed = ""
         //hash every title and text
         if (context?.packageName != packageName) {
             if ("" != title) {
-                titleHashed = title.hashCode().toString()
+                title = title.hashCode().toString()
             }
             if ("" != text) {
-                textHashed = text.hashCode().toString()
+                text = text.hashCode().toString()
+            }
+            if ("" != infoText) {
+                infoText = text.hashCode().toString()
+            }
+            if ("" != subText) {
+                subText = text.hashCode().toString()
             }
         }
 
-        /*if(notification.actions != null){
-            LogHelper.d(TAG, "Notification actions: "+getString(notification.actions));
-        }*/
-        //TODO hash
-        checkIfNotificationExistsAndSave(title, timestamp, "$text, info: $infoText, subText: $subText", priority, packageName, category)
-
+        checkIfNotificationExistsAndSave(title, timestamp, text, subtext = subText, infoText = infoText, priority, packageName, category)
         Log.d(TAG, "onNotificationPosted done")
     }
 
@@ -116,7 +115,7 @@ class NotificationListener: NotificationListenerService() {
         return mOnUnbind
     }
 
-    private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
+    private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, subtext:String?, infoText: String?, priority: Int, packageName: String, category: String?) {
         Log.d(TAG, "checkIfNotificationExistsAndSave() $packageName ${packageName != "com.example.trackingapp"}")
         if(packageName != "com.example.trackingapp" ||
             category != Notification.CATEGORY_CALL ||
@@ -124,12 +123,12 @@ class NotificationListener: NotificationListenerService() {
             category != Notification.CATEGORY_STOPWATCH ||
             category != Notification.CATEGORY_LOCATION_SHARING ||
             category != Notification.CATEGORY_ALARM){
-            saveEntry(title, timestamp, text, priority, packageName, category)
+            saveEntry(title, timestamp, text, subtext, infoText, priority, packageName, category)
         }
     }
 
-    private fun saveEntry(title: String, timestamp: Long, text: String, priority: Int, packageName: String, category: String?) {
-        val metaNotification = MetaNotification(priority, category)
+    private fun saveEntry(title: String, timestamp: Long, text: String, subtext:String?, infoText: String?, priority: Int, packageName: String, category: String?) {
+        val metaNotification = MetaNotification(priority, category, infoText = infoText, subText = subtext)
         LogEvent(LogEventName.NOTIFICATION, timestamp, event= title, description= text, packageName = packageName).saveToDataBase(metaNotification)
 
     }

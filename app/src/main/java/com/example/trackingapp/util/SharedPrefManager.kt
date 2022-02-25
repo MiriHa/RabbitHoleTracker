@@ -23,7 +23,7 @@ object SharedPrefManager {
         return sharedPrefs.getString(CONST.PREFERENCES_INTENTION_NAME, "last intention")
     }
 
-    fun saveCurrentSesionID(id: String){
+    fun saveCurrentSessionID(id: String){
         val editor = sharedPrefs.edit()
         editor.putString(CONST.PREFERENCES_SESSION_ID, id)
         editor.apply()

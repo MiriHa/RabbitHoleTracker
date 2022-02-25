@@ -2,6 +2,7 @@ package com.example.trackingapp.activity.esm
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
@@ -31,7 +33,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLockscreenEsmBinding
     private lateinit var viewModel: ESMIntentionViewModel
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,27 +41,46 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
 
         SharedPrefManager.init(this.applicationContext)
+        viewModel.questionList = viewModel.createQuestionList()
 
         binding.textViewEsmLockIntention.text = viewModel.savedIntention
         val listAdapter = ListAdapter(viewModel.questionList)
 
-        binding.recyclerviewFragmentMainscreen.apply {
+        binding.recyclerviewFragmentEsmLock.apply {
             adapter = listAdapter
             layoutManager = LinearLayoutManager(this@ESMIntentionLockActivity)
         }
+        binding.buttonFinish.apply {
+            isEnabled = false
+            setBackgroundColor(context.resources.getColor(R.color.LightBlackishGray, null))
+            setOnClickListener {
+                Log.d("xxx", "button esm finish")
+                Toast.makeText(context, "button esm finish", Toast.LENGTH_LONG).show()
+                checkOrDismissFullScreenNotification()
+            }
+        }
 
         this.turnScreenOnAndKeyguardOff()
-
     }
 
     private fun checkOrDismissFullScreenNotification() {
-        if (viewModel.questionList.size == viewModel.answeredQuestions.size) {
-            viewModel.questionList.forEach { item ->
-                viewModel.makeLogQuestion(item.value, item.questionType, System.currentTimeMillis())
+        viewModel.questionList.forEach { item ->
+            viewModel.makeLogESMLockQuestion(item.value, item.questionType, System.currentTimeMillis())
+        }
+        Log.d("xxx", "look at pref before: ${SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
+        //SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
+        Log.d("xxx", "look at pref after: ${SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
+        this.finish()
+        dismissESMNotification(this)
+    }
+
+    private fun isDoneButtonEnabled() {
+        Log.d("xxx", "button: ${viewModel.questionList.size} ${viewModel.answeredQuestions.size}")
+        if (viewModel.questionList.size == viewModel.answeredQuestions.size && !binding.buttonFinish.isEnabled) {
+            binding.buttonFinish.apply {
+                isEnabled = true
+                setBackgroundColor(context.resources.getColor(R.color.milkGreen, null))
             }
-            SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
-            this.finish()
-            dismissESMNotification(this)
         }
     }
 
@@ -114,6 +134,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             fun setValue(item: ESMItem, value: String) {
                 item.value = value
                 if (!viewModel.answeredQuestions.contains(item.questionType)) viewModel.answeredQuestions.add(item.questionType)
+                isDoneButtonEnabled()
             }
         }
 
@@ -135,19 +156,18 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                     setOnCheckedChangeListener { _, isChecked ->
                         if (isChecked) {
                             setValue(item, buttonText)
-                            checkOrDismissFullScreenNotification()
                         }
                     }
                 }
                 itemBinding.radioGroupEsmLock.addView(radioButton)
             }
-
         }
 
         inner class ESMSliderItemViewHolder(private val itemBinding: LayoutEsmLockItemScaleBinding) : ListViewHolder<ESMSliderItem>(itemBinding.root) {
             override fun bindData(
                 item: ESMSliderItem,
-            ) { itemBinding.esmLockItemSliderQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
+            ) {
+                itemBinding.esmLockItemSliderQuestion.text = HtmlCompat.fromHtml(getString(item.question), HtmlCompat.FROM_HTML_MODE_LEGACY)
                 itemBinding.textviewEsmLockItemSliderMin.text = getString(item.sliderMinLabel)
                 itemBinding.textviewEsmLockItemSliderMax.text = getString(item.sliderMaxLabel)
                 itemBinding.sliderEsmLockItemSlider.apply {
@@ -165,7 +185,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                         trackActiveTintList = ColorStateList.valueOf(context.resources.getColor(R.color.milkGreen, null))
                         this.setLabelFormatter { value.toInt().toString() }
                         setValue(item, value.toString())
-                        checkOrDismissFullScreenNotification()
                     }
                 }
             }
@@ -193,7 +212,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 val value = parent?.getItemAtPosition(position).toString()
                 setValue(esmItem, value)
-                checkOrDismissFullScreenNotification()
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {

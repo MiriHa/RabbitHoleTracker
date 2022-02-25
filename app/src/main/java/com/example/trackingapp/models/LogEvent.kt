@@ -1,5 +1,6 @@
 package com.example.trackingapp.models
 
+import com.example.trackingapp.service.LoggingManager
 import java.util.*
 
 open class LogEvent(
@@ -9,11 +10,12 @@ open class LogEvent(
     val description: String? = null,
     val name: String? = null,
     val packageName: String? = null,
-    val id: String? = null,
+    var id: String? = null,
     var timezoneOffset: Int? = null
 ) {
     init {
         timezoneOffset = calculateTimezoneOffset(timestamp)
+        id = LoggingManager.currentSessionID
     }
 
     private fun calculateTimezoneOffset(timestamp: Long?): Int {

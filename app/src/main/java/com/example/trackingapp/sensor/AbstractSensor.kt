@@ -2,6 +2,7 @@ package com.example.trackingapp.sensor
 
 import android.content.Context
 import android.util.Log
+import com.example.trackingapp.util.SharedPrefManager
 import com.google.firebase.FirebaseApp
 import java.io.Serializable
 
@@ -21,6 +22,7 @@ abstract class AbstractSensor protected constructor(
         isSensorAvailable = isAvailable(context)
         if (!isSensorAvailable) Log.i(TAG, "Sensor not available")
         FirebaseApp.initializeApp(context)
+        SharedPrefManager.init(context)
     }
     abstract fun stop()
 

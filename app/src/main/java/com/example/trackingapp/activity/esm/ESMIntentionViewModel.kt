@@ -14,21 +14,21 @@ import java.util.*
 
 class ESMIntentionViewModel : ViewModel() {
 
-    val questionList = createQuestionList()
+    var questionList = createQuestionList()
     val answeredQuestions = mutableListOf<ESMQuestionType>()
 
     val savedIntention
         get() = SharedPrefManager.getLastSavedIntention()
 
-    fun makeLogQuestion(answer: String, questionType: ESMQuestionType, time: Long) {
+    fun makeLogESMLockQuestion(answer: String, questionType: ESMQuestionType, time: Long) {
         answeredQuestions.add(questionType)
+        SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
         LogEvent(
             LogEventName.ESM,
             timestamp = time,
             event = questionType.name,
             name = answer,
             description = savedIntention,
-            id = SharedPrefManager.getCurrentSessionID()
         ).saveToDataBase()
     }
 
@@ -41,7 +41,7 @@ class ESMIntentionViewModel : ViewModel() {
     }
 
 
-    private fun createQuestionList(): List<ESMItem> {
+    fun createQuestionList(): List<ESMItem> {
         val lastFullESM = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, 0L)
         val sessionHadNoIntention = SharedPrefManager.getBoolean(CONST.PREFERENCES_IS_NO_CONCRETE_INTENTION)
         return when {
@@ -93,11 +93,11 @@ class ESMIntentionViewModel : ViewModel() {
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
                         ESMQuestionType.ESM_LOCK_Q_FINISH,
-                    ).takeIf { sessionHadNoIntention },
+                    ).takeIf { !sessionHadNoIntention },
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_more,
                         ESMQuestionType.ESM_LOCK_Q_MORE,
-                    ).takeIf { sessionHadNoIntention },
+                    ).takeIf { !sessionHadNoIntention },
                 )
             }
             else -> {
@@ -105,11 +105,11 @@ class ESMIntentionViewModel : ViewModel() {
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
                         ESMQuestionType.ESM_LOCK_Q_FINISH,
-                    ).takeIf {sessionHadNoIntention },
+                    ).takeIf { !sessionHadNoIntention },
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_more,
                         ESMQuestionType.ESM_LOCK_Q_MORE,
-                    ).takeIf { sessionHadNoIntention},
+                    ).takeIf { !sessionHadNoIntention},
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_regret,
                         ESMQuestionType.ESM_LOCK_Q_REGRET,
@@ -123,6 +123,7 @@ class ESMIntentionViewModel : ViewModel() {
             }
         }
     }
+
 }
 
 class ESMIntentionViewModelFactory : ViewModelProvider.Factory {

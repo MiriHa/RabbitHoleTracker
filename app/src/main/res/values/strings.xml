@@ -32,15 +32,18 @@
     <string name="esm_unlock_intention_question">What do you want to use your phone for?</string>
     <string name="esm_unlock_intention_hint">Your Intention</string>
     <string name="esm_unlock_intention_button_start">Start</string>
+    <string name="esm_lock_intention_button_done">Done</string>
     <string name="esm_lock_intention_description_promt">Your intention was:</string>
     <string name="esm_lock_notification_title">Here are some questions about your usage time.</string>
+
     <string name="esm_lock_intention_question_intention_finished">Did you <b>finish</b> your intention?</string>
     <string name="esm_lock_intention_question_intention_more">Did you do <b>more</b> than your intention?</string>
-    <string name="esm_lock_intention_question_regret">How strong was your <b>feeling of regret?</b></string>
-    <string name="esm_lock_intention_question_track_of_time">How much did you <b>loose track of time</b> while using your phone?</string>
-    <string name="esm_lock_intention_question_track_of_space">How much did you <b>loose track of your surroundings</b> while using your phone?</string>
-    <string name="esm_lock_intention_question_agency">How strong was your feeling of <b>agency?</b></string>
+    <string name="esm_lock_intention_question_regret">I feel <b>regret</b> for part of my phone use.</string>
+    <string name="esm_lock_intention_question_agency">I had a strong sense of <b>agency</b>.</string>
+    <string name="esm_lock_intention_question_track_of_time">I have <b>lost track of time</b> while using my phone.</string>
+    <string name="esm_lock_intention_question_track_of_space">I had a <b>good sense of my surroundings</b> while using my phone.</string>
     <string name="esm_lock_intention_question_emotion">Which pair of <b>emotion</b> corresponds best to how you felt this usage session?</string>
+
     <string name="esm_lock_label_stronglyAgree">strongly agree</string>
     <string name="esm_lock_label_stronglyDisagree">strongly disagree</string>
     <string name="esm_button_yes">Yes</string>
