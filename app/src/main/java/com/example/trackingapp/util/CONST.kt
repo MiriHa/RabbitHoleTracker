@@ -41,6 +41,8 @@ object CONST {
     const val ESM_FREQUENCY: Long = 20 * 60 * 1000 //20 min
     const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 16 //minutes
     const val ESM_LOCK_ASK_COUNT = 3
+    const val ESM_ANSWERED: String = "com.example.trackingapp.ESM_ANSWERED"
+    const val ESM_ANSWERED_MESSAGE = "ESM_ANSWERED_MESSAGE"
 
     const val UNIQUE_WORK_NAME = "StartMyServiceViaWorker"
 

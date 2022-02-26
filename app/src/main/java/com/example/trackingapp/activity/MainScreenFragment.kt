@@ -98,7 +98,6 @@ class MainScreenFragment : Fragment() {
     }
 
     override fun onResume() {
-        Log.d("xxx", "onResume")
         LoggingManager.ensureLoggingManagerIsAlive(mContext)
         super.onResume()
     }

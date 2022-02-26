@@ -9,7 +9,6 @@ import android.view.accessibility.AccessibilityNodeInfo
 import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
-import com.example.trackingapp.models.metadata.ContentChangeEvent
 import com.google.firebase.FirebaseApp
 
 class AccessibilityLogService : AccessibilityService() {
@@ -31,11 +30,6 @@ class AccessibilityLogService : AccessibilityService() {
         stopForeground(true)
         super.onDestroy()
     }
-
-    var keyboardEvents: Int = 0 //mutableListOf<String>()
-    var initialContent: String? = null
-    var cachedHintText: String? = null
-    var chachedContentChangeEvent: ContentChangeEvent? = null
 
     var browserApp = ""
     var browserUrl = ""

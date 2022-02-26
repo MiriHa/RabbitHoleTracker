@@ -1,16 +1,12 @@
 package com.example.trackingapp.activity.esm
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
@@ -53,33 +49,37 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         binding.buttonFinish.apply {
             isEnabled = false
             setBackgroundColor(context.resources.getColor(R.color.LightBlackishGray, null))
+            setTextColor(context.resources.getColor(R.color.BlackishGray, null))
             setOnClickListener {
-                Log.d("xxx", "button esm finish")
-                Toast.makeText(context, "button esm finish", Toast.LENGTH_LONG).show()
-                checkOrDismissFullScreenNotification()
+                dismissFullScreenNotification()
             }
         }
 
         this.turnScreenOnAndKeyguardOff()
     }
 
-    private fun checkOrDismissFullScreenNotification() {
+    private fun dismissFullScreenNotification() {
         viewModel.questionList.forEach { item ->
             viewModel.makeLogESMLockQuestion(item.value, item.questionType, System.currentTimeMillis())
         }
-        Log.d("xxx", "look at pref before: ${SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
-        //SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
-        Log.d("xxx", "look at pref after: ${SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
+        sendESMAnswered()
         this.finish()
         dismissESMNotification(this)
     }
 
+    private fun sendESMAnswered(){
+        val intent = Intent(CONST.ESM_ANSWERED)
+        intent.setPackage(packageName)
+        intent.putExtra(CONST.ESM_ANSWERED_MESSAGE, true)
+        applicationContext.sendBroadcast(intent)
+    }
+
     private fun isDoneButtonEnabled() {
-        Log.d("xxx", "button: ${viewModel.questionList.size} ${viewModel.answeredQuestions.size}")
         if (viewModel.questionList.size == viewModel.answeredQuestions.size && !binding.buttonFinish.isEnabled) {
             binding.buttonFinish.apply {
                 isEnabled = true
                 setBackgroundColor(context.resources.getColor(R.color.milkGreen, null))
+                setTextColor(context.resources.getColor(R.color.background_gray, null))
             }
         }
     }

@@ -39,11 +39,13 @@ class ScreenStateSensor : AbstractSensor(
         Log.d(TAG, "StartSensor: ${CONST.dateTimeFormat.format(time)}")
 
         mContext = context
+        esmAnswered = false
 
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_SCREEN_ON)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
         filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(CONST.ESM_ANSWERED)
         mReceiver = ScreenReceiver()
         try {
             context.unregisterReceiver(mReceiver)
@@ -61,6 +63,10 @@ class ScreenStateSensor : AbstractSensor(
         }
     }
 
+    companion object{
+        var esmAnswered = false
+    }
+
 
     inner class ScreenReceiver : BroadcastReceiver() {
 
@@ -71,16 +77,18 @@ class ScreenStateSensor : AbstractSensor(
             val time = System.currentTimeMillis()
             val currentState: ScreenState = determineScreenState(context, intent)
 
-            Log.d("TAG","ScreenReceiver: $currentState isRunning: $isRunning")
-
+            Log.d(TAG,"ScreenReceiver: $currentState isRunning: $isRunning")
 
             if (isRunning) {
                 val notificationManager = NotificationManagerCompat.from(context)
-                when (currentState) {
-                    ScreenState.OFF_LOCKED -> {
+                when{
+                    intent.action == CONST.ESM_ANSWERED -> {
+                        esmAnswered = intent.getBooleanExtra(CONST.ESM_ANSWERED_MESSAGE, true)
+                        //SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, esmAnswered)
+                    }
+                    currentState == ScreenState.OFF_LOCKED -> {
                         SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
-                        Log.d("xxx","screen off: $screenOffAskedCounter ${SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED) }")
-                        if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT && !SharedPrefManager.getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)) {
+                        if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT && !esmAnswered) {
                             screenOffAskedCounter += 1
                             NotificationHelper.dismissESMNotification(context)
                             NotificationHelper.createESMFullScreenNotification(
@@ -90,22 +98,21 @@ class ScreenStateSensor : AbstractSensor(
                         }
                         saveEntry(currentState, time)
                     }
-                    ScreenState.OFF_UNLOCKED -> {
+                    currentState == ScreenState.OFF_UNLOCKED -> {
                         saveEntry(currentState, time)
                     }
-                    ScreenState.ON_LOCKED -> {
+                    currentState == ScreenState.ON_LOCKED -> {
                         saveEntry(currentState, time)
                     }
-                    ScreenState.ON_UNLOCKED -> {
+                    currentState == ScreenState.ON_UNLOCKED -> {
                         saveEntry(currentState, time)
                     }
-                    ScreenState.ON_USERPRESENT -> {
+                    currentState == ScreenState.ON_USERPRESENT -> {
                         screenOffAskedCounter = 0
+                        esmAnswered = false
                         with(SharedPrefManager){
                             saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
-                            Log.d("xxx","look at pref besfore screen: ${getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
-                            saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, false)
-                            Log.d("xxx","look at pref after  screen: ${getBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED)}")
+                            //saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, false)
                             saveCurrentSessionID(LoggingManager.generateSessionID(time))
                         }
                         val unlockESMintent = Intent(context, ESMIntentionUnlockActivity::class.java)
