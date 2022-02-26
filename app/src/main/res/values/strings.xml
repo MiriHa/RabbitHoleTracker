@@ -34,7 +34,8 @@
     <string name="esm_unlock_intention_button_start">Start</string>
     <string name="esm_lock_intention_button_done">Done</string>
     <string name="esm_lock_intention_description_promt">Your intention was:</string>
-    <string name="esm_lock_notification_title">Here are some questions about your usage time.</string>
+    <string name="esm_lock_notification_title">Questions about your usage time</string>
+    <string name="esm_lock_notification_description">Please answer these questions immediately.</string>
 
     <string name="esm_lock_intention_question_intention_finished">Did you <b>finish</b> your intention?</string>
     <string name="esm_lock_intention_question_intention_more">Did you do <b>more</b> than your intention?</string>

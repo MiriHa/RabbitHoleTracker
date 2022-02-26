@@ -41,7 +41,6 @@
         <activity
             android:name="com.example.trackingapp.activity.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

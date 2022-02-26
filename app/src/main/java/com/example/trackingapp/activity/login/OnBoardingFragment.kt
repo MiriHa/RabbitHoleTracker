@@ -36,7 +36,7 @@ class OnBoardingFragment: Fragment() {
     override fun onStart() {
         super.onStart()
        if(DatabaseManager.isUserLoggedIn){
-           //G0 to the MainScreen
+           //Go to the MainScreen or Permissionscreen
            if(PermissionManager.areAllPermissionGiven(this.activity)) {
                SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
                navigate(to=ScreenType.HomeScreen, from=ScreenType.Welcome)

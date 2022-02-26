@@ -3,7 +3,6 @@ package com.example.trackingapp.service
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -79,7 +78,6 @@ object LoggingManager {
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED, true)
         }
         Log.d(TAG, "startService called")
-        Toast.makeText(context, "Start LoggingService", Toast.LENGTH_LONG).show()
         val serviceIntent = Intent(context, LoggingService::class.java)
         ContextCompat.startForegroundService(context, serviceIntent)
         startServiceViaWorker(context)
@@ -88,7 +86,6 @@ object LoggingManager {
 
     fun stopLoggingService(context: Context) {
         Log.d(TAG, "stopService called")
-        Toast.makeText(context, "Stop LoggingService", Toast.LENGTH_LONG).show()
         val stopIntent = Intent(context, LoggingService::class.java)
         context.applicationContext.stopService(stopIntent)
         cancelServiceViaWorker(context)
@@ -97,8 +94,7 @@ object LoggingManager {
 
     fun ensureLoggingManagerIsAlive(context: Context) {
         Log.d(TAG, "ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}")
-        Toast.makeText(context, "ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}", Toast.LENGTH_LONG).show()
-        if (isLoggingActive.value == false && isDataRecordingActive) {
+       if (isLoggingActive.value == false && isDataRecordingActive) {
             startLoggingService(context)
         }
     }

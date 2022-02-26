@@ -32,7 +32,8 @@ object NotificationHelper {
         notificationManager: NotificationManagerCompat,
         esmType: ESMType,
         title: String = "Title",
-        description: String = "Description"
+        description: String = "Description",
+        sessionID: String? ,
     ) {
         Log.d(TAG, "Create ESM FullscreenNotification")
         dismissESMNotification(context)
@@ -42,8 +43,9 @@ object NotificationHelper {
             ESMType.ESMINTENTIONCOMPLETED -> ESMIntentionLockActivity::class.java
         }
         val fullScreenIntent = Intent(context, destination)
+        fullScreenIntent.putExtra(CONST.ESM_SESSION_ID_MESSAGE, sessionID)
         fullScreenIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE)
+        val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(context, CONST.CHANNEL_ID_ESM)
             .setSmallIcon(R.drawable.ic_logo)
@@ -58,6 +60,14 @@ object NotificationHelper {
             val notification = builder.build()
             notify(CONST.NOTIFICATION_ID_ESM, notification)
         }
+    }
+
+    fun openESMUnlockActivity(context: Context){
+        val unlockESMIntent = Intent(context, ESMIntentionUnlockActivity::class.java)
+        unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        context.startActivity(unlockESMIntent)
     }
 
     fun dismissESMNotification(context: Context){

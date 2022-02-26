@@ -9,7 +9,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.activity.permissions.PermissionView
@@ -54,7 +53,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             requestPermissions()
             false
         } else {
-            Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
             true
         }
     }
@@ -66,7 +64,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             activity.startActivity(intent)
             false
         } else {
-            Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
             true
         }
     }
@@ -74,7 +71,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     fun checkForNotificationListenerPermissionEnabled(): Boolean {
         return if (isNotificationListenerEnabled(activity)
         ) {
-            Toast.makeText(activity, "Permissions already granted.", Toast.LENGTH_SHORT).show()
             true
         } else {
             val intent = Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS")
@@ -129,7 +125,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
         val permission = deniedPermission()
         if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
             // Show an explanation asynchronously
-            Toast.makeText(activity, "Should show an explanation.", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(activity, appPermissions.toTypedArray(), code)
         }

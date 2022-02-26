@@ -117,13 +117,15 @@ class NotificationListener: NotificationListenerService() {
 
     private fun checkIfNotificationExistsAndSave(title: String, timestamp: Long, text: String, subtext:String?, infoText: String?, priority: Int, packageName: String, category: String?) {
         Log.d(TAG, "checkIfNotificationExistsAndSave() $packageName ${packageName != "com.example.trackingapp"}")
-        if(packageName != "com.example.trackingapp" ||
-            category != Notification.CATEGORY_CALL ||
-            category != Notification.CATEGORY_PROGRESS ||
-            category != Notification.CATEGORY_STOPWATCH ||
-            category != Notification.CATEGORY_LOCATION_SHARING ||
-            category != Notification.CATEGORY_ALARM){
-            saveEntry(title, timestamp, text, subtext, infoText, priority, packageName, category)
+        if(packageName != "com.example.trackingapp") {
+            if (category != Notification.CATEGORY_CALL ||
+                category != Notification.CATEGORY_PROGRESS ||
+                category != Notification.CATEGORY_STOPWATCH ||
+                category != Notification.CATEGORY_LOCATION_SHARING ||
+                category != Notification.CATEGORY_ALARM
+            ) {
+                saveEntry(title, timestamp, text, subtext, infoText, priority, packageName = packageName, category)
+            }
         }
     }
 

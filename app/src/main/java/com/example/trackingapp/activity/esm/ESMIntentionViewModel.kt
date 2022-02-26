@@ -1,12 +1,10 @@
 package com.example.trackingapp.activity.esm
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.DatabaseManager
-import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
-import com.example.trackingapp.models.LogEvent
-import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
@@ -14,23 +12,13 @@ import java.util.*
 
 class ESMIntentionViewModel : ViewModel() {
 
-    var questionList = createQuestionList()
+    var currentSessionID: String? = ""
+
+    var questionList = listOf<ESMItem>()
     val answeredQuestions = mutableListOf<ESMQuestionType>()
 
     val savedIntention
         get() = SharedPrefManager.getLastSavedIntention()
-
-    fun makeLogESMLockQuestion(answer: String, questionType: ESMQuestionType, time: Long) {
-        answeredQuestions.add(questionType)
-        SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
-        LogEvent(
-            LogEventName.ESM,
-            timestamp = time,
-            event = questionType.name,
-            name = answer,
-            description = savedIntention,
-        ).saveToDataBase()
-    }
 
     fun checkDuplicateIntentionAnSave(newIntention: String) {
         SharedPrefManager.saveLastIntention(newIntention)
@@ -40,15 +28,23 @@ class ESMIntentionViewModel : ViewModel() {
         }
     }
 
-
     fun createQuestionList(): List<ESMItem> {
+        val time = System.currentTimeMillis()
         val lastFullESM = SharedPrefManager.getLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, 0L)
         val sessionHadNoIntention = SharedPrefManager.getBoolean(CONST.PREFERENCES_IS_NO_CONCRETE_INTENTION)
         return when {
             //Was Last full ESM over xxx min ago?
-            System.currentTimeMillis() - lastFullESM > CONST.ESM_FREQUENCY -> {
+            time - lastFullESM > CONST.ESM_FREQUENCY -> {
                 SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
                 listOfNotNull(
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_finished,
+                        ESMQuestionType.ESM_LOCK_Q_FINISH,
+                    ).takeIf { !sessionHadNoIntention },
+                    ESMRadioGroupItem(
+                        R.string.esm_lock_intention_question_intention_more,
+                        ESMQuestionType.ESM_LOCK_Q_MORE,
+                    ).takeIf { !sessionHadNoIntention },
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_regret,
                         ESMQuestionType.ESM_LOCK_Q_REGRET,
@@ -90,14 +86,6 @@ class ESMIntentionViewModel : ViewModel() {
                         sliderMaxLabel = R.string.esm_lock_label_stronglyAgree,
                         sliderMinLabel = R.string.esm_lock_label_stronglyDisagree
                     ),
-                    ESMRadioGroupItem(
-                        R.string.esm_lock_intention_question_intention_finished,
-                        ESMQuestionType.ESM_LOCK_Q_FINISH,
-                    ).takeIf { !sessionHadNoIntention },
-                    ESMRadioGroupItem(
-                        R.string.esm_lock_intention_question_intention_more,
-                        ESMQuestionType.ESM_LOCK_Q_MORE,
-                    ).takeIf { !sessionHadNoIntention },
                 )
             }
             else -> {
@@ -109,7 +97,7 @@ class ESMIntentionViewModel : ViewModel() {
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_more,
                         ESMQuestionType.ESM_LOCK_Q_MORE,
-                    ).takeIf { !sessionHadNoIntention},
+                    ).takeIf { !sessionHadNoIntention },
                     ESMSliderItem(
                         R.string.esm_lock_intention_question_regret,
                         ESMQuestionType.ESM_LOCK_Q_REGRET,
@@ -123,7 +111,6 @@ class ESMIntentionViewModel : ViewModel() {
             }
         }
     }
-
 }
 
 class ESMIntentionViewModelFactory : ViewModelProvider.Factory {

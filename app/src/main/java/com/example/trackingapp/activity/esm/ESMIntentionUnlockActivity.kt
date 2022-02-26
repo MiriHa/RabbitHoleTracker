@@ -17,7 +17,6 @@ import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
-import java.util.*
 
 class ESMIntentionUnlockActivity : AppCompatActivity() {
     private lateinit var viewModel: ESMIntentionViewModel
@@ -88,6 +87,12 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         // Do Nothing
     }
 
+    override fun onStop() {
+        super.onStop()
+        this.finish()
+        dismissESMNotification(this)
+    }
+
     private fun actionManualInputDone(intention: String) {
         if (intention.isNotBlank()) {
             actionDone(intention, System.currentTimeMillis())
@@ -109,7 +114,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
             LogEventName.ESM,
             timestamp = time,
             event = ESMQuestionType.ESM_UNLOCK_INTENTION.name,
-            description = intention,
+            description = intention
         ).saveToDataBase()
     }
 
@@ -118,5 +123,4 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         moveTaskToBack(true)
         dismissESMNotification(this)
     }
-
 }

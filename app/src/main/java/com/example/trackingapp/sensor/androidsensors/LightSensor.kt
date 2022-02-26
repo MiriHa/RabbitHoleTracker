@@ -56,15 +56,15 @@ class LightSensor: AbstractSensor(
 
     override fun onSensorChanged(event: SensorEvent?) {
         val time = System.currentTimeMillis()
-        if (isRunning && LoggingManager.userPresent) {
+        if (isRunning && LoggingManager.userPresent && event != null) {
             try {
-                when (event?.accuracy) {
+                when (event.accuracy) {
                     SensorManager.SENSOR_STATUS_UNRELIABLE -> {
-                        val sensorData = CONST.numberFormat.format(event.values[0])
+                        val sensorData = event.values[0].toString()
                         saveEntry(time, sensorData, SensorAccuracy.ACCURACY_UNRELAIABLE.name)
                     }
                     else -> {
-                        val sensorData = CONST.numberFormat.format(event?.values?.get(0))
+                        val sensorData = event.values[0].toString()
                         saveEntry(time, sensorData, SensorAccuracy.ACCURACY_ELSE.name)
                     }
                 }

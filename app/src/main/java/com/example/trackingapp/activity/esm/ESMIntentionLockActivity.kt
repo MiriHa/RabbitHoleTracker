@@ -3,7 +3,10 @@ package com.example.trackingapp.activity.esm
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.*
+import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
@@ -12,11 +15,14 @@ import androidx.core.text.HtmlCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityLockscreenEsmBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemButtonsBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemDropdownBinding
 import com.example.trackingapp.databinding.LayoutEsmLockItemScaleBinding
+import com.example.trackingapp.models.LogEvent
+import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
@@ -39,6 +45,8 @@ class ESMIntentionLockActivity : AppCompatActivity() {
         SharedPrefManager.init(this.applicationContext)
         viewModel.questionList = viewModel.createQuestionList()
 
+        viewModel.currentSessionID = intent.getStringExtra(CONST.ESM_SESSION_ID_MESSAGE)
+
         binding.textViewEsmLockIntention.text = viewModel.savedIntention
         val listAdapter = ListAdapter(viewModel.questionList)
 
@@ -60,9 +68,19 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     private fun dismissFullScreenNotification() {
         viewModel.questionList.forEach { item ->
-            viewModel.makeLogESMLockQuestion(item.value, item.questionType, System.currentTimeMillis())
+            viewModel.answeredQuestions.add(item.questionType)
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
+            LogEvent(
+                LogEventName.ESM,
+                timestamp = System.currentTimeMillis(),
+                event = item.questionType.name,
+                name = item.value,
+                description = viewModel.savedIntention,
+                id = viewModel.currentSessionID
+            ).saveToDataBase()
         }
         sendESMAnswered()
+        viewModel.currentSessionID = ""
         this.finish()
         dismissESMNotification(this)
     }
@@ -90,6 +108,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
+        viewModel.currentSessionID = ""
         this.finish()
         dismissESMNotification(this)
     }
