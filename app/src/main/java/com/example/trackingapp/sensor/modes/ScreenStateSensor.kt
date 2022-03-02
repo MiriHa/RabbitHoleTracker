@@ -65,6 +65,7 @@ class ScreenStateSensor : AbstractSensor(
     companion object{
         var esmAnswered = false
         var currentSessionID: String = ""
+        var lastSessionStarted = 0L
     }
 
 
@@ -89,8 +90,12 @@ class ScreenStateSensor : AbstractSensor(
                     }
                     currentState == ScreenState.OFF_LOCKED -> {
                         SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
-                        if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT && !esmAnswered) {
+                        if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT
+                            && System.currentTimeMillis() - lastSessionStarted > CONST.ESM_SESSION_TIMEOUT
+                            && !esmAnswered
+                        ) {
                             screenOffAskedCounter += 1
+
                             NotificationHelper.dismissESMNotification(context)
                             NotificationHelper.createESMFullScreenNotification(
                                 context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
@@ -114,6 +119,7 @@ class ScreenStateSensor : AbstractSensor(
                         currentSessionID = LoggingManager.generateSessionID(time)
                         screenOffAskedCounter = 0
                         esmAnswered = false
+                        lastSessionStarted = System.currentTimeMillis()
                         with(SharedPrefManager){
                             saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
                             saveCurrentSessionID(currentSessionID)
