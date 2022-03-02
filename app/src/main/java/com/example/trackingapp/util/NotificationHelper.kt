@@ -3,14 +3,13 @@ package com.example.trackingapp.util
 import android.app.*
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
-import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.R
 import com.example.trackingapp.activity.esm.ESMIntentionLockActivity
 import com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity
+
 
 object NotificationHelper {
 
@@ -62,11 +61,12 @@ object NotificationHelper {
         }
     }
 
-    fun openESMUnlockActivity(context: Context){
+    fun openESMUnlockActivity(context: Context, sessionID: String?){
         val unlockESMIntent = Intent(context, ESMIntentionUnlockActivity::class.java)
         unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
         unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        unlockESMIntent.putExtra(CONST.ESM_SESSION_ID_MESSAGE, sessionID)
         context.startActivity(unlockESMIntent)
     }
 
@@ -81,33 +81,18 @@ object NotificationHelper {
 }
 
 fun Activity.turnScreenOnAndKeyguardOff() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-        setShowWhenLocked(true)
-        setTurnScreenOn(true)
-    } else {
-        window.addFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-                    or WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-        )
-    }
+    setShowWhenLocked(true)
+    setTurnScreenOn(true)
 
     with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
+        val lock = newKeyguardLock("LOCK")
         requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
     }
 }
 
 fun Activity.turnScreenOffAndKeyguardOn() {
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-        setShowWhenLocked(false)
-        setTurnScreenOn(false)
-    } else {
-        window.clearFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
-                    or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-        )
-    }
+    setShowWhenLocked(false)
+    setTurnScreenOn(false)
 }
 
 sealed class ESMType{

@@ -1,6 +1,5 @@
 package com.example.trackingapp.activity.esm
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.trackingapp.DatabaseManager
@@ -26,6 +25,10 @@ class ESMIntentionViewModel : ViewModel() {
             //save new Intention to Firebase
             DatabaseManager.saveNewIntention(Date(), newIntention)
         }
+    }
+
+    fun resetSessionID() {
+        currentSessionID = ""
     }
 
     fun createQuestionList(): List<ESMItem> {

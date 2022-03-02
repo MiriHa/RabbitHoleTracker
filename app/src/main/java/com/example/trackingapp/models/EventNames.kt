@@ -15,7 +15,6 @@ enum class LogEventName {
     DEVICE_INFO,
     ESM,
     GYROSCOPE,
-    INPUT,
     INTERNET,
     INSTALLED_APP,
     LIGHT,

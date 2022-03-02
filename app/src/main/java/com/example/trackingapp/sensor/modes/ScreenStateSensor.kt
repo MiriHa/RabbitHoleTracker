@@ -85,6 +85,7 @@ class ScreenStateSensor : AbstractSensor(
                     intent.action == CONST.ESM_ANSWERED -> {
                         esmAnswered = intent.getBooleanExtra(CONST.ESM_ANSWERED_MESSAGE, true)
                         //SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, esmAnswered)
+                        //(context as Activity).turnScreenOffAndKeyguardOn()
                     }
                     currentState == ScreenState.OFF_LOCKED -> {
                         SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
@@ -95,7 +96,7 @@ class ScreenStateSensor : AbstractSensor(
                                 context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
                                 context.getString(R.string.esm_lock_notification_title),
                                 context.getString(R.string.esm_lock_notification_description),
-                                sessionID = currentSessionID
+                                sessionID = LoggingManager.currentSessionID//currentSessionID
                             )
                         }
                         saveEntry(currentState, time)
@@ -117,7 +118,7 @@ class ScreenStateSensor : AbstractSensor(
                             saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
                             saveCurrentSessionID(currentSessionID)
                         }
-                        NotificationHelper.openESMUnlockActivity(context)
+                        NotificationHelper.openESMUnlockActivity(context, currentSessionID)
 
                         saveEntry(currentState, time)
                     }

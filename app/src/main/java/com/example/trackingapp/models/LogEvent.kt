@@ -15,7 +15,7 @@ open class LogEvent(
 ) {
     init {
         timezoneOffset = calculateTimezoneOffset(timestamp)
-        id = LoggingManager.currentSessionID
+        if (eventName != LogEventName.ESM) id = LoggingManager.currentSessionID
     }
 
     private fun calculateTimezoneOffset(timestamp: Long?): Int {

@@ -108,7 +108,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        viewModel.currentSessionID = ""
+        viewModel.resetSessionID()
         this.finish()
         dismissESMNotification(this)
     }

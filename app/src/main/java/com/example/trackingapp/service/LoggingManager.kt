@@ -60,13 +60,16 @@ object LoggingManager {
         get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_PRESENT)
 
     val currentSessionID: String?
-        get() = SharedPrefManager.getCurrentSessionID()
+        get() = cachedSessionID ?: SharedPrefManager.getCurrentSessionID()
+
+    var cachedSessionID: String? = null
 
     val _isLoggingActive = MutableLiveData(false)
     val isLoggingActive: LiveData<Boolean> = _isLoggingActive
 
     val isDataRecordingActive: Boolean
         get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE)
+
 
     private fun firstStartLoggingService(context: Context) {
         PhoneState.logCurrentPhoneState(context)
@@ -123,6 +126,9 @@ object LoggingManager {
     }
 
     fun generateSessionID(timestamp: Long): String {
-        return timestamp.toString() + "_" + UUID.randomUUID().toString()
+        val sessionID = timestamp.toString() + "_" + UUID.randomUUID().toString()
+        cachedSessionID = sessionID
+        Log.d("xxx", "generate sessionID: $cachedSessionID or $sessionID")
+        return sessionID
     }
 }

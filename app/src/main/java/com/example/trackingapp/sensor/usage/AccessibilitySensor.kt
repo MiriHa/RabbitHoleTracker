@@ -26,7 +26,7 @@ class AccessibilitySensor : AbstractSensor(
 
         mContext = context
 
-        /* TODO Service gets started via settings???
+        /* Service gets started via settings
         val startIntent = Intent(context, AccessibilityLogService::class.java)
         context.startService(startIntent)
          */

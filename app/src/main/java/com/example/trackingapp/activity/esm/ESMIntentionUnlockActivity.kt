@@ -1,5 +1,6 @@
 package com.example.trackingapp.activity.esm
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -32,6 +33,8 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
 
         SharedPrefManager.init(this.applicationContext)
 
+        viewModel.currentSessionID = intent.getStringExtra(CONST.ESM_SESSION_ID_MESSAGE)
+
         val adapter = ArrayAdapter(
             this@ESMIntentionUnlockActivity,
             R.layout.support_simple_spinner_dropdown_item,
@@ -61,7 +64,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         }
 
         binding.buttonEsmUnlock1.apply {
-            visibility = if(DatabaseManager.intentionExampleList.contains(viewModel.savedIntention)) View.GONE else View.VISIBLE
+            visibility = if (DatabaseManager.intentionExampleList.contains(viewModel.savedIntention)) View.GONE else View.VISIBLE
             configureRadioButton()
             text = viewModel.savedIntention
         }
@@ -83,6 +86,11 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         }
     }
 
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        viewModel.currentSessionID = intent?.getStringExtra(CONST.ESM_SESSION_ID_MESSAGE)
+    }
+
     override fun onBackPressed() {
         // Do Nothing
     }
@@ -90,6 +98,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         this.finish()
+        viewModel.resetSessionID()
         dismissESMNotification(this)
     }
 
@@ -102,7 +111,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
     }
 
     private fun actionDone(intention: String, time: Long) {
-        if(intention == getString(R.string.esm_intention_example_noIntention)){
+        if (intention == getString(R.string.esm_intention_example_noIntention)) {
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_IS_NO_CONCRETE_INTENTION, true)
         } else {
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_IS_NO_CONCRETE_INTENTION, false)
@@ -114,13 +123,14 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
             LogEventName.ESM,
             timestamp = time,
             event = ESMQuestionType.ESM_UNLOCK_INTENTION.name,
-            description = intention
+            description = intention,
+            id = viewModel.currentSessionID
         ).saveToDataBase()
     }
 
     private fun dismissFullScreenNotification() {
         this.finish()
-        moveTaskToBack(true)
+        //moveTaskToBack(true)
         dismissESMNotification(this)
     }
 }
