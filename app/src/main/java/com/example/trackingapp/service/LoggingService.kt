@@ -67,6 +67,7 @@ class LoggingService : Service() {
         stopLoggingUpdates()
 
         // Restart LoggingService if it is killed
+        Log.d(mTAG, "service stopped, restart service needed: ${LoggingManager.isDataRecordingActive}")
         if (LoggingManager.isDataRecordingActive) {
             val broadcastIntent = Intent(this, StayAliveReceiver::class.java)
             sendBroadcast(broadcastIntent)

@@ -3,7 +3,9 @@ package com.example.trackingapp.activity
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.os.SystemClock
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -13,15 +15,18 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.BuildConfig
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.CustomListItemBinding
 import com.example.trackingapp.databinding.FragmentMainscreenBinding
-import com.example.trackingapp.models.LogEvent
-import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.*
+import com.google.android.gms.common.internal.safeparcel.SafeParcelableSerializer
+import com.google.android.gms.location.ActivityTransition
+import com.google.android.gms.location.ActivityTransitionEvent
+import com.google.android.gms.location.ActivityTransitionResult
+import com.google.android.gms.location.DetectedActivity
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -61,7 +66,7 @@ class MainScreenFragment : Fragment() {
 
         setAdapter()
 
-        LoggingManager.isLoggingActive.observe(this, loggingObserver)
+        LoggingManager.isLoggingActive.observe(this.viewLifecycleOwner, loggingObserver)
 
         LoggingManager.ensureLoggingManagerIsAlive(mContext)
         if (!SharedPrefManager.getBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED)) {
@@ -73,11 +78,7 @@ class MainScreenFragment : Fragment() {
                 R.string.mainScreen_logging_start_button
             )
             setOnClickListener {
-                Log.d(TAG, "startLoggingButton Click: running")
-                SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
-                LoggingManager.stopLoggingService(mContext)
-                LoggingManager.startLoggingService(mContext as Activity)
-                LogEvent(LogEventName.LOGIN, System.currentTimeMillis(), "startLoggingService", "test").saveToDataBase()
+                testRecognition()
             }
         }
 
@@ -90,6 +91,43 @@ class MainScreenFragment : Fragment() {
         }
 
         return view
+    }
+
+    fun testRecognition(){
+        Log.d("xxx","testRecognition")
+        /*val intent = Intent()
+        intent.action = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER"
+        val events: MutableList<ActivityTransitionEvent> = ArrayList()
+        var transitionEvent = ActivityTransitionEvent(
+            DetectedActivity.STILL,
+            ActivityTransition.ACTIVITY_TRANSITION_EXIT, SystemClock.elapsedRealtimeNanos()
+        )
+        events.add(transitionEvent)
+        transitionEvent = ActivityTransitionEvent(
+            DetectedActivity.WALKING,
+            ActivityTransition.ACTIVITY_TRANSITION_ENTER, SystemClock.elapsedRealtimeNanos()
+        )
+        events.add(transitionEvent)
+        val result = ActivityTransitionResult(events)
+        SafeParcelableSerializer.serializeToIntentExtra(
+            result, intent,
+            "com.google.android.location.internal.EXTRA_ACTIVITY_TRANSITION_RESULT"
+        )
+        mContext.sendBroadcast(intent)
+*/
+
+        val intent = Intent()
+        // Your broadcast receiver action
+        intent.action = BuildConfig.APPLICATION_ID + "TRANSITION_ACTION_RECEIVER"
+        val events: ArrayList<ActivityTransitionEvent> = arrayListOf()
+        // You can set desired events with their corresponding state
+        val transitionEvent1 = ActivityTransitionEvent(DetectedActivity.WALKING, ActivityTransition.ACTIVITY_TRANSITION_EXIT, SystemClock.elapsedRealtimeNanos())
+        val transitionEvent = ActivityTransitionEvent(DetectedActivity.IN_VEHICLE, ActivityTransition.ACTIVITY_TRANSITION_ENTER, SystemClock.elapsedRealtimeNanos())
+        events.add(transitionEvent1)
+        events.add(transitionEvent)
+        val result = ActivityTransitionResult(events)
+        SafeParcelableSerializer.serializeToIntentExtra(result, intent, "com.google.android.location.internal.EXTRA_ACTIVITY_TRANSITION_RESULT")
+        activity?.sendBroadcast(intent)
     }
 
     override fun onAttach(context: Context) {

@@ -6,6 +6,7 @@ import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
@@ -86,7 +87,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             Log.d(TAG, "checkAccesibiltyPermission open settings")
             // if not construct intent to request permission
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             // request permission via start activity for result
             activity.startActivity(intent)
             false
@@ -133,6 +134,13 @@ class PermissionManager(val activity: Activity, private val code: Int) {
     companion object {
         fun isPermissionGranted(context: Context, permission: String): Boolean {
             return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun requestBatteryOptimization(context: Context) {
+            Log.i(TAG, "Requesting: Ignore Battery Optimization")
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+            intent.data = Uri.parse("package:" + context.applicationContext.packageName)
+            context.startActivity(intent)
         }
 
         fun isNotificationListenerEnabled(context: Context): Boolean {

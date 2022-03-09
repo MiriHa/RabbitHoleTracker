@@ -7,13 +7,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 import com.example.trackingapp.BuildConfig
-import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.ActivityTransitionType
 import com.example.trackingapp.models.ActivityType
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.google.android.gms.location.*
 
 
@@ -42,7 +42,6 @@ class ActivityRecognitionSensor : AbstractSensor(
 
         val client = ActivityRecognition.getClient(context)
         val task = client.requestActivityTransitionUpdates(request, getPendingIntent(context))
-        //val task2 = client.requestActivityUpdates(1000, getPendingIntent(context))
 
         task.addOnSuccessListener {
             Log.d(TAG, "Successfully requested activity updates  ${task.result}")
@@ -101,8 +100,8 @@ class ActivityRecognitionSensor : AbstractSensor(
         )
 
         activities.forEach { activity ->
-            transitions += transition(activity, ActivityTransition.ACTIVITY_TRANSITION_ENTER)
-            transitions += transition(activity, ActivityTransition.ACTIVITY_TRANSITION_EXIT)
+            transitions.add(transition(activity, ActivityTransition.ACTIVITY_TRANSITION_ENTER))
+            transitions.add(transition(activity, ActivityTransition.ACTIVITY_TRANSITION_EXIT))
         }
 
         return transitions
@@ -145,6 +144,7 @@ class ActivityRecognitionSensor : AbstractSensor(
     }
 
     fun saveEntry(timestamp: Long, activity: String, transition: String, elapasedTime: Long) {
+        Log.d("xxx","Save transition update")
         LogEvent(LogEventName.ACTIVITY, timestamp, activity, transition, elapasedTime.toString()).saveToDataBase()
     }
 
@@ -159,6 +159,8 @@ class ActivityRecognitionSensor : AbstractSensor(
         override fun onReceive(context: Context?, intent: Intent?) {
             val time = System.currentTimeMillis()
 
+            Log.d("xxx","activity onRecive ${ActivityTransitionResult.hasResult(intent)}")
+
             intent?.let {
                 if (ActivityTransitionResult.hasResult(intent)) {
                     val result = ActivityTransitionResult.extractResult(intent)
@@ -166,6 +168,7 @@ class ActivityRecognitionSensor : AbstractSensor(
                         for (event in result.transitionEvents) {
                             val activity = userFacingActivity(event.activityType)
                             val transition = userFacingTransition(event.transitionType)
+                            Log.d("xxx","activity onRecive2 $activity $transition")
                             saveEntry(time, activity, transition, event.elapsedRealTimeNanos)
                         }
                     }

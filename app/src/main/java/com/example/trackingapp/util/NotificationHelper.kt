@@ -13,9 +13,9 @@ import com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity
 
 object NotificationHelper {
 
-    val TAG ="TRACKINGAPP_NOTIFICATION_HELPER"
+    const val TAG ="TRACKINGAPP_NOTIFICATION_HELPER"
 
-    fun NotificationManagerCompat.createESMNotificationChannel() {
+    private fun NotificationManagerCompat.createESMNotificationChannel() {
 
         val channel = NotificationChannel(
             CONST.CHANNEL_ID_ESM, CONST.CHANNEL_NAME_ESM, NotificationManager.IMPORTANCE_HIGH
@@ -85,7 +85,6 @@ fun Activity.turnScreenOnAndKeyguardOff() {
     setTurnScreenOn(true)
 
     with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
-        val lock = newKeyguardLock("LOCK")
         requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
     }
 }
