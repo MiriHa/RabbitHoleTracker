@@ -7,7 +7,7 @@ import android.os.IBinder
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import android.util.Log
-import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaNotification

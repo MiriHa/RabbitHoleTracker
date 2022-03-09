@@ -1,11 +1,9 @@
-package com.example.trackingapp
+package com.example.trackingapp.util
 
 import android.util.Log
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.User
 import com.example.trackingapp.models.metadata.MetaType
-import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.SharedPrefManager
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -14,15 +12,12 @@ import java.util.*
 
 object DatabaseManager {
 
-    val TAG = "TRACKINGAPP_DATABASE_MANAGER"
+    const val TAG = "TRACKINGAPP_DATABASE_MANAGER"
 
     val user: FirebaseUser?
         get() = Firebase.auth.currentUser
 
-    val userID: String
-        get() = user?.uid ?: ""
-
-    val database = Firebase.database.reference
+    private val database = Firebase.database.reference
 
     var intentionList: MutableSet<String?> = HashSet()
     var intentionExampleList: List<String> = listOf()
@@ -37,10 +32,6 @@ object DatabaseManager {
             "No concrete intention",
             "Messaging",
             "Search for information"
-            //TODO
-            /*Resources.getSystem().getString(R.string.esm_intention_example_noIntention),
-            Resources.getSystem().getString(R.string.esm_intention_example_messaging),
-            Resources.getSystem().getString(R.string.esm_intention_example_searchInformation)*/
         )
     }
 

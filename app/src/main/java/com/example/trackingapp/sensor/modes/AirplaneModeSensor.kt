@@ -2,7 +2,7 @@ package com.example.trackingapp.sensor.modes
 
 import android.content.Context
 import android.provider.Settings
-import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.ONOFFSTATE

@@ -13,13 +13,13 @@ import android.provider.ContactsContract.PhoneLookup
 import android.telephony.TelephonyManager
 import android.util.Log
 import androidx.core.content.ContextCompat
-import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.metadata.MetaCall
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.util.PhoneNumberHelper
 
 class CallSensor : AbstractSensor(

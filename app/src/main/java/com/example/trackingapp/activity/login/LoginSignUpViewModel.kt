@@ -6,7 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.DatabaseManager
+import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.R
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase

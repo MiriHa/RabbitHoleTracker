@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
-import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import kotlinx.coroutines.CoroutineScope

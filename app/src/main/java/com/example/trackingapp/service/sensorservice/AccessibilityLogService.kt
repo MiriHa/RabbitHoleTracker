@@ -6,7 +6,7 @@ import android.util.Log
 import android.util.Patterns
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
-import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.google.firebase.FirebaseApp

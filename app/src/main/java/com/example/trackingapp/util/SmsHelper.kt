@@ -5,11 +5,11 @@ import android.database.Cursor
 import android.net.Uri
 import android.provider.ContactsContract
 import android.util.Log
-import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.models.SmsEventType
 import com.example.trackingapp.models.metadata.MetaSMS
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 
 object SmsHelper {
     private const val TAG = "SmsHelper"
@@ -43,10 +43,10 @@ object SmsHelper {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-        } finally {
-            c?.close()
-            return uid
         }
+        c?.close()
+        return uid
+
     }
 
     fun getContactNameByNumber(context: Context, number: String?): String? {
@@ -63,10 +63,9 @@ object SmsHelper {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-        } finally {
-            c?.close()
-            return name
         }
+        c?.close()
+        return name
     }
 
     fun saveEntry(
@@ -106,13 +105,7 @@ object SmsHelper {
         }
     }
 
-    /**
-     * Generates unique SMS identifier
-     *
-     * @param partnerNumber partner number
-     * @param timestamp event's timestamp
-     * @return unique sms id
-     */
+
     fun generateSmsID(partnerNumber: String, timestamp: Long): String {
         Log.d(TAG, "generateSmsID()")
         return "$partnerNumber:$timestamp"

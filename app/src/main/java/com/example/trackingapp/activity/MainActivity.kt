@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.trackingapp.DatabaseManager
+import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.ActivityMainBinding
 import com.example.trackingapp.util.CONST

@@ -2,7 +2,7 @@ package com.example.trackingapp.activity.esm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.DatabaseManager
+import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.R
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.SharedPrefManager

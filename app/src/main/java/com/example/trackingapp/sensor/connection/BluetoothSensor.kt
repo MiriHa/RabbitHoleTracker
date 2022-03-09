@@ -8,13 +8,13 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
-import com.example.trackingapp.DatabaseManager.saveToDataBase
 import com.example.trackingapp.models.BluetoothDeviceType
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.sensor.AbstractSensor
 import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 
 class BluetoothSensor : AbstractSensor(
     "BLUETOOTH_SENSOR",

@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.trackingapp.DatabaseManager
+import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.databinding.FragmentOnboradingBinding
 import com.example.trackingapp.util.*
 

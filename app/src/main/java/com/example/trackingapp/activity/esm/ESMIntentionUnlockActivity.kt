@@ -9,8 +9,8 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.DatabaseManager
-import com.example.trackingapp.DatabaseManager.saveToDataBase
+import com.example.trackingapp.util.DatabaseManager
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmUnlockIntentionBinding
 import com.example.trackingapp.models.LogEvent
@@ -32,6 +32,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         SharedPrefManager.init(this.applicationContext)
+        if(DatabaseManager.intentionList.isEmpty()) DatabaseManager.initIntentionList()
 
         viewModel.currentSessionID = intent.getStringExtra(CONST.ESM_SESSION_ID_MESSAGE)
 
