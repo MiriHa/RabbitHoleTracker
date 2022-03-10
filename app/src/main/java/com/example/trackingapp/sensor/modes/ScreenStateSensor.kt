@@ -43,7 +43,7 @@ class ScreenStateSensor : AbstractSensor(
         val filter = IntentFilter()
         filter.addAction(Intent.ACTION_SCREEN_ON)
         filter.addAction(Intent.ACTION_SCREEN_OFF)
-        filter.addAction(Intent.ACTION_USER_PRESENT);
+        filter.addAction(Intent.ACTION_USER_PRESENT)
         filter.addAction(CONST.ESM_ANSWERED)
         mReceiver = ScreenReceiver()
         try {
@@ -80,10 +80,10 @@ class ScreenStateSensor : AbstractSensor(
             val time = System.currentTimeMillis()
             val currentState: ScreenState = determineScreenState(context, intent)
 
-            Log.d(TAG,"ScreenReceiver: $currentState isRunning: $isRunning")
+            Log.d(TAG, "ScreenReceiver: $currentState isRunning: $isRunning")
 
             if (isRunning) {
-                when{
+                when {
                     intent.action == CONST.ESM_ANSWERED -> {
                         esmAnswered = intent.getBooleanExtra(CONST.ESM_ANSWERED_MESSAGE, true)
                         lastESMShown = time
@@ -95,7 +95,7 @@ class ScreenStateSensor : AbstractSensor(
                     }
                     currentState == ScreenState.OFF_UNLOCKED -> {
                         saveEntry(currentState, time)
-                        if(!isDeviceSecure) onPhoneLock(time, context)
+                        onPhoneLock(time, context)
                     }
                     currentState == ScreenState.ON_LOCKED -> {
                         saveEntry(currentState, time)
@@ -115,10 +115,10 @@ class ScreenStateSensor : AbstractSensor(
             }
         }
 
-        private fun onPhoneLock(time: Long, context: Context){
+        private fun onPhoneLock(time: Long, context: Context) {
             val notificationManager = NotificationManagerCompat.from(context)
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
-            if(screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT
+            if (screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT
                 && System.currentTimeMillis() - lastSessionStarted > CONST.ESM_SESSION_TIMEOUT
                 && !esmAnswered
             ) {
@@ -135,15 +135,25 @@ class ScreenStateSensor : AbstractSensor(
             }
         }
 
-        private fun onPhoneUnLock(time: Long, context: Context){
+        private fun onPhoneUnLock(time: Long, context: Context) {
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, true)
             currentSessionID = LoggingManager.generateSessionID(time)
             SharedPrefManager.saveCurrentSessionID(currentSessionID)
             lastSessionStarted = System.currentTimeMillis()
-            if(time - lastESMShown > CONST.ESM_LOCK_TIMEOUT) {
+            if (time - lastESMShown > CONST.ESM_LOCK_TIMEOUT) {
+                val notificationManager = NotificationManagerCompat.from(context)
                 screenOffAskedCounter = 0
                 esmAnswered = false
-                NotificationHelper.openESMUnlockActivity(context, currentSessionID)
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    NotificationHelper.openESMUnlockActivity(context, currentSessionID)
+                }
+                NotificationHelper.dismissESMNotification(context)
+                NotificationHelper.createESMFullScreenNotification(
+                    context, notificationManager, ESMType.ESMINTENTION,
+                    context.getString(R.string.esm_unlock_notification_title),
+                    context.getString(R.string.esm_unlock_notification_description),
+                    sessionID = LoggingManager.currentSessionID
+                )
             }
         }
 
@@ -167,15 +177,17 @@ class ScreenStateSensor : AbstractSensor(
             val state: ScreenState = when {
                 userPresent -> ScreenState.ON_USERPRESENT
                 screenOn -> {
-                    if(isLocked) ScreenState.ON_LOCKED else ScreenState.ON_UNLOCKED
+                    if (isLocked) ScreenState.ON_LOCKED else ScreenState.ON_UNLOCKED
                 }
                 !screenOn -> {
-                    if(isLocked)  ScreenState.OFF_LOCKED else ScreenState.OFF_UNLOCKED
+                    if (isLocked) ScreenState.OFF_LOCKED else ScreenState.OFF_UNLOCKED
                 }
-                else -> {ScreenState.UNKNOWN}
+                else -> {
+                    ScreenState.UNKNOWN
+                }
             }
 
-            Log.d(TAG,"determine screenstate: locked:$isLocked screenOn:$screenOn state:$state desc:$desc")
+            Log.d(TAG, "determine screenstate: locked:$isLocked screenOn:$screenOn state:$state desc:$desc")
             return state
         }
 

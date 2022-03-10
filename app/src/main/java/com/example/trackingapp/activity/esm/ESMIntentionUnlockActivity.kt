@@ -9,13 +9,13 @@ import android.widget.RadioButton
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.util.DatabaseManager
-import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmUnlockIntentionBinding
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.DatabaseManager
+import com.example.trackingapp.util.DatabaseManager.saveToDataBase
 import com.example.trackingapp.util.NotificationHelper.dismissESMNotification
 import com.example.trackingapp.util.SharedPrefManager
 
@@ -25,6 +25,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        dismissESMNotification(this)
 
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
 

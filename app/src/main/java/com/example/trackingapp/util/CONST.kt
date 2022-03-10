@@ -43,7 +43,7 @@ object CONST {
     const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 16 //minutes
     const val ESM_LOCK_ASK_COUNT = 3
     const val ESM_SESSION_TIMEOUT = 45 * 1000 //45s
-    const val ESM_LOCK_TIMEOUT = 3 * 1000 //1s
+    const val ESM_LOCK_TIMEOUT = 2 * 1000 //1s
 
     //Intent
     const val ESM_ANSWERED: String = "com.example.trackingapp.ESM_ANSWERED"

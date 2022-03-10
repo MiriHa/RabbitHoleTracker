@@ -35,6 +35,8 @@
     <string name="esm_lock_intention_description_promt">Your intention was:</string>
     <string name="esm_lock_notification_title">Questions about your usage time</string>
     <string name="esm_lock_notification_description">Please answer these questions immediately.</string>
+    <string name="esm_unlock_notification_title">Question about your usage intention</string>
+    <string name="esm_unlock_notification_description">Click here to answer this question immediately.</string>
 
     <string name="esm_lock_intention_question_intention_finished">Did you <b>finish</b> your intention?</string>
     <string name="esm_lock_intention_question_intention_more">Did you do <b>more</b> than your intention?</string>
@@ -78,11 +80,11 @@
     <string name="permission_explanation_description">Please give us access to the following permissions as this application needs them to collect your usage data.</string>
     <string name="permission_request_accessibility_service_title">Enable Accessibility Service</string>
     <string name="permission_request_accessibility_service_notification_title">Please enable the accessibility service for Rabbit Hole Tracker!</string>
-    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your screen events. \n\nPlease scroll down in the settings to Downloaded Services section and enable Accessibility Service for the Rabbit Hole Tracker application. </string>
+    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your screen events. \n\nPlease scroll in the settings to the Downloaded Services section and enable Accessibility Service for the Rabbit Hole Tracker application. \n\nThen come back to this application.</string>
     <string name="permission_request_notification_listener_title">Enable Notifications</string>
-    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect the timestamps about your received notifications. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable the notification listener.</string>
+    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect the timestamps about your received notifications. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable the notification listener. \n\nThen Come back to this application.</string>
     <string name="permission_request_usage_stats_title">Give Usage Information Access</string>
-    <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics, so we can collect your usage events.</string>
+    <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics, so we can collect your usage events. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable usage information access. \n\nThen Come back to this application.</string>
     <string name="permission_settings_button_text">Go to Settings</string>
     <string name="permission_button_text">Allow Permissions</string>
 
