@@ -19,7 +19,7 @@ object SharedPrefManager {
     }
 
     fun getLastSavedIntention(): String? {
-        return sharedPrefs.getString(CONST.PREFERENCES_INTENTION_NAME, "last intention")
+        return sharedPrefs.getString(CONST.PREFERENCES_INTENTION_NAME, "first session")
     }
 
     fun saveCurrentSessionID(id: String) {

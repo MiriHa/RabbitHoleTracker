@@ -42,7 +42,8 @@ object CONST {
     const val ESM_FREQUENCY: Long = 20 * 60 * 1000 //20 min
     const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 16 //minutes
     const val ESM_LOCK_ASK_COUNT = 3
-    const val ESM_SESSION_TIMEOUT = 45 * 1000 //45s
+    //todo
+    const val ESM_SESSION_TIMEOUT = 15 * 1000 //45s
     const val ESM_LOCK_TIMEOUT = 2 * 1000 //1s
 
     //Intent
@@ -51,5 +52,9 @@ object CONST {
     const val ESM_SESSION_ID_MESSAGE = "ESM_SESSION_ID_MESSAGE"
 
     const val UNIQUE_WORK_NAME = "RABBIT_HOLE_TRACKER_STAY_ALIVE"
+
+    //Survery
+    const val baseSurveyURL = "https://survey.ifkw.lmu.de/MobileRabbitHole/"
+    const val NOTIFICATION_ID_SURVEY = 24098
 
 }

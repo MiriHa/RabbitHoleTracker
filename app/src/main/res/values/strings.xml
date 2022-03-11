@@ -80,11 +80,11 @@
     <string name="permission_explanation_description">Please give us access to the following permissions as this application needs them to collect your usage data.</string>
     <string name="permission_request_accessibility_service_title">Enable Accessibility Service</string>
     <string name="permission_request_accessibility_service_notification_title">Please enable the accessibility service for Rabbit Hole Tracker!</string>
-    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your screen events. \n\nPlease scroll in the settings to the Downloaded Services section and enable Accessibility Service for the Rabbit Hole Tracker application. \n\nThen come back to this application.</string>
+    <string name="permission_request_accessibility_service_description">By enabling the accessibility service for this applications, we will be able to track your screen events. \n\nPlease go in the settings to the Downloaded Services section and enable Accessibility Service for the Rabbit Hole Tracker application. \n\nThen come back to this application.</string>
     <string name="permission_request_notification_listener_title">Enable Notifications</string>
-    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect the timestamps about your received notifications. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable the notification listener. \n\nThen Come back to this application.</string>
+    <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect the timestamps about your received notifications. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable the notification listener. \n\nThen come back to this application.</string>
     <string name="permission_request_usage_stats_title">Give Usage Information Access</string>
-    <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics, so we can collect your usage events. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable usage information access. \n\nThen Come back to this application.</string>
+    <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics, so we can collect your usage events. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable usage information access. \n\nThen come back to this application.</string>
     <string name="permission_settings_button_text">Go to Settings</string>
     <string name="permission_button_text">Allow Permissions</string>
 
@@ -103,5 +103,14 @@
     <string name="accessibility_button_Off">Disabled Accessibility</string>
     <string name="settings">Settings</string>
 
+    <!-- Contact -->
+    <string name="contact_title">Contact</string>
+    <string name="contact_description">If you have any questions about this study or run into technical problems with this application, please contact:</string>
+    <string name="contact_email">miriam.halsner@campus.lmu.de</string>
+
+    <!--Survey-->
+    <string name="survey_start_notification_title">First Questionnaire</string>
+    <string name="survey_end_notification_title">Second Questionnaire</string>
+    <string name="survey_notification_description">Click here to answer this questionnaire</string>
 
 </resources>

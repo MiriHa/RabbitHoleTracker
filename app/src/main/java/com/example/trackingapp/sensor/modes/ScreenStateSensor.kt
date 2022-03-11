@@ -91,11 +91,11 @@ class ScreenStateSensor : AbstractSensor(
                     currentState == ScreenState.OFF_LOCKED -> {
                         saveEntry(currentState, time)
                         lastESMShown = time
-                        onPhoneLock(time, context)
+                        onPhoneLock(currentState, time, context)
                     }
                     currentState == ScreenState.OFF_UNLOCKED -> {
                         saveEntry(currentState, time)
-                        onPhoneLock(time, context)
+                        onPhoneLock(currentState, time, context)
                     }
                     currentState == ScreenState.ON_LOCKED -> {
                         saveEntry(currentState, time)
@@ -115,7 +115,7 @@ class ScreenStateSensor : AbstractSensor(
             }
         }
 
-        private fun onPhoneLock(time: Long, context: Context) {
+        private fun onPhoneLock(screenState: ScreenState, time: Long, context: Context) {
             val notificationManager = NotificationManagerCompat.from(context)
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_PRESENT, false)
             if (screenOffAskedCounter <= CONST.ESM_LOCK_ASK_COUNT
@@ -125,9 +125,12 @@ class ScreenStateSensor : AbstractSensor(
                 screenOffAskedCounter += 1
                 lastESMShown = time
 
+                if(screenState == ScreenState.OFF_UNLOCKED && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q){
+                    NotificationHelper.openESMActivity(context, currentSessionID, ESMType.ESM_LOCK)
+                }
                 NotificationHelper.dismissESMNotification(context)
                 NotificationHelper.createESMFullScreenNotification(
-                    context, notificationManager, ESMType.ESMINTENTIONCOMPLETED,
+                    context, notificationManager, ESMType.ESM_LOCK,
                     context.getString(R.string.esm_lock_notification_title),
                     context.getString(R.string.esm_lock_notification_description),
                     sessionID = LoggingManager.currentSessionID//currentSessionID
@@ -145,11 +148,11 @@ class ScreenStateSensor : AbstractSensor(
                 screenOffAskedCounter = 0
                 esmAnswered = false
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    NotificationHelper.openESMUnlockActivity(context, currentSessionID)
+                    NotificationHelper.openESMActivity(context, currentSessionID, ESMType.ESM_UNLOCK)
                 }
                 NotificationHelper.dismissESMNotification(context)
                 NotificationHelper.createESMFullScreenNotification(
-                    context, notificationManager, ESMType.ESMINTENTION,
+                    context, notificationManager, ESMType.ESM_UNLOCK,
                     context.getString(R.string.esm_unlock_notification_title),
                     context.getString(R.string.esm_unlock_notification_description),
                     sessionID = LoggingManager.currentSessionID

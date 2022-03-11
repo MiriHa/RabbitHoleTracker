@@ -30,7 +30,7 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
 
-    <uses-permission android:name="android.permission.DISABLE_KEYGUARD"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
 
 
     <application
@@ -54,7 +54,7 @@
         <activity
             android:name="com.example.trackingapp.activity.esm.ESMIntentionLockActivity"
             android:exported="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:showOnLockScreen="true"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.TrackingApp.NoActionBar"/>

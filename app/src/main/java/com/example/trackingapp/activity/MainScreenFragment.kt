@@ -78,7 +78,8 @@ class MainScreenFragment : Fragment() {
                 R.string.mainScreen_logging_start_button
             )
             setOnClickListener {
-                testRecognition()
+               // testRecognition()
+                NotificationHelper.createSurveyNotification(mContext, SurveryType.SURVEY_START)
             }
         }
 

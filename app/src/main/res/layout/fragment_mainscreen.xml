@@ -13,14 +13,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:backgroundTint="@color/milkGreen"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        tools:text="Start Lock Notifications" />
+        tools:text="test button" />
 
     <Button
         android:id="@+id/buttonTestStop"
@@ -45,9 +45,19 @@
         android:paddingHorizontal="10dp"
         android:text="@string/mainScreen_sensorlist_title"
         android:textColor="@color/cardview_light_background"
-        android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="22dp" />
+        android:textSize="24sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:alpha="0.1"
+        android:background="@color/background_gray"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView_sensorList_title" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -56,8 +66,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_sensorList_title">
-
+        app:layout_constraintTop_toBottomOf="@+id/line">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerview_fragment_mainscreen"

@@ -3,10 +3,7 @@ package com.example.trackingapp.activity.esm
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.ContextThemeWrapper
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RadioButton
@@ -29,7 +26,6 @@ import com.example.trackingapp.util.SharedPrefManager
 import com.example.trackingapp.util.turnScreenOffAndKeyguardOn
 import com.example.trackingapp.util.turnScreenOnAndKeyguardOff
 
-
 class ESMIntentionLockActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLockscreenEsmBinding
@@ -37,6 +33,12 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        this.turnScreenOnAndKeyguardOff()
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                    or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+        )
 
         binding = ActivityLockscreenEsmBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -62,8 +64,6 @@ class ESMIntentionLockActivity : AppCompatActivity() {
                 dismissFullScreenNotification()
             }
         }
-
-        this.turnScreenOnAndKeyguardOff()
     }
 
     private fun dismissFullScreenNotification() {
@@ -115,6 +115,7 @@ class ESMIntentionLockActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        dismissESMNotification(this)
         this.turnScreenOffAndKeyguardOn()
     }
 

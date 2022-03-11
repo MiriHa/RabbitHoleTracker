@@ -3,7 +3,9 @@ package com.example.trackingapp.util
 import android.app.*
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.R
@@ -13,7 +15,7 @@ import com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity
 
 object NotificationHelper {
 
-    const val TAG ="TRACKINGAPP_NOTIFICATION_HELPER"
+    const val TAG = "TRACKINGAPP_NOTIFICATION_HELPER"
 
     private fun NotificationManagerCompat.createESMNotificationChannel() {
 
@@ -32,18 +34,19 @@ object NotificationHelper {
         esmType: ESMType,
         title: String = "Title",
         description: String = "Description",
-        sessionID: String? ,
+        sessionID: String?,
     ) {
         Log.d(TAG, "Create ESM FullscreenNotification")
         dismissESMNotification(context)
 
-        val destination = when(esmType){
-            ESMType.ESMINTENTION -> ESMIntentionUnlockActivity::class.java
-            ESMType.ESMINTENTIONCOMPLETED -> ESMIntentionLockActivity::class.java
+        val destination = when (esmType) {
+            ESMType.ESM_UNLOCK -> ESMIntentionUnlockActivity::class.java
+            ESMType.ESM_LOCK -> ESMIntentionLockActivity::class.java
         }
         val fullScreenIntent = Intent(context, destination)
         fullScreenIntent.putExtra(CONST.ESM_SESSION_ID_MESSAGE, sessionID)
-        fullScreenIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        fullScreenIntent.flags = Intent.FLAG_ACTIVITY_NO_HISTORY or
+                Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
         val fullScreenPendingIntent = PendingIntent.getActivity(context, 0, fullScreenIntent, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
 
         val builder = NotificationCompat.Builder(context, CONST.CHANNEL_ID_ESM)
@@ -54,23 +57,28 @@ object NotificationHelper {
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_ALARM)
 
-        with(notificationManager){
+        with(notificationManager) {
             createESMNotificationChannel()
             val notification = builder.build()
             notify(CONST.NOTIFICATION_ID_ESM, notification)
         }
     }
 
-    fun openESMUnlockActivity(context: Context, sessionID: String?){
-        val unlockESMIntent = Intent(context, ESMIntentionUnlockActivity::class.java)
-        unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
-        unlockESMIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        unlockESMIntent.putExtra(CONST.ESM_SESSION_ID_MESSAGE, sessionID)
-        context.startActivity(unlockESMIntent)
+    fun openESMActivity(context: Context, sessionID: String?, esmType: ESMType) {
+        val destination = when (esmType) {
+            ESMType.ESM_UNLOCK -> ESMIntentionUnlockActivity::class.java
+            ESMType.ESM_LOCK -> ESMIntentionLockActivity::class.java
+        }
+        val ESMIntent = Intent(context, destination)
+        ESMIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        ESMIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY)
+        ESMIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        ESMIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        ESMIntent.putExtra(CONST.ESM_SESSION_ID_MESSAGE, sessionID)
+        context.startActivity(ESMIntent)
     }
 
-    fun dismissESMNotification(context: Context){
+    fun dismissESMNotification(context: Context) {
         Log.d(TAG, "Dismiss ESM Notification")
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
@@ -78,15 +86,58 @@ object NotificationHelper {
             cancel(CONST.NOTIFICATION_ID_ESM)
         }
     }
+
+    fun createSurveyNotification(context: Context, type: SurveryType) {
+        val notificationIntent = Intent(Intent.ACTION_VIEW, createSurveyLink(type))
+        val pendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE)
+
+        val title = if(type == SurveryType.SURVEY_START) context.getString(R.string.survey_start_notification_title) else context.getString(R.string.survey_end_notification_title)
+        val builder = NotificationCompat.Builder(context, CONST.CHANNEL_ID_ESM)
+            .setSmallIcon(R.drawable.ic_logo)
+            .setContentTitle(title)
+            .setContentText(context.getString(R.string.survey_notification_description))
+            .setAutoCancel(true)
+            .setOngoing(true)
+            .setContentIntent(pendingIntent)
+
+
+        val notificationManager = NotificationManagerCompat.from(context)
+        with(notificationManager) {
+            createESMNotificationChannel()
+            val notification = builder.build()
+            notify(CONST.NOTIFICATION_ID_SURVEY, notification)
+        }
+    }
+
+    fun createSurveyLink(type: SurveryType): Uri? {
+        // https://www.soscisurvey.de/demo/?s=AB123456
+        val serialNumber = DatabaseManager.user?.uid
+        val questionnaireParameter = when(type) {
+            SurveryType.SURVEY_START -> "?q=MRH1"
+            SurveryType.SURVEY_END -> "?q=MRH2"
+        }
+        serialNumber?.let {  uID ->
+            val serialNumberParameter = "&s=$uID"
+            val uri = "${CONST.baseSurveyURL}$questionnaireParameter$serialNumberParameter"
+            Log.d("xxx", "uri: $uri")
+            return Uri.parse(uri)
+        } ?: return null
+    }
 }
 
 fun Activity.turnScreenOnAndKeyguardOff() {
     setShowWhenLocked(true)
     setTurnScreenOn(true)
 
-    with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
-        requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
-    }
+    window.addFlags(
+        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
+                or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
+    )
+
+    /*with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
+        requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, MyKeyguardDismissCallback())
+    }*/
 }
 
 fun Activity.turnScreenOffAndKeyguardOn() {
@@ -94,7 +145,12 @@ fun Activity.turnScreenOffAndKeyguardOn() {
     setTurnScreenOn(false)
 }
 
-sealed class ESMType{
-    object ESMINTENTION: ESMType()
-    object ESMINTENTIONCOMPLETED : ESMType()
+sealed class ESMType {
+    object ESM_UNLOCK : ESMType()
+    object ESM_LOCK : ESMType()
+}
+
+enum class SurveryType {
+    SURVEY_START,
+    SURVEY_END
 }

@@ -32,6 +32,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
             l.add(Manifest.permission.BLUETOOTH)
+           // l.add(Manifest.permission.SYSTEM_ALERT_WINDOW)
             l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 l.add(Manifest.permission.FOREGROUND_SERVICE)
@@ -87,7 +88,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             Log.d(TAG, "checkAccesibiltyPermission open settings")
             // if not construct intent to request permission
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             // request permission via start activity for result
             activity.startActivity(intent)
             false

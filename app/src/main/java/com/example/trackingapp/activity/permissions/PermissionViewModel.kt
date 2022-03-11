@@ -65,4 +65,10 @@ enum class PermissionView(
         R.drawable.ic_query_stats,
         R.string.permission_settings_button_text,
     ),
+  /*  OVERLAY(
+        R.string.permission_request_usage_stats_title,
+        R.string.permission_request_usage_stats_description,
+        R.drawable.ic_query_stats,
+        R.string.permission_settings_button_text,
+    )*/
 }

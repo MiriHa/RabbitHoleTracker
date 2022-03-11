@@ -104,6 +104,11 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
         dismissESMNotification(this)
     }
 
+    override fun onResume() {
+        super.onResume()
+        dismissESMNotification(this)
+    }
+
     private fun actionManualInputDone(intention: String) {
         if (intention.isNotBlank()) {
             actionDone(intention, System.currentTimeMillis())
