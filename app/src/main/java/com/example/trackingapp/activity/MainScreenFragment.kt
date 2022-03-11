@@ -68,9 +68,11 @@ class MainScreenFragment : Fragment() {
 
         LoggingManager.isLoggingActive.observe(this.viewLifecycleOwner, loggingObserver)
 
+        LoggingManager.isStudyOver(mContext)
         LoggingManager.ensureLoggingManagerIsAlive(mContext)
         if (!SharedPrefManager.getBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED)) {
             LoggingManager.startLoggingService(mContext as Activity)
+            NotificationHelper.createSurveyNotification(mContext, SurveryType.SURVEY_START)
         }
 
         binding.buttonTest.apply {

@@ -25,7 +25,9 @@ import com.example.trackingapp.sensor.modes.ScreenStateSensor
 import com.example.trackingapp.sensor.usage.*
 import com.example.trackingapp.service.stayalive.StartLoggingWorker
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.NotificationHelper
 import com.example.trackingapp.util.SharedPrefManager
+import com.example.trackingapp.util.SurveryType
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -70,9 +72,9 @@ object LoggingManager {
     val isDataRecordingActive: Boolean
         get() = SharedPrefManager.getBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE)
 
-
     private fun firstStartLoggingService(context: Context) {
         PhoneState.logCurrentPhoneState(context)
+        calculateStudyInterval()
     }
 
     fun startLoggingService(context: Context) {
@@ -97,7 +99,7 @@ object LoggingManager {
 
     fun ensureLoggingManagerIsAlive(context: Context) {
         Log.d(TAG, "ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}")
-       if (isLoggingActive.value == false && isDataRecordingActive) {
+        if (isLoggingActive.value == false && isDataRecordingActive) {
             startLoggingService(context)
         }
     }
@@ -123,6 +125,24 @@ object LoggingManager {
 
     private fun cancelServiceViaWorker(context: Context) {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
+    }
+
+    private fun calculateStudyInterval() {
+        val calendar: Calendar = Calendar.getInstance()
+        val studyStart: Long = calendar.timeInMillis
+        calendar.add(Calendar.WEEK_OF_MONTH, 2)
+        val studyEnd: Long = calendar.timeInMillis
+        SharedPrefManager.saveLong(CONST.PREFERENCES_STUDY_START, studyStart)
+        SharedPrefManager.saveLong(CONST.PREFERENCES_STUDY_END, studyEnd)
+    }
+
+    fun isStudyOver(context: Context) {
+        val calendarNow = Calendar.getInstance().time
+        val studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
+        val isStudyOver = calendarNow.after(Date(studyEnd))
+        if(isStudyOver){
+            NotificationHelper.createSurveyNotification(context, SurveryType.SURVEY_END)
+        }
     }
 
     fun generateSessionID(timestamp: Long): String {

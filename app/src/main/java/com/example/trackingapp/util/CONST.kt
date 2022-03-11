@@ -19,6 +19,8 @@ object CONST {
     const val PREFERENCES_ESM_LOCK_ANSWERED: String = "PREFERENCES_ESM_LOCK_ANSWERED"
     const val PREFERENCES_IS_NO_CONCRETE_INTENTION: String = "PREFERENCES_IS_NO_CONCRETE_INTENTION"
     const val PREFERENCES_SESSION_ID: String = "PREFERENCES_SESSION_ID"
+    const val PREFERENCES_STUDY_START: String = "PREFERENCES_STUDY_START"
+    const val PREFERENCES_STUDY_END: String = "PREFERENCES_STUDY_END"
 
     //Firebase
     const val firebaseReferenceUsers = "users"
@@ -56,5 +58,6 @@ object CONST {
     //Survery
     const val baseSurveyURL = "https://survey.ifkw.lmu.de/MobileRabbitHole/"
     const val NOTIFICATION_ID_SURVEY = 24098
+
 
 }

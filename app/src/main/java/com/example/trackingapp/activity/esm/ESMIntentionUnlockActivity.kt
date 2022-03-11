@@ -13,6 +13,7 @@ import com.example.trackingapp.R
 import com.example.trackingapp.databinding.LayoutEsmUnlockIntentionBinding
 import com.example.trackingapp.models.LogEvent
 import com.example.trackingapp.models.LogEventName
+import com.example.trackingapp.service.LoggingManager
 import com.example.trackingapp.util.CONST
 import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.util.DatabaseManager.saveToDataBase
@@ -26,6 +27,7 @@ class ESMIntentionUnlockActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dismissESMNotification(this)
+        LoggingManager.isStudyOver(this)
 
         viewModel = ViewModelProvider(this, ESMIntentionViewModelFactory())[ESMIntentionViewModel::class.java]
 
