@@ -6,8 +6,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.R
+import com.example.trackingapp.util.DatabaseManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -46,11 +46,11 @@ class LoginSignUpViewModel : ViewModel() {
         }
     }
 
-    fun createEmailPasswordAccount(username: String, email: String, password: String){
+    fun createEmailPasswordAccount(email: String, password: String){
         Firebase.auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 Log.d("LoginSignUpViewModel:","Create Account successful")
-                DatabaseManager.saveUserToFirebase(username, email)
+                DatabaseManager.saveUserToFirebase(email)
                 _loginResult.value =
                     LoginResult(success = true)
             } else{

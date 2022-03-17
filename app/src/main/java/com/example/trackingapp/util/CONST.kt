@@ -21,6 +21,8 @@ object CONST {
     const val PREFERENCES_SESSION_ID: String = "PREFERENCES_SESSION_ID"
     const val PREFERENCES_STUDY_START: String = "PREFERENCES_STUDY_START"
     const val PREFERENCES_STUDY_END: String = "PREFERENCES_STUDY_END"
+    const val PREFERENCES_STUDY_END_ANSWERED: String = "PREFERENCES_STUDY_END_ANSWERED"
+    const val PREFERENCES_USER_FINISHED_ONBAORDING: String = "PREFERENCES_USER_FINISHED_ONBAORDING"
 
     //Firebase
     const val firebaseReferenceUsers = "users"
@@ -45,7 +47,7 @@ object CONST {
     const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 16 //minutes
     const val ESM_LOCK_ASK_COUNT = 3
     //todo
-    const val ESM_SESSION_TIMEOUT = 15 * 1000 //45s
+    const val ESM_SESSION_TIMEOUT = 45 * 1000 //45s
     const val ESM_LOCK_TIMEOUT = 2 * 1000 //1s
 
     //Intent
@@ -55,7 +57,7 @@ object CONST {
 
     const val UNIQUE_WORK_NAME = "RABBIT_HOLE_TRACKER_STAY_ALIVE"
 
-    //Survery
+    //Survey
     const val baseSurveyURL = "https://survey.ifkw.lmu.de/MobileRabbitHole/"
     const val NOTIFICATION_ID_SURVEY = 24098
 

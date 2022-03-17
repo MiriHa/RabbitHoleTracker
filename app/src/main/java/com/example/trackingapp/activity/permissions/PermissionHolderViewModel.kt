@@ -73,6 +73,7 @@ private class PermissionIterator(val activity: Activity, val permissions: List<P
                 PermissionView.USAGE_STATS -> {
                     PermissionManager.isUsageInformationPermissionEnabled(it)
                 }
+                else -> false
             }
         }
     }

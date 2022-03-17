@@ -67,9 +67,10 @@ class ESMIntentionLockActivity : AppCompatActivity() {
     }
 
     private fun dismissFullScreenNotification() {
+        SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
+        if(viewModel.type == ESMLOCKTYPE.ESM_LONG) SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
         viewModel.questionList.forEach { item ->
             viewModel.answeredQuestions.add(item.questionType)
-            SharedPrefManager.saveBoolean(CONST.PREFERENCES_ESM_LOCK_ANSWERED, true)
             LogEvent(
                 LogEventName.ESM,
                 timestamp = System.currentTimeMillis(),

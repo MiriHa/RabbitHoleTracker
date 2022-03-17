@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import android.view.WindowManager
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.trackingapp.R
@@ -97,9 +96,11 @@ object NotificationHelper {
             .setContentTitle(title)
             .setContentText(context.getString(R.string.survey_notification_description))
             .setAutoCancel(true)
-            .setOngoing(true)
             .setContentIntent(pendingIntent)
 
+        if(type == SurveryType.SURVEY_END){
+            builder.setOngoing(true)
+        }
 
         val notificationManager = NotificationManagerCompat.from(context)
         with(notificationManager) {
@@ -109,8 +110,14 @@ object NotificationHelper {
         }
     }
 
+    fun dismissSurveyNotification(context: Context){
+        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        with(notificationManager) {
+            cancel(CONST.NOTIFICATION_ID_SURVEY)
+        }
+    }
+
     fun createSurveyLink(type: SurveryType): Uri? {
-        // https://www.soscisurvey.de/demo/?s=AB123456
         val serialNumber = DatabaseManager.user?.uid
         val questionnaireParameter = when(type) {
             SurveryType.SURVEY_START -> "?q=MRH1"
@@ -119,7 +126,7 @@ object NotificationHelper {
         serialNumber?.let {  uID ->
             val serialNumberParameter = "&s=$uID"
             val uri = "${CONST.baseSurveyURL}$questionnaireParameter$serialNumberParameter"
-            Log.d("xxx", "uri: $uri")
+            Log.d(TAG, "uri: $uri")
             return Uri.parse(uri)
         } ?: return null
     }
@@ -129,14 +136,10 @@ fun Activity.turnScreenOnAndKeyguardOff() {
     setShowWhenLocked(true)
     setTurnScreenOn(true)
 
-    window.addFlags(
-        WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                or WindowManager.LayoutParams.FLAG_ALLOW_LOCK_WHILE_SCREEN_ON
-                or WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
-    )
-
-    /*with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
-        requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, MyKeyguardDismissCallback())
+    /*if(Build.VERSION.SDK_INT < Build.VERSION_CODES.S) {
+        with(getSystemService(Context.KEYGUARD_SERVICE) as KeyguardManager) {
+            requestDismissKeyguard(this@turnScreenOnAndKeyguardOff, null)
+        }
     }*/
 }
 

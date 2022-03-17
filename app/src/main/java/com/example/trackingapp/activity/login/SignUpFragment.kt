@@ -30,7 +30,6 @@ class SignUpFragment: Fragment() {
         binding = FragmentSignupBinding.inflate(inflater)
         viewModel = ViewModelProvider(this, LoginViewModelFactory())[LoginSignUpViewModel::class.java]
 
-        val usernameEditText = binding.signUpNickname
         val emailEditText = binding.signUpEmail
         val passwordEditText = binding.signUpPassword
         val passwordRepeatEditText = binding.signUpRepeatPassword
@@ -81,7 +80,6 @@ class SignUpFragment: Fragment() {
         passwordRepeatEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.createEmailPasswordAccount(
-                    usernameEditText.text.toString(),
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )
@@ -93,7 +91,6 @@ class SignUpFragment: Fragment() {
             if(viewModel.isButtonEnabled) {
                 loadingProgressBar.visibility = View.VISIBLE
                 viewModel.createEmailPasswordAccount(
-                    usernameEditText.text.toString(),
                     emailEditText.text.toString(),
                     passwordEditText.text.toString()
                 )

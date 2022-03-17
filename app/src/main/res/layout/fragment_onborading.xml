@@ -63,7 +63,7 @@
             android:layout_marginHorizontal="64dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/milkGreen"
-            android:text="@string/login_signup"
+            android:text="@string/login_signUp_CreateAccount"
             android:textColor="@color/white" />
 
     </LinearLayout>

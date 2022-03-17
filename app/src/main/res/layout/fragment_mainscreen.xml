@@ -1,81 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/BlackishGray"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="16dp">
+    android:orientation="vertical"
+    android:background="@color/BlackishGray">
 
-    <Button
-        android:id="@+id/buttonTest"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_mainScreen_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:visibility="visible"
-        android:backgroundTint="@color/milkGreen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="test button" />
+        android:layout_height="40dp"
+        app:tabIndicatorColor="@color/background_gray"
+        app:tabTextColor="@color/background_gray"
+        android:background="@color/milkGreenDark"/>
 
-    <Button
-        android:id="@+id/buttonTestStop"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewpager_mainScreen_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
-        android:backgroundTint="@color/milkGreen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonTest"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="Stop Lock Notifications" />
-
-    <TextView
-        android:id="@+id/textView_sensorList_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:paddingHorizontal="10dp"
-        android:text="@string/mainScreen_sensorlist_title"
-        android:textColor="@color/cardview_light_background"
-        android:textSize="24sp"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <View
-        android:id="@+id/line"
-        android:layout_width="fill_parent"
-        android:layout_height="1dp"
-        android:alpha="0.1"
-        android:background="@color/background_gray"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView_sensorList_title" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         android:background="@color/BlackishGray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/line">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerview_fragment_mainscreen"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/textView_sensorList_title"
-            tools:listitem="@layout/custom_list_item" />
-
-    </ScrollView>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
-
+</LinearLayout>

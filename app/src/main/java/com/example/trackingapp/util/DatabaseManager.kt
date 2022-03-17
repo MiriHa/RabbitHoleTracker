@@ -35,9 +35,9 @@ object DatabaseManager {
         )
     }
 
-    fun saveUserToFirebase(userName: String, email: String) {
+    fun saveUserToFirebase(email: String) {
         val userId = Firebase.auth.currentUser?.uid
-        val user = User(userName, email, userId)
+        val user = User(email, userId)
         if (userId != null) {
             database.child(CONST.firebaseReferenceUsers)
                 .child(userId)

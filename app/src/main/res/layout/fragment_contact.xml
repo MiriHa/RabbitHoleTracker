@@ -1,88 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/BlackishGray"
-    android:paddingHorizontal="16dp"
-    android:paddingVertical="16dp">
+    android:background="@color/BlackishGray">
 
-    <androidx.cardview.widget.CardView
-        card_view:cardCornerRadius="10dp"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:backgroundTint="@color/DarkBlackishGray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/BlackishGray"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="16dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="12dp">
-
-        <TextView
-            android:id="@+id/textView_contact_fragment_title"
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView_Questionnaire"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="6dp"
-            android:text="@string/contact_title"
-            android:textColor="@color/cardview_light_background"
-            android:textSize="24sp"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:backgroundTint="@color/DarkBlackishGray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            card_view:cardCornerRadius="10dp">
 
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/background_gray"
-                android:alpha="0.1"
-                android:visibility="visible" />
-
-        <TextView
-            android:id="@+id/textView_contact_fragment_description"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="6dp"
-            android:text="@string/contact_description"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_title"
-            tools:layout_editor_absoluteX="16dp" />
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_description"
-            tools:layout_editor_absoluteX="16dp">
-
-            <ImageView
-                android:id="@+id/contact_icon"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="10dp"
-                android:contentDescription="@string/prompt_email"
-                android:src="@drawable/ic_email"
-                app:tint="@color/background_gray" />
-
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/contact_icon"
-                android:autoLink="email"
-                android:text="@string/contact_email"
-                android:textColorLink="@color/milkGreen"
-                android:textSize="16sp" />
-        </RelativeLayout>
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/textView_questionnaire_fragment_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:text="@string/questionnaire_title"
+                    android:textColor="@color/cardview_light_background"
+                    android:textSize="24sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.1"
+                    android:background="@color/background_gray"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textView_questionnaire_fragment_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:text="@string/questionnaire_note"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_title"
+                    tools:layout_editor_absoluteX="16dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_description"
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:id="@+id/questionnaire_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/link"
+                        android:src="@drawable/ic_link"
+                        app:tint="@color/background_gray" />
+
+                    <TextView
+                        android:id="@+id/textview_link_questionnaire"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toEndOf="@+id/questionnaire_icon"
+                        android:autoLink="web"
+                        android:textColor="@color/milkGreen"
+                        android:textColorLink="@color/milkGreen"
+                        android:textSize="16sp"
+                        tools:text="@string/contact_email" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView_information"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:backgroundTint="@color/DarkBlackishGray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cardView"
+            card_view:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/textView_information_fragment_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:text="@string/information_title"
+                    android:textColor="@color/cardview_light_background"
+                    android:textSize="24sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.1"
+                    android:background="@color/background_gray"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textView_information_fragment_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:text="@string/information_note"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_title"
+                    tools:layout_editor_absoluteX="16dp" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="6dp"
+            android:backgroundTint="@color/DarkBlackishGray"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            card_view:cardCornerRadius="10dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:id="@+id/textView_contact_fragment_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:text="@string/contact_title"
+                    android:textColor="@color/cardview_light_background"
+                    android:textSize="24sp"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.1"
+                    android:background="@color/background_gray"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textView_contact_fragment_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="6dp"
+                    android:text="@string/contact_description"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_title"
+                    tools:layout_editor_absoluteX="16dp" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_description"
+                    tools:layout_editor_absoluteX="16dp">
+
+                    <ImageView
+                        android:id="@+id/contact_icon"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="10dp"
+                        android:contentDescription="@string/prompt_email"
+                        android:src="@drawable/ic_email"
+                        app:tint="@color/background_gray" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/contact_icon"
+                        android:autoLink="email"
+                        android:text="@string/contact_email"
+                        android:textColorLink="@color/milkGreen"
+                        android:textSize="16sp" />
+                </RelativeLayout>
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

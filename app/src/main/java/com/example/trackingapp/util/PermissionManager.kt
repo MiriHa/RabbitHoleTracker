@@ -3,16 +3,18 @@ package com.example.trackingapp.util
 import android.Manifest
 import android.app.Activity
 import android.app.AppOpsManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.text.TextUtils
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.trackingapp.activity.permissions.PermissionView
+import com.example.trackingapp.service.sensorservice.AccessibilityLogService
 
 
 class PermissionManager(val activity: Activity, private val code: Int) {
@@ -32,7 +34,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
             l.add(Manifest.permission.BLUETOOTH)
-           // l.add(Manifest.permission.SYSTEM_ALERT_WINDOW)
             l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                 l.add(Manifest.permission.FOREGROUND_SERVICE)
@@ -137,13 +138,13 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
         }
 
-        fun requestBatteryOptimization(context: Context) {
+        /*fun requestBatteryOptimization(context: Context) {
             Log.i(TAG, "Requesting: Ignore Battery Optimization")
             val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
             intent.data = Uri.parse("package:" + context.applicationContext.packageName)
             context.startActivity(intent)
         }
-
+*/
         fun isNotificationListenerEnabled(context: Context): Boolean {
             return Settings.Secure.getString(context.contentResolver, "enabled_notification_listeners")
                     .contains(context.applicationContext.packageName)
@@ -151,14 +152,29 @@ class PermissionManager(val activity: Activity, private val code: Int) {
 
         fun isAccessibilityServiceEnabled(context: Context): Boolean {
             var accessEnabled = 0
-            Log.d(TAG, "checkAccesibiltyPermission")
+            var enabledSpecific = false
             try {
                 accessEnabled = Settings.Secure.getInt(context.contentResolver, Settings.Secure.ACCESSIBILITY_ENABLED)
-                Log.d(TAG, "checkAccesibiltyPermission enabed: $accessEnabled")
+
+                val accessibilityService = AccessibilityLogService::class.java
+                accessibilityService.let {
+                    val expectedComponentName = ComponentName(context, it)
+                    val enabledServicesSetting: String =
+                        Settings.Secure.getString(context.contentResolver, Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES) ?: return false
+                    val colonSplitter = TextUtils.SimpleStringSplitter(':')
+                    colonSplitter.setString(enabledServicesSetting)
+                    while (colonSplitter.hasNext()) {
+                        val componentNameString = colonSplitter.next()
+                        val enabledService = ComponentName.unflattenFromString(componentNameString)
+                        enabledSpecific = (enabledService != null && enabledService == expectedComponentName)
+                        Log.d("xxx", "checkAccesibiltyPermission2 enabled: $enabledSpecific")
+                    }
+                }
+                Log.d(TAG, "checkAccesibiltyPermission enabled: $accessEnabled $enabledSpecific")
             } catch (e: Settings.SettingNotFoundException) {
                 e.printStackTrace()
             }
-            return accessEnabled == 1
+            return (accessEnabled == 1 && enabledSpecific)
         }
 
         fun isUsageInformationPermissionEnabled(context: Context): Boolean {
@@ -209,6 +225,7 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                     PermissionView.USAGE_STATS -> {
                         isUsageInformationPermissionEnabled(it)
                     }
+                    else -> false
                 }
             }
             return false

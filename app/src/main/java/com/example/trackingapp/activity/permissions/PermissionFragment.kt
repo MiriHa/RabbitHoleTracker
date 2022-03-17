@@ -11,10 +11,9 @@ import android.view.ViewGroup
 import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import com.example.trackingapp.databinding.FragmentPermissionBinding
-import com.example.trackingapp.util.CONST
-import com.example.trackingapp.util.PermissionManager
+import com.example.trackingapp.util.*
 
-class PermissionFragment() : Fragment() {
+class PermissionFragment : Fragment() {
 
     private val TAG = "PERMISSIONFRAGMENT"
 
@@ -37,6 +36,12 @@ class PermissionFragment() : Fragment() {
         binding.textViewPermissionFragmentTitle.text = mContext.getString(permissionView.titleLabelResourceId)
         binding.textViewPermissionFragmentDescription.text = mContext.getString(permissionView.descriptionLabelResourceId)
         binding.buttonPermissionFragent.text = mContext.getString(permissionView.primaryButtonLabelResourceId)
+
+        if(permissionView == PermissionView.QUESTIONNAIRE){
+            NotificationHelper.createSurveyNotification(mContext, SurveryType.SURVEY_START)
+            binding.layoutLinkPermissions.visibility = View.VISIBLE
+            binding.textviewLinkQuestionnaire.text = NotificationHelper.createSurveyLink(SurveryType.SURVEY_START).toString()
+        }
 
         binding.buttonPermissionFragent.setOnClickListener {
             continueClicked()
@@ -76,6 +81,7 @@ class PermissionFragment() : Fragment() {
                         viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
                     }
                 }
+                else -> { /*Do nothing */ }
             }
         }
     }
@@ -105,6 +111,13 @@ class PermissionFragment() : Fragment() {
                     if(managePermissions.checkForUsageStatsPermissions()){
                         checkPermissionsOrProceed()
                     }
+                }
+                PermissionView.ONBOARDING -> {
+                    SharedPrefManager.saveBoolean(CONST.PREFERENCES_USER_FINISHED_ONBAORDING, true)
+                    viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
+                }
+                PermissionView.QUESTIONNAIRE -> {
+                    viewModel.userResponded(PermissionViewModel.UserResponse.ACCEPTED)
                 }
             }
         }

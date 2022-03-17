@@ -2,9 +2,9 @@ package com.example.trackingapp.activity.esm
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.R
 import com.example.trackingapp.util.CONST
+import com.example.trackingapp.util.DatabaseManager
 import com.example.trackingapp.util.SharedPrefManager
 import java.util.*
 
@@ -14,6 +14,7 @@ class ESMIntentionViewModel : ViewModel() {
     var currentSessionID: String? = ""
 
     var questionList = listOf<ESMItem>()
+    var type = ESMLOCKTYPE.ESM_SHORT
     val answeredQuestions = mutableListOf<ESMQuestionType>()
 
     val savedIntention
@@ -38,7 +39,8 @@ class ESMIntentionViewModel : ViewModel() {
         return when {
             //Was Last full ESM over xxx min ago?
             time - lastFullESM > CONST.ESM_FREQUENCY -> {
-                SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
+                //SharedPrefManager.saveLong(CONST.PREFERENCES_LAST_ESM_FULL_TIMESTAMP, System.currentTimeMillis())
+                type = ESMLOCKTYPE.ESM_LONG
                 listOfNotNull(
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
@@ -92,6 +94,7 @@ class ESMIntentionViewModel : ViewModel() {
                 )
             }
             else -> {
+                type = ESMLOCKTYPE.ESM_SHORT
                 listOfNotNull(
                     ESMRadioGroupItem(
                         R.string.esm_lock_intention_question_intention_finished,
@@ -114,6 +117,11 @@ class ESMIntentionViewModel : ViewModel() {
             }
         }
     }
+}
+
+enum class ESMLOCKTYPE{
+    ESM_LONG,
+    ESM_SHORT
 }
 
 class ESMIntentionViewModelFactory : ViewModelProvider.Factory {

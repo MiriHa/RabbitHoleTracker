@@ -102,7 +102,6 @@ class ScreenStateSensor : AbstractSensor(
                     }
                     currentState == ScreenState.ON_UNLOCKED -> {
                         saveEntry(currentState, time)
-                        onPhoneUnLock(time, context)
                     }
                     currentState == ScreenState.ON_USERPRESENT -> {
                         saveEntry(currentState, time)

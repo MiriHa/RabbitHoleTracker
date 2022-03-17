@@ -134,21 +134,32 @@ object LoggingManager {
         val studyEnd: Long = calendar.timeInMillis
         SharedPrefManager.saveLong(CONST.PREFERENCES_STUDY_START, studyStart)
         SharedPrefManager.saveLong(CONST.PREFERENCES_STUDY_END, studyEnd)
+        SharedPrefManager.saveBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED, false)
+        Log.d(TAG,"calculate study interval: ${Date(studyStart)} - ${Date(studyEnd)}")
     }
 
     fun isStudyOver(context: Context) {
         val calendarNow = Calendar.getInstance().time
         val studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
+        val alreadyAnswered = SharedPrefManager.getBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED)
         val isStudyOver = calendarNow.after(Date(studyEnd))
-        if(isStudyOver){
+        Log.d(TAG,"isStudyover? $isStudyOver")
+        if(isStudyOver && !alreadyAnswered){
             NotificationHelper.createSurveyNotification(context, SurveryType.SURVEY_END)
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED, true)
         }
+    }
+
+    fun isStudyOver(): Boolean {
+        val calendar = Calendar.getInstance().time
+        val studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
+        Log.d(TAG,"isStudyover? ${calendar.after(Date(studyEnd))}")
+        return calendar.after(Date(studyEnd))
     }
 
     fun generateSessionID(timestamp: Long): String {
         val sessionID = timestamp.toString() + "_" + UUID.randomUUID().toString()
         cachedSessionID = sessionID
-        Log.d("xxx", "generate sessionID: $cachedSessionID or $sessionID")
         return sessionID
     }
 }

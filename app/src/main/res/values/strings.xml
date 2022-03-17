@@ -85,8 +85,16 @@
     <string name="permission_request_notification_listener_description">Enable notification permissions, so we can collect the timestamps about your received notifications. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable the notification listener. \n\nThen come back to this application.</string>
     <string name="permission_request_usage_stats_title">Give Usage Information Access</string>
     <string name="permission_request_usage_stats_description">Give this app permission to access your usage statistics, so we can collect your usage events. \n\nPlease select the Rabbit Hole Tracker application in the settings and enable usage information access. \n\nThen come back to this application.</string>
+    <string name="permission_request_overlay_title">Give Permission to show our app on the lock screen</string>
+    <string name="permission_request_overlay_description">Please allow this application RabbitHoleTracker to show our questionnaire on your lockscreen.</string>
+    <string name="permission_request_questionnaire_title">Questionnaire</string>
+    <string name="permission_request_questionnaire_description">Please fill out the first questionnaire under the following link or by clicking on the notification. \n\nAfter your are finished, come back to this application.</string>
+    <string name="permission_request_questionnaire_button">Questionnaire answered</string>
+    <string name="permission_request_onboarding_title">Please note</string>
+    <string name="permission_request_onboarding_description">Please try to answer the prompted questionnaires always as truthfully as possible. \n\nThis application will collect your usage data in the background. Be aware that it might affect the battery drain and internet usage of your phone. \n\nMake sure than you have internet access as much as possible.\n\nIf you notice that the app is not running, for example after a phone restart, just open the application again to restart logging.</string>
     <string name="permission_settings_button_text">Go to Settings</string>
     <string name="permission_button_text">Allow Permissions</string>
+    <string name="permissions_button_continue">Continue</string>
 
     <!-- Logging -->
     <string name="logging_notification_service_title">Logging is Running</string>
@@ -98,6 +106,9 @@
     <string name="mainScreen_sensorList_is_running">is running</string>
     <string name="mainScreen_sensorList_not_running">not running</string>
 
+    <string name="mainScreen_tab_sensor_title">Sensors</string>
+    <string name="mainScreen_tab_contact_title">Information</string>
+
     <string name="accessibility_button">Accessibility</string>
     <string name="accessibility_button_On">Enabled Accessibility</string>
     <string name="accessibility_button_Off">Disabled Accessibility</string>
@@ -107,11 +118,15 @@
     <string name="contact_title">Contact</string>
     <string name="contact_description">If you have any questions about this study or run into technical problems with this application, please contact:</string>
     <string name="contact_email">miriam.halsner@campus.lmu.de</string>
-    <string name="contact_note">Please make sure that the you see the Logging Notification of this app any time. If not, open the application to restart it.</string>
+    <string name="information_title">Please note</string>
+    <string name="information_note">Please make sure that the you see the logging notification of this app at any time and that you receive our short questionnaires. \n\nIf not, open this application again to restart it.</string>
+    <string name="questionnaire_title">Questionnaire</string>
+    <string name="questionnaire_note">Your two weeks of study are over, but feel free to continue to use the application for longer if you want to help us out a little bit more. \n\nPlease fill out the second questionnaire under the following link, if not already done:</string>
+    <string name="link">link</string>
 
     <!--Survey-->
     <string name="survey_start_notification_title">First Questionnaire</string>
     <string name="survey_end_notification_title">Second Questionnaire</string>
-    <string name="survey_notification_description">Click here to answer this questionnaire</string>
+    <string name="survey_notification_description">Click here to answer this questionnaire.</string>
 
 </resources>

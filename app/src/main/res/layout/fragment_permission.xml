@@ -50,7 +50,7 @@
                 android:gravity="center"
                 android:text="@string/permission_title"
                 android:textColor="@color/white"
-                android:textSize="32sp"
+                android:textSize="26sp"
                 app:layout_constraintBottom_toTopOf="@+id/textView_permission_fragment_description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
@@ -81,6 +81,40 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <RelativeLayout
+                android:id="@+id/layout_link_permissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="16dp"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_description"
+                tools:layout_editor_absoluteX="16dp">
+
+                <ImageView
+                    android:id="@+id/questionnaire_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="10dp"
+                    android:contentDescription="@string/link"
+                    android:src="@drawable/ic_link"
+                    app:tint="@color/background_gray" />
+
+                <TextView
+                    android:id="@+id/textview_link_questionnaire"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@+id/questionnaire_icon"
+                    android:autoLink="web"
+                    android:textColor="@color/milkGreen"
+                    android:textColorLink="@color/milkGreen"
+                    android:textSize="16sp"
+                    tools:text="@string/contact_email" />
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/button_permission_fragent"
