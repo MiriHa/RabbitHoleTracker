@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.trackingapp">
+    package="com.lmu.trackingapp">
 
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -40,7 +40,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TrackingApp">
         <activity
-            android:name="com.example.trackingapp.activity.MainActivity"
+            android:name="com.lmu.trackingapp.activity.MainActivity"
             android:exported="true"
             android:windowSoftInputMode="stateHidden|adjustPan">
             <intent-filter>
@@ -52,7 +52,7 @@
         </activity>
 
         <activity
-            android:name="com.example.trackingapp.activity.esm.ESMIntentionLockActivity"
+            android:name="com.lmu.trackingapp.activity.esm.ESMIntentionLockActivity"
             android:exported="true"
             android:launchMode="singleInstance"
             android:showOnLockScreen="true"
@@ -60,7 +60,7 @@
             android:theme="@style/Theme.TrackingApp.NoActionBar"/>
 
         <activity
-            android:name="com.example.trackingapp.activity.esm.ESMIntentionUnlockActivity"
+            android:name="com.lmu.trackingapp.activity.esm.ESMIntentionUnlockActivity"
             android:exported="true"
             android:launchMode="singleTop"
             android:excludeFromRecents="true"
@@ -68,7 +68,7 @@
             android:theme="@style/Theme.TrackingApp.NoActionBar"/>
 
         <service
-            android:name=".service.LoggingService"
+            android:name="com.lmu.trackingapp.service.LoggingService"
             android:enabled="true"
             android:exported="true"
             android:process=":remote"
@@ -79,7 +79,7 @@
         </service>
 
         <service
-            android:name=".service.sensorservice.NotificationListener"
+            android:name="com.lmu.trackingapp.service.sensorservice.NotificationListener"
             android:exported="true"
             android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
             <intent-filter>
@@ -87,7 +87,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".service.sensorservice.AccessibilityLogService"
+        <service android:name="com.lmu.trackingapp.service.sensorservice.AccessibilityLogService"
             android:exported="true"
             android:process=":remote"
             android:stopWithTask="false"
@@ -100,11 +100,11 @@
 
 
         <receiver
-            android:name=".service.stayalive.StayAliveReceiver"
+            android:name="com.lmu.trackingapp.service.stayalive.StayAliveReceiver"
             android:exported="true" />
 
         <receiver
-            android:name="com.example.trackingapp.sensor.BootUpReceiver"
+            android:name="com.lmu.trackingapp.sensor.BootUpReceiver"
             android:exported="true"
             android:enabled="true"
             android:stopWithTask="false">

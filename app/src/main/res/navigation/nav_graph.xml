@@ -9,7 +9,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.trackingapp.activity.login.LoginFragment"
+        android:name="com.lmu.trackingapp.activity.login.LoginFragment"
         android:label="LoginFragment" >
         <!--<argument
             android:name="LoginSignUpScreenType"
@@ -24,7 +24,7 @@
     </fragment>
     <fragment
         android:id="@+id/OnBoardingFragment"
-        android:name="com.example.trackingapp.activity.login.OnBoardingFragment"
+        android:name="com.lmu.trackingapp.activity.login.OnBoardingFragment"
         android:label="WelcomeFragment" >
         <action
             android:id="@+id/action_welcomeFragment_to_loginFragment"
@@ -41,11 +41,11 @@
     </fragment>
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.example.trackingapp.activity.MainActivity"
+        android:name="com.lmu.trackingapp.activity.MainActivity"
         android:label="MainActivity" />
     <fragment
         android:id="@+id/mainScreenFragment"
-        android:name="com.example.trackingapp.activity.MainScreenFragment"
+        android:name="com.lmu.trackingapp.activity.MainScreenFragment"
         android:label="MainScreenFragment" >
         <action
             android:id="@+id/action_mainScreenFragment_to_OnBoardingFragment"
@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.trackingapp.activity.login.SignUpFragment"
+        android:name="com.lmu.trackingapp.activity.login.SignUpFragment"
         android:label="SignUpFragment" >
         <action
             android:id="@+id/action_signUpFragment_to_mainScreenFragment"
@@ -67,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/permissionHolderFragment"
-        android:name="com.example.trackingapp.activity.permissions.PermissionHolderFragment"
+        android:name="com.lmu.trackingapp.activity.permissions.PermissionHolderFragment"
         android:label="PermissionHolderFragment" >
         <action
             android:id="@+id/action_permissionHolderFragment_to_mainScreenFragment"

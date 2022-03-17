@@ -40,16 +40,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/ic_email"
+            android:src="@drawable/ic_user"
             app:tint="@color/white" />
 
         <EditText
             android:id="@+id/username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="@string/prompt_email"
+            android:autofillHints="@string/prompt_username"
             android:backgroundTint="@color/LightBlackishGray"
-            android:hint="@string/prompt_email"
+            android:hint="@string/prompt_username"
             android:inputType="textEmailAddress"
             android:selectAllOnFocus="true"
             android:textColor="@color/white"

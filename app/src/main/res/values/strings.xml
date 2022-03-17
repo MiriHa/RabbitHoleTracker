@@ -14,18 +14,19 @@
     <string name="logout_menu_title">Log out</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_username">Username</string>
+    <string name="prompt_username">StudyID</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="login_prompt_password_repeat">Repeat Password</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">Welcome!</string>
-    <string name="invalid_username">Not a valid email</string>
+    <string name="invalid_username">Not a valid StudyID</string>
     <string name="invalid_password">Password must be at least 6 characters</string>
     <string name="invalid_password_no_match">Both passwords need to match</string>
     <string name="invalid_data_error">Entered data is not valid!</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="study_code">XXYYZZ, with the following rules:\n\nXX the first two letters of the first name of your mother.\nYY ist the day of your birthday\nZZ are the first two letters of the streetname your are living in</string>
 
     <!-- ESM -->
     <string name="esm_unlock_intention_question">What do you want to use your phone for?</string>
@@ -123,6 +124,9 @@
     <string name="questionnaire_title">Questionnaire</string>
     <string name="questionnaire_note">Your two weeks of study are over, but feel free to continue to use the application for longer if you want to help us out a little bit more. \n\nPlease fill out the second questionnaire under the following link, if not already done:</string>
     <string name="link">link</string>
+    <string name="tracked_data_title">Tracked Usage Data</string>
+    <string name="tracked_data_description">- Demography\n- Smartphone accelerometer sensor data\n- Smartphone gyroscope sensor data\n- Smartphone rotation sensor data\n- Smartphone proximity sensor data\n- Light intensity\n- Smartphone accessibility events\n- Activity recognition \n- Changes in airplane mode\n- Changes in bluetooth connections\n- Changes in ringer mode and sound level\n- Changes in screen rotation\n- Change in screen states\n- Changes in battery levels\n- Changes in internet connections\n- Timestamps of phone calls\n- Timestamps of SMS\n- Timestamps and priority of notifications\n- Internet addresses of visited websites\n- Sent and received bytes</string>
+    <string name="tracked_data_note">Your tracked usage data is saved anonymously.</string>
 
     <!--Survey-->
     <string name="survey_start_notification_title">First Questionnaire</string>

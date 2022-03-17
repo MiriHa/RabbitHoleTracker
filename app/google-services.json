@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:459215279370:android:8c925e0f4d05784ac616f3",
         "android_client_info": {
-          "package_name": "com.example.trackingapp"
+          "package_name": "com.lmu.trackingapp"
         }
       },
       "oauth_client": [
