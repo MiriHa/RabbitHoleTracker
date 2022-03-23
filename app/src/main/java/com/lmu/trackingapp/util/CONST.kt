@@ -42,7 +42,7 @@ object CONST {
     const val PERMISSION_REQUEST_CODE = 123
 
     //Frequency and Constants
-    const val LOGGING_FREQUENCY: Long = 500 //milliseconds
+    const val LOGGING_FREQUENCY: Long = 750 //milliseconds
     const val ESM_FREQUENCY: Long = 20 * 60 * 1000 //20 min
     const val LOGGING_CHECK_FOR_LOGGING_ALIVE_INTERVAL: Long = 16 //minutes
     const val ESM_LOCK_ASK_COUNT = 2

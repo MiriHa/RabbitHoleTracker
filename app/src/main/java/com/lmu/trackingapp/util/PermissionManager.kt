@@ -30,8 +30,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
             l.add(Manifest.permission.READ_CALL_LOG)
             l.add(Manifest.permission.READ_PHONE_NUMBERS)
             l.add(Manifest.permission.READ_SMS)
-            l.add(Manifest.permission.RECEIVE_SMS)
-            l.add(Manifest.permission.READ_SMS)
             l.add(Manifest.permission.ACCESS_NETWORK_STATE)
             l.add(Manifest.permission.BLUETOOTH)
             l.add("com.google.android.gms.permission.ACTIVITY_RECOGNITION")

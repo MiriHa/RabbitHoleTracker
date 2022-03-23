@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BlackishGray"
@@ -16,13 +16,21 @@
         android:scaleType="fitCenter"
         android:src="@drawable/ic_accessibility"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@+id/cardview_permission"
+        app:layout_constraintBottom_toTopOf="@+id/scrollview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.110000014"
         app:tint="@color/background_gray" />
 
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/DarkBlackishGray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview_permission"
@@ -30,9 +38,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
         android:backgroundTint="@color/DarkBlackishGray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         card_view:cardCornerRadius="10dp">
 
         <LinearLayout
@@ -45,8 +50,8 @@
                 android:id="@+id/textView_permission_fragment_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
                 android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
                 android:gravity="center"
                 android:text="@string/permission_title"
                 android:textColor="@color/white"
@@ -66,21 +71,21 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView_sensorList_title" />
 
-            <TextView
-                android:id="@+id/textView_permission_fragment_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginVertical="16dp"
-                android:layout_marginBottom="32dp"
-                android:gravity="center"
-                android:text="@string/permission_request_notification_listener_description"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toTopOf="@+id/button_permission_fragent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent" />
+                <TextView
+                    android:id="@+id/textView_permission_fragment_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginVertical="16dp"
+                    android:layout_marginBottom="32dp"
+                    android:gravity="center"
+                    tools:text="@string/permission_request_onboarding_description"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toTopOf="@+id/button_permission_fragent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent" />
 
             <RelativeLayout
                 android:id="@+id/layout_link_permissions"
@@ -88,8 +93,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="16dp"
-                android:orientation="horizontal"
                 android:gravity="center"
+                android:orientation="horizontal"
                 android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/textView_contact_fragment_description"
                 tools:layout_editor_absoluteX="16dp">
@@ -131,5 +136,7 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

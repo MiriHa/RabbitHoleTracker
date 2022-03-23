@@ -48,10 +48,10 @@ class PermissionHolderFragment : Fragment() {
             PermissionView.QUESTIONNAIRE.takeIf { !SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_FINISHED_ONBAORDING) },
             PermissionView.ONBOARDING.takeIf { !SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_FINISHED_ONBAORDING) },
             PermissionView.PERMISSIONS.takeIf { !PermissionManager.checkPermission(PermissionView.PERMISSIONS, this.activity) },
-            PermissionView.ACCESSIBILITY_SERVICE.takeIf { !SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_FINISHED_ONBAORDING) ||
-                    !PermissionManager.checkPermission(PermissionView.ACCESSIBILITY_SERVICE, this.activity) },
             PermissionView.NOTIFICATION_LISTENER.takeIf { !PermissionManager.checkPermission(PermissionView.NOTIFICATION_LISTENER, this.activity) },
             PermissionView.USAGE_STATS.takeIf { !PermissionManager.checkPermission(PermissionView.USAGE_STATS, this.activity) },
+            PermissionView.ACCESSIBILITY_SERVICE.takeIf { !SharedPrefManager.getBoolean(CONST.PREFERENCES_USER_FINISHED_ONBAORDING) ||
+                    !PermissionManager.checkPermission(PermissionView.ACCESSIBILITY_SERVICE, this.activity) },
         ).filterNotNull()
     }
 

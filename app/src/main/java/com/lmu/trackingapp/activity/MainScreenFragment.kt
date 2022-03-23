@@ -7,13 +7,13 @@ import android.view.*
 import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.lmu.trackingapp.R
 import com.lmu.trackingapp.databinding.FragmentMainscreenBinding
 import com.lmu.trackingapp.service.LoggingManager
 import com.lmu.trackingapp.util.*
-import com.google.android.material.tabs.TabLayoutMediator
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 
 class MainScreenFragment: Fragment() {
 

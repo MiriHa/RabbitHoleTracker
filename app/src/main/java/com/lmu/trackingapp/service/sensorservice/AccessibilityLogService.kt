@@ -6,11 +6,11 @@ import android.util.Log
 import android.util.Patterns
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import com.google.firebase.FirebaseApp
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.util.SharedPrefManager
-import com.google.firebase.FirebaseApp
 
 class AccessibilityLogService : AccessibilityService() {
 
@@ -39,11 +39,10 @@ class AccessibilityLogService : AccessibilityService() {
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         val time = System.currentTimeMillis()
         try {
-            when {
-                event?.eventType == AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED ||  event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ->
+            when (event?.eventType) {
+                AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED, AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ->
                     trackBrowserURL(event)
-
-                event?.eventType == AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
+                AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
                     trackBrowserURL(event)
                     LogEvent(
                         LogEventName.ACCESSIBILITY,
@@ -53,14 +52,25 @@ class AccessibilityLogService : AccessibilityService() {
                     ).saveToDataBase()
                 }
                 //represents and foreground change
-                event?.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
-                event?.eventType == AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return
-                event?.eventType == AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED -> {
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
+                AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return
+                AccessibilityEvent.TYPE_ANNOUNCEMENT -> return
+                AccessibilityEvent.TYPE_GESTURE_DETECTION_END -> return
+                AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUS_CLEARED -> return
+                AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED -> return
+                AccessibilityEvent.TYPE_TOUCH_EXPLORATION_GESTURE_START -> return
+                AccessibilityEvent.TYPE_TOUCH_EXPLORATION_GESTURE_END -> return
+                AccessibilityEvent.TYPE_ASSIST_READING_CONTEXT -> return
+                AccessibilityEvent.TYPE_VIEW_FOCUSED -> return
+                AccessibilityEvent.TYPE_VIEW_TEXT_TRAVERSED_AT_MOVEMENT_GRANULARITY -> return
+                AccessibilityEvent.TYPE_GESTURE_DETECTION_START -> return
+                AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED -> return
+                AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED -> {
                     LogEvent(
                         LogEventName.ACCESSIBILITY_KEYBOARD_INPUT,
                         timestamp = time,
                         event = getEventType(event),
-                        description = getEventText(event),
+                        description = getEventText(event).hashCode().toString(),
                         name = event.className.toString(),
                         packageName = event.packageName.toString()
                     ).saveToDataBase()
@@ -122,7 +132,7 @@ class AccessibilityLogService : AccessibilityService() {
         return "default"
     }
 
-    private fun trackBrowserURL(event: AccessibilityEvent){
+    private fun trackBrowserURL(event: AccessibilityEvent) {
         try {
             val parentNodeInfo = event.source ?: return
             val packageName = event.packageName.toString()
