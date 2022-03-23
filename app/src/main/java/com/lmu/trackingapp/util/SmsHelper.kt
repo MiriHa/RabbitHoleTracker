@@ -74,20 +74,16 @@ object SmsHelper {
         timestamp: Long,
         numberHashed: String?,
         countryCode: String?,
-        contactName: String?,
         messageHash: String?,
         messageLength: Int,
-        contactUID: Int,
         smsID: String
     ) {
         if (!save) {
             val metaSms = MetaSMS(
                 phoneNumber = numberHashed,
                 countryCode = countryCode,
-                partner = contactName,
                 length = messageLength,
                 messageHash = messageHash,
-                contactId = contactUID
             )
             LogEvent(
                 eventName = LogEventName.SMS,
@@ -108,7 +104,7 @@ object SmsHelper {
 
     fun generateSmsID(partnerNumber: String, timestamp: Long): String {
         Log.d(TAG, "generateSmsID()")
-        return "$partnerNumber:$timestamp"
+        return "${partnerNumber.hashCode()}:$timestamp"
     }
 
     fun getTypeByConstant(constantValue: Int): SmsEventType {

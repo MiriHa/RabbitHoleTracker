@@ -144,7 +144,6 @@ class ActivityRecognitionSensor : AbstractSensor(
     }
 
     fun saveEntry(timestamp: Long, activity: String, transition: String, elapasedTime: Long) {
-        Log.d("xxx","Save transition update")
         LogEvent(LogEventName.ACTIVITY, timestamp, activity, transition, elapasedTime.toString()).saveToDataBase()
     }
 
@@ -159,8 +158,6 @@ class ActivityRecognitionSensor : AbstractSensor(
         override fun onReceive(context: Context?, intent: Intent?) {
             val time = System.currentTimeMillis()
 
-            Log.d("xxx","activity onRecive ${ActivityTransitionResult.hasResult(intent)}")
-
             intent?.let {
                 if (ActivityTransitionResult.hasResult(intent)) {
                     val result = ActivityTransitionResult.extractResult(intent)
@@ -168,7 +165,7 @@ class ActivityRecognitionSensor : AbstractSensor(
                         for (event in result.transitionEvents) {
                             val activity = userFacingActivity(event.activityType)
                             val transition = userFacingTransition(event.transitionType)
-                            Log.d("xxx","activity onRecive2 $activity $transition")
+                            Log.d(TAG,"activity onRecive2 $activity $transition")
                             saveEntry(time, activity, transition, event.elapsedRealTimeNanos)
                         }
                     }

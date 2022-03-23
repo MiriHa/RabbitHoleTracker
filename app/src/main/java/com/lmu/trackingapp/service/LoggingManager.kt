@@ -24,10 +24,7 @@ import com.lmu.trackingapp.sensor.modes.ScreenOrientationSensor
 import com.lmu.trackingapp.sensor.modes.ScreenStateSensor
 import com.lmu.trackingapp.sensor.usage.*
 import com.lmu.trackingapp.service.stayalive.StartLoggingWorker
-import com.lmu.trackingapp.util.CONST
-import com.lmu.trackingapp.util.NotificationHelper
-import com.lmu.trackingapp.util.SharedPrefManager
-import com.lmu.trackingapp.util.SurveryType
+import com.lmu.trackingapp.util.*
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -135,6 +132,7 @@ object LoggingManager {
         SharedPrefManager.saveLong(CONST.PREFERENCES_STUDY_START, studyStart)
         SharedPrefManager.saveLong(CONST.PREFERENCES_STUDY_END, studyEnd)
         SharedPrefManager.saveBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED, false)
+        DatabaseManager.saveStudyInterval(start = studyStart, end = studyEnd)
         Log.d(TAG,"calculate study interval: ${Date(studyStart)} - ${Date(studyEnd)}")
     }
 

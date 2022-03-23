@@ -51,8 +51,6 @@ class AccessibilityLogService : AccessibilityService() {
                         description = getWindowChangeType(event)
                     ).saveToDataBase()
                 }
-                //represents and foreground change
-                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED -> trackBrowserURL(event)
                 AccessibilityEvent.TYPE_NOTIFICATION_STATE_CHANGED -> return
                 AccessibilityEvent.TYPE_ANNOUNCEMENT -> return
                 AccessibilityEvent.TYPE_GESTURE_DETECTION_END -> return

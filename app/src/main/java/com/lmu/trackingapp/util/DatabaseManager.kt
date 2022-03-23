@@ -86,4 +86,14 @@ object DatabaseManager {
                 .setValue(intention)
         }
     }
+
+    fun saveStudyInterval(start: Long, end: Long) {
+        Log.d(TAG, "save studyinterval")
+        user?.let {
+            database.child(CONST.firebaseReferenceUsers)
+                .child(it.uid)
+                .child(CONST.firebaseReferenceInterval)
+                .setValue("${Date(start)} - ${Date(end)}")
+        }
+    }
 }

@@ -28,6 +28,7 @@ object CONST {
     const val firebaseReferenceUsers = "users"
     const val firebaseReferenceLogs = "logs"
     const val firebaseReferenceIntentions = "intentionList"
+    const val firebaseReferenceInterval = "intervalStudy"
 
     //Notifications
     const val CHANNEL_ID_LOGGING = "LOGGING_MANAGER_NOTIFICATION_CHANNEL"

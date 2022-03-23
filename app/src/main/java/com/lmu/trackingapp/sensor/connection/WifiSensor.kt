@@ -11,13 +11,12 @@ import android.net.wifi.WifiInfo
 import android.net.wifi.WifiManager
 import android.os.Build
 import android.util.Log
-import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.models.ConnectionType
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.models.WifiConnectionState
 import com.lmu.trackingapp.sensor.AbstractSensor
-import com.lmu.trackingapp.service.LoggingManager
+import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 
 class WifiSensor : AbstractSensor(
     "WIFI_SENSOR",
@@ -141,32 +140,32 @@ class WifiSensor : AbstractSensor(
     inner class WifiReceiver : BroadcastReceiver() {
 
         override fun onReceive(context: Context?, intent: Intent) {
-            if (!LoggingManager.isDataRecordingActive) {
-                return
-            }
+            try {
+                val timestamp = System.currentTimeMillis()
 
-            val timestamp = System.currentTimeMillis()
+                if (intent.action == WifiManager.WIFI_STATE_CHANGED_ACTION) {
+                    //find out if Wifi was enabled or disabled
 
-            if (intent.action == WifiManager.WIFI_STATE_CHANGED_ACTION) {
-                //find out if Wifi was enabled or disabled
+                    when (intent.getIntExtra(
+                        WifiManager.EXTRA_WIFI_STATE,
+                        WifiManager.WIFI_STATE_UNKNOWN
+                    )) {
+                        WifiManager.WIFI_STATE_ENABLED -> {
+                            val netWorkType = getCurrentNetworkType(context)
+                            saveEntry(WifiConnectionState.ENABLED, netWorkType, timestamp)
+                        }
 
-                when (intent.getIntExtra(
-                    WifiManager.EXTRA_WIFI_STATE,
-                    WifiManager.WIFI_STATE_UNKNOWN
-                )) {
-                    WifiManager.WIFI_STATE_ENABLED -> {
-                        val netWorkType = getCurrentNetworkType(context)
-                        saveEntry(WifiConnectionState.ENABLED, netWorkType, timestamp)
+                        WifiManager.WIFI_STATE_DISABLED -> {
+                            val netWorkType = getCurrentNetworkType(context)
+                            saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)
+                        }
+
+                        else ->                     //ignore cases ENABLING, DISABLING, UNKNOWN
+                            Log.i(TAG, "Wifi is enabling, disabling or unknown - ignoring state change")
                     }
-
-                    WifiManager.WIFI_STATE_DISABLED -> {
-                        val netWorkType = getCurrentNetworkType(context)
-                        saveEntry(WifiConnectionState.DISABLED, netWorkType, timestamp)
-                    }
-
-                    else ->                     //ignore cases ENABLING, DISABLING, UNKNOWN
-                        Log.i(TAG, "Wifi is enabling, disabling or unknown - ignoring state change")
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, e.toString())
             }
         }
     }

@@ -15,7 +15,6 @@ import com.lmu.trackingapp.models.BluetoothDeviceType
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.sensor.AbstractSensor
-import com.lmu.trackingapp.service.LoggingManager
 import com.lmu.trackingapp.util.CONST
 import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.util.PermissionManager
@@ -72,10 +71,6 @@ class BluetoothSensor : AbstractSensor(
         var state = -1
 
         override fun onReceive(context: Context?, intent: Intent) {
-            if (!LoggingManager.isDataRecordingActive) {
-                return
-            }
-
             val timestamp = System.currentTimeMillis()
             val action = intent.action
             val extras = intent.extras

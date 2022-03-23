@@ -120,7 +120,7 @@
     <string name="contact_description">If you have any questions about this study or run into technical problems with this application, please contact:</string>
     <string name="contact_email">miriam.halsner@campus.lmu.de</string>
     <string name="information_title">Please note</string>
-    <string name="information_note">Please make sure that the you see the logging notification of this app at any time and that you receive our short questionnaires. \n\nIf not, open this application again to restart it.</string>
+    <string name="information_note">Please make sure that the you see the logging notification of this app at any time and that you receive our short questionnaires. \n\nIf not, open this application again to restart it. \n\nPlease do not logout of this app during the study if not absolutely necessary.</string>
     <string name="questionnaire_title">Questionnaire</string>
     <string name="questionnaire_note">Your two weeks of study are over, but feel free to continue to use the application for longer if you want to help us out a little bit more. When you are finished, please uninstall this application.\n\nPlease fill out the second questionnaire under the following link, if not already done:</string>
     <string name="link">link</string>

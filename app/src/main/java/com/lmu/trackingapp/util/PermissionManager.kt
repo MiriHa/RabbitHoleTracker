@@ -165,7 +165,6 @@ class PermissionManager(val activity: Activity, private val code: Int) {
                         val componentNameString = colonSplitter.next()
                         val enabledService = ComponentName.unflattenFromString(componentNameString)
                         enabledSpecific = (enabledService != null && enabledService == expectedComponentName)
-                        Log.d("xxx", "checkAccesibiltyPermission2 enabled: $enabledSpecific")
                     }
                 }
                 Log.d(TAG, "checkAccesibiltyPermission enabled: $accessEnabled $enabledSpecific")

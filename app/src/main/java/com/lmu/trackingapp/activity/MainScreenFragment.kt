@@ -37,6 +37,9 @@ class MainScreenFragment: Fragment() {
 
         if (!SharedPrefManager.getBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED)) {
             NotificationHelper.dismissSurveyNotification(mContext)
+            val currentSessionID = LoggingManager.generateSessionID(System.currentTimeMillis())
+            SharedPrefManager.saveCurrentSessionID(currentSessionID)
+            SharedPrefManager.saveBoolean(CONST.PREFERENCES_DATA_RECORDING_ACTIVE, true)
             LoggingManager.startLoggingService(mContext as Activity)
         }
 

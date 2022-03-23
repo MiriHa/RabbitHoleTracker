@@ -6,13 +6,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.util.Log
-import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.models.InstallEventType
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.sensor.AbstractSensor
-import com.lmu.trackingapp.service.LoggingManager
 import com.lmu.trackingapp.util.CONST
+import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 
 class AppInstallsSensor : AbstractSensor(
     "APP_INSTALLS_SENSOR",
@@ -68,10 +67,6 @@ class AppInstallsSensor : AbstractSensor(
     inner class InstAppReceiver : BroadcastReceiver() {
         private val LABEL_UNKNOWN = "UNKNOWN"
         override fun onReceive(context: Context, intent: Intent) {
-            if (!LoggingManager.isDataRecordingActive) {
-                return
-            }
-
             //get package name from intent
             val uri = intent.data
             val packageName = uri?.schemeSpecificPart

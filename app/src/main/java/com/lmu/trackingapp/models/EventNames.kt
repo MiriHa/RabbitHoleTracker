@@ -18,7 +18,6 @@ enum class LogEventName {
     INTERNET,
     INSTALLED_APP,
     LIGHT,
-    LOGIN,
     NOTIFICATION,
     PHONE_ORIENTATION,
     PHONE,

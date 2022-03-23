@@ -6,13 +6,12 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.util.Log
-import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.models.PowerState
 import com.lmu.trackingapp.sensor.AbstractSensor
-import com.lmu.trackingapp.service.LoggingManager
 import com.lmu.trackingapp.util.CONST
+import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 
 class PowerSensor : AbstractSensor(
     "POWER_SENSOR",
@@ -110,9 +109,6 @@ class PowerSensor : AbstractSensor(
         private var state: PowerState? = null
 
         override fun onReceive(context: Context, intent: Intent) {
-            if (!LoggingManager.isDataRecordingActive) {
-                return
-            }
             val timestamp = System.currentTimeMillis()
 
             //determine current charge level

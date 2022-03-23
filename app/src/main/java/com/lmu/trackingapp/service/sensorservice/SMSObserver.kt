@@ -27,21 +27,20 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
     }
 
     override fun onChange(selfChange: Boolean) {
-        if (!LoggingManager.isDataRecordingActive) {
-            return
-        }
+        try {
 
-        if (System.currentTimeMillis() - lastOnChangeCall < 3000) {
-            Log.d(TAG, "no URI provided in onChange call")
-            this.onChange(selfChange, null)
+            if (System.currentTimeMillis() - lastOnChangeCall < 3000) {
+                Log.d(TAG, "no URI provided in onChange call")
+                this.onChange(selfChange, null)
+            }
+            lastOnChangeCall = System.currentTimeMillis()
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
         }
-        lastOnChangeCall = System.currentTimeMillis()
     }
 
     override fun onChange(selfChange: Boolean, uri: Uri?) {
-        if (!LoggingManager.isDataRecordingActive) {
-            return
-        }
+        try {
         if (System.currentTimeMillis() - lastOnChangeCall < 2000) {
             Log.d(TAG, "last onChange less than 2s ago, aborted")
             return
@@ -51,6 +50,9 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
         CoroutineScope(Dispatchers.IO).launch {
             delay(1000)
             getSMS(context)
+        }
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
         }
     }
 
@@ -80,8 +82,6 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
 
                         //generate ID
                         val smsID: String = SmsHelper.generateSmsID(address, timestamp)
-                        val partnerName: String? = SmsHelper.getContactNameByNumber(context, address)
-                        val partnerUID: Int = SmsHelper.getContactUidByNumber(context, address) //if this is 0, then partner number is not saved in contacts
                         val messageLength = body.length
                         val countryCode = getCountryCode(address)
                         val hashedNumber: String = PhoneNumberHelper.formatNumber(address).hashCode().toString()
@@ -90,14 +90,12 @@ class SmsObserver(handler: Handler?, context: Context) : ContentObserver(handler
                         SmsHelper.saveEntry(
                             save = save,
                             type = eventType,
-                            timestamp= timestamp,
-                            numberHashed= hashedNumber,
-                            countryCode= countryCode,
-                            contactName = partnerName.hashCode().toString(),
-                            messageHash= body.hashCode().toString(),
-                            messageLength= messageLength,
-                            contactUID= partnerUID,
-                            smsID= smsID
+                            timestamp = timestamp,
+                            numberHashed = hashedNumber,
+                            countryCode = countryCode,
+                            messageHash = body.hashCode().toString(),
+                            messageLength = messageLength,
+                            smsID = smsID
                         )
                         Log.i(TAG, "Checked sms was already saved, updated")
                     }
