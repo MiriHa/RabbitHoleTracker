@@ -12,6 +12,9 @@
     <string name="login_signUp_CreateAccount">Create Account</string>
     <string name="login_button">Log in</string>
     <string name="logout_menu_title">Log out</string>
+    <string name="cancel">Cancel</string>
+    <string name="logout_dialogTitle">Do you really want to log out?</string>
+    <string name="logout_dialog_description">Please only logout if strictly necessary.\nYou will additionally need to disable the Accessibility Service for this app.</string>
 
     <!-- Strings related to login -->
     <string name="prompt_username">StudyID</string>
@@ -120,12 +123,12 @@
     <string name="contact_description">If you have any questions about this study or run into technical problems with this application, please contact:</string>
     <string name="contact_email">miriam.halsner@campus.lmu.de</string>
     <string name="information_title">Please note</string>
-    <string name="information_note">Please make sure that the you see the logging notification of this app at any time and that you receive our short questionnaires. \n\nIf not, open this application again to restart it. \n\nPlease do not logout of this app during the study if not absolutely necessary.</string>
+    <string name="information_note">Please make sure that the you see the logging notification of this app at any time and that you receive our short questionnaires, especially after restarting your phone. \n\nIf not, open this application again to restart it. \n\nPlease do not logout of this app during the study if not absolutely necessary.</string>
     <string name="questionnaire_title">Questionnaire</string>
     <string name="questionnaire_note">Your two weeks of study are over, but feel free to continue to use the application for longer if you want to help us out a little bit more. When you are finished, please uninstall this application.\n\nPlease fill out the second questionnaire under the following link, if not already done:</string>
     <string name="link">link</string>
     <string name="tracked_data_title">Tracked Usage Data</string>
-    <string name="tracked_data_description">- Demography\n- Smartphone accelerometer sensor data\n- Smartphone gyroscope sensor data\n- Smartphone rotation sensor data\n- Smartphone proximity sensor data\n- Light intensity\n- Smartphone accessibility events\n- Activity recognition \n- Changes in airplane mode\n- Changes in bluetooth connections\n- Changes in ringer mode and sound level\n- Changes in screen rotation\n- Change in screen states\n- Changes in battery levels\n- Changes in internet connections\n- Timestamps of phone calls\n- Timestamps of SMS\n- Timestamps and priority of notifications\n- Internet addresses of visited websites\n- Sent and received bytes</string>
+    <string name="tracked_data_description">- Demography\n- Smartphone accelerometer sensor data\n- Smartphone gyroscope sensor data\n- Smartphone proximity sensor data\n- Light intensity\n- Smartphone accessibility events\n- Activity recognition \n- Changes in airplane mode\n- Changes in bluetooth connections\n- Changes in ringer mode and sound level\n- Changes in screen rotation\n- Change in screen states\n- Changes in battery levels\n- Changes in internet connections\n- Timestamps of phone calls\n- Timestamps of SMS\n- Timestamps and priority of notifications\n- Internet addresses of visited websites\n- Sent and received bytes</string>
     <string name="tracked_data_note">Your tracked usage data is saved anonymously.</string>
 
     <!--Survey-->

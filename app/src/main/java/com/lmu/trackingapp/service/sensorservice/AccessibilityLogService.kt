@@ -40,8 +40,7 @@ class AccessibilityLogService : AccessibilityService() {
         val time = System.currentTimeMillis()
         try {
             when (event?.eventType) {
-                AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED, AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED ->
-                    trackBrowserURL(event)
+                AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED, AccessibilityEvent.TYPE_WINDOW_CONTENT_CHANGED -> trackBrowserURL(event)
                 AccessibilityEvent.TYPE_WINDOWS_CHANGED -> {
                     trackBrowserURL(event)
                     LogEvent(

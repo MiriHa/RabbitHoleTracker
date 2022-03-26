@@ -7,11 +7,11 @@ import android.content.Context.USAGE_STATS_SERVICE
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.util.Log
-import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.sensor.AbstractSensor
 import com.lmu.trackingapp.util.CONST
+import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import com.lmu.trackingapp.util.PermissionManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +59,7 @@ class UsageStatsSensor : AbstractSensor(
     private fun getEvents() {
         val timestamp = System.currentTimeMillis()
         Log.d(TAG, "Savesnapshot: between  ${CONST.dateTimeFormat.format(lastTimeStamp)} ${CONST.dateTimeFormat.format(timestamp)}")
-        if (lastTimeStamp == 0L) lastTimeStamp = System.currentTimeMillis() - CONST.LOGGING_FREQUENCY
+        if (lastTimeStamp == 0L) lastTimeStamp = System.currentTimeMillis() - 10 * 60 * 1000
         val events = usageStatsManager.queryEvents(lastTimeStamp, timestamp)
         val event = UsageEvents.Event()
         while (events.hasNextEvent()) {

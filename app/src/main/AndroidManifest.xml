@@ -108,9 +108,12 @@
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+                <action android:name="com.htc.intent.action.ACTION_SHUTDOWN"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.htc.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="android.intent.action.LOCKED_BOOT_COMPLETED"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

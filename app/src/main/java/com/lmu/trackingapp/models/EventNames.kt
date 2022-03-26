@@ -21,6 +21,7 @@ enum class LogEventName {
     NOTIFICATION,
     PHONE_ORIENTATION,
     PHONE,
+    ADMIN,
     POWER,
     PROXIMITY,
     RINGER_MODE,
@@ -33,7 +34,8 @@ enum class LogEventName {
 enum class BootEventType {
     BOOTED,
     SHUTDOWN,
-    REBOOT
+    REBOOT,
+    UNDEFINED
 }
 
 enum class ONOFFSTATE {

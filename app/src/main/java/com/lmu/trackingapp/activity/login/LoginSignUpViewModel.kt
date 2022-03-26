@@ -8,7 +8,12 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.lmu.trackingapp.R
+import com.lmu.trackingapp.models.LogEvent
+import com.lmu.trackingapp.models.LogEventName
+import com.lmu.trackingapp.util.CONST
 import com.lmu.trackingapp.util.DatabaseManager
+import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
+import com.lmu.trackingapp.util.SharedPrefManager
 
 data class LoginFormState(
     val usernameError: Int? = null,
@@ -36,6 +41,7 @@ class LoginSignUpViewModel : ViewModel() {
         Firebase.auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
             if(task.isSuccessful){
                 Log.d("LoginSignUpViewModel:","Login successful")
+                LogEvent(LogEventName.ADMIN, System.currentTimeMillis(), "LOGIN",).saveToDataBase()
                 _loginResult.value =
                     LoginResult(success = true)
             } else{
@@ -50,11 +56,12 @@ class LoginSignUpViewModel : ViewModel() {
             if(task.isSuccessful){
                 Log.d("LoginSignUpViewModel:","Create Account successful")
                 DatabaseManager.saveUserToFirebase(email)
+                SharedPrefManager.saveBoolean(CONST.PREFERENCES_LOGGING_FIRST_STARTED, false)
                 _loginResult.value =
                     LoginResult(success = true)
             } else{
                 Log.d("LoginSignUpViewModel:","Create Account failed")
-                _loginResult.value = LoginResult(error = R.string.login_failed)
+                _loginResult.value = LoginResult(error = R.string.login_failed )
             }
         }
     }

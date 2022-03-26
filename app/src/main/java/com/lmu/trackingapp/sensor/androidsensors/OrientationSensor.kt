@@ -1,19 +1,6 @@
 package com.lmu.trackingapp.sensor.androidsensors
 
-import android.content.Context
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
-import android.hardware.SensorManager
-import android.util.Log
-import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
-import com.lmu.trackingapp.models.LogEvent
-import com.lmu.trackingapp.models.LogEventName
-import com.lmu.trackingapp.models.SensorAccuracy
-import com.lmu.trackingapp.sensor.AbstractSensor
-import com.lmu.trackingapp.service.LoggingManager
-import com.lmu.trackingapp.util.CONST
-
+/*
 class OrientationSensor : AbstractSensor(
     "ORIENTATION_SENSOR",
     "Orientation"
@@ -75,4 +62,4 @@ class OrientationSensor : AbstractSensor(
         }
     }
 
-}
+}*/

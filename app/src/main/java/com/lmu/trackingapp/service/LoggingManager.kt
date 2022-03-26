@@ -9,9 +9,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.lmu.trackingapp.models.LogEvent
+import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.sensor.AbstractSensor
 import com.lmu.trackingapp.sensor.activityrecognition.ActivityRecognitionSensor
-import com.lmu.trackingapp.sensor.androidsensors.*
+import com.lmu.trackingapp.sensor.androidsensors.AccelerometerSensor
+import com.lmu.trackingapp.sensor.androidsensors.GyroscopeSensor
+import com.lmu.trackingapp.sensor.androidsensors.LightSensor
+import com.lmu.trackingapp.sensor.androidsensors.ProximitySensor
 import com.lmu.trackingapp.sensor.communication.CallSensor
 import com.lmu.trackingapp.sensor.communication.NotificationSensor
 import com.lmu.trackingapp.sensor.communication.SmsSensor
@@ -25,6 +30,7 @@ import com.lmu.trackingapp.sensor.modes.ScreenStateSensor
 import com.lmu.trackingapp.sensor.usage.*
 import com.lmu.trackingapp.service.stayalive.StartLoggingWorker
 import com.lmu.trackingapp.util.*
+import com.lmu.trackingapp.util.DatabaseManager.saveToDataBase
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -44,7 +50,7 @@ object LoggingManager {
         GyroscopeSensor(),
         LightSensor(),
         NotificationSensor(),
-        OrientationSensor(),
+        //OrientationSensor(),
         PowerSensor(),
         ProximitySensor(),
         RingerModeSensor(),
@@ -97,6 +103,11 @@ object LoggingManager {
     fun ensureLoggingManagerIsAlive(context: Context) {
         Log.d(TAG, "ensureLoggingManager is alive, restartneeded: ${isLoggingActive.value} $isDataRecordingActive}")
         if (isLoggingActive.value == false && isDataRecordingActive) {
+            LogEvent(
+                LogEventName.ADMIN,
+                System.currentTimeMillis(),
+                "RESTARTED_LOGGING",
+            ).saveToDataBase()
             startLoggingService(context)
         }
     }
@@ -124,7 +135,7 @@ object LoggingManager {
         WorkManager.getInstance(context).cancelAllWorkByTag(CONST.UNIQUE_WORK_NAME)
     }
 
-    private fun calculateStudyInterval() {
+    private fun calculateStudyInterval(): Long {
         val calendar: Calendar = Calendar.getInstance()
         val studyStart: Long = calendar.timeInMillis
         calendar.add(Calendar.WEEK_OF_MONTH, 2)
@@ -134,14 +145,18 @@ object LoggingManager {
         SharedPrefManager.saveBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED, false)
         DatabaseManager.saveStudyInterval(start = studyStart, end = studyEnd)
         Log.d(TAG,"calculate study interval: ${Date(studyStart)} - ${Date(studyEnd)}")
+        return studyEnd
     }
 
     fun isStudyOver(context: Context) {
         val calendarNow = Calendar.getInstance().time
-        val studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
+        var studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
+        if (studyEnd == 0L) {
+            studyEnd = calculateStudyInterval()
+        }
         val alreadyAnswered = SharedPrefManager.getBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED)
         val isStudyOver = calendarNow.after(Date(studyEnd))
-        Log.d(TAG,"isStudyover? $isStudyOver")
+        Log.d(TAG,"isStudyover? $isStudyOver $calendarNow")
         if(isStudyOver && !alreadyAnswered){
             NotificationHelper.createSurveyNotification(context, SurveryType.SURVEY_END)
             SharedPrefManager.saveBoolean(CONST.PREFERENCES_STUDY_END_ANSWERED, true)
@@ -150,8 +165,11 @@ object LoggingManager {
 
     fun isStudyOver(): Boolean {
         val calendar = Calendar.getInstance().time
-        val studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
-        Log.d(TAG,"isStudyover? ${calendar.after(Date(studyEnd))} $studyEnd")
+        var studyEnd = SharedPrefManager.getLong(CONST.PREFERENCES_STUDY_END, 0L)
+        if (studyEnd == 0L) {
+            studyEnd = calculateStudyInterval()
+        }
+        Log.d(TAG,"isStudyover? ${calendar.after(Date(studyEnd))} $studyEnd $calendar")
         return calendar.after(Date(studyEnd))
     }
 
