@@ -3,6 +3,7 @@ package com.lmu.trackingapp.activity.esm
 import androidx.annotation.ArrayRes
 import androidx.annotation.StringRes
 import com.lmu.trackingapp.R
+import com.lmu.trackingapp.models.ESMQuestionType
 
 sealed interface ESMItem {
     val question: Int
@@ -38,15 +39,3 @@ class ESMRadioGroupItem(
     override var value: String = "unanswered",
     val buttonList: List<Int> = arrayListOf(R.string.esm_button_yes, R.string.esm_button_no)
 ) : ESMItem
-
-
-enum class ESMQuestionType{
-    ESM_UNLOCK_INTENTION,
-    ESM_LOCK_Q_FINISH,
-    ESM_LOCK_Q_MORE,
-    ESM_LOCK_Q_TRACK_OF_TIME,
-    ESM_LOCK_Q_TRACK_OF_SPACE,
-    ESM_LOCK_Q_EMOTION,
-    ESM_LOCK_Q_REGRET,
-    ESM_LOCK_Q_AGENCY,
-}

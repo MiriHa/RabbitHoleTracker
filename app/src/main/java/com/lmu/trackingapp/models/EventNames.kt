@@ -57,6 +57,17 @@ enum class ScreenState {
     UNKNOWN
 }
 
+enum class ESMQuestionType{
+    ESM_UNLOCK_INTENTION,
+    ESM_LOCK_Q_FINISH,
+    ESM_LOCK_Q_MORE,
+    ESM_LOCK_Q_TRACK_OF_TIME,
+    ESM_LOCK_Q_TRACK_OF_SPACE,
+    ESM_LOCK_Q_EMOTION,
+    ESM_LOCK_Q_REGRET,
+    ESM_LOCK_Q_AGENCY,
+}
+
 enum class WifiConnectionState {
     DISABLED,
     ENABLED,

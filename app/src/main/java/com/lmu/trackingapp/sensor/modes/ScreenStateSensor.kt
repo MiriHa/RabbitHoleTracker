@@ -104,8 +104,8 @@ class ScreenStateSensor : AbstractSensor(
                         saveEntry(currentState, time)
                     }
                     currentState == ScreenState.ON_USERPRESENT -> {
-                        saveEntry(currentState, time)
                         onPhoneUnLock(time, context)
+                        saveEntry(currentState, time)
                     }
                     else -> {
                         saveEntry(ScreenState.UNKNOWN, time)

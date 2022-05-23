@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.lmu.trackingapp.R
 import com.lmu.trackingapp.databinding.LayoutEsmUnlockIntentionBinding
+import com.lmu.trackingapp.models.ESMQuestionType
 import com.lmu.trackingapp.models.LogEvent
 import com.lmu.trackingapp.models.LogEventName
 import com.lmu.trackingapp.service.LoggingManager
