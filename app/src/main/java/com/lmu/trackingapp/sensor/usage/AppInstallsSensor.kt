@@ -99,9 +99,6 @@ class AppInstallsSensor : AbstractSensor(
 
                 //get application label
                 var label = LABEL_UNKNOWN
-                if (type.equals(InstallEventType.UNINSTALLED) || type.equals(InstallEventType.UNINSTALLED_AND_DATA_REMOVED)) {
-                    //TODO someway get uninstalled app packagename?
-                } else {
                     try {
                         val packageManager = context.packageManager
                         val info = packageManager.getApplicationInfo(packageName, 0)
@@ -114,7 +111,6 @@ class AppInstallsSensor : AbstractSensor(
                         e.printStackTrace()
                         Log.e(TAG, "Unexpected Exception")
                     }
-                }
                 saveEntry(type, packageName, label, timestamp)
             } else {
                 Log.e(TAG, "Package name couldn't be resolved - ignoring event")
